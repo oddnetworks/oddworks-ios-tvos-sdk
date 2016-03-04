@@ -72,7 +72,6 @@
 		1353FAAD1C46F10400B57A83 /* OddConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C1DFA21C2876000091BCBA /* OddConstants.swift */; };
 		1353FAAE1C46F10400B57A83 /* OddLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134386601C3D574C0042CCC8 /* OddLogger.swift */; };
 		1353FAB21C46F10400B57A83 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E687B1C24608200A0A602 /* APIService.swift */; };
-		135A60FD1C6A7D36004ABDE7 /* BETAInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 135A60FC1C6A7D36004ABDE7 /* BETAInfo.plist */; };
 		135E686D1C245FFE00A0A602 /* OddSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 135E686C1C245FFE00A0A602 /* OddSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135E68801C24608200A0A602 /* OddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68791C24608200A0A602 /* OddView.swift */; };
 		135E68821C24608200A0A602 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E687B1C24608200A0A602 /* APIService.swift */; };
@@ -134,7 +133,6 @@
 		1353FA891C46F0B200B57A83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1353FA8C1C46F0B200B57A83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1353FA8E1C46F0B200B57A83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		135A60FC1C6A7D36004ABDE7 /* BETAInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BETAInfo.plist; sourceTree = "<group>"; };
 		135E68691C245FFE00A0A602 /* OddSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OddSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		135E686C1C245FFE00A0A602 /* OddSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OddSDK.h; sourceTree = "<group>"; };
 		135E686E1C245FFE00A0A602 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -243,7 +241,6 @@
 			children = (
 				135E686C1C245FFE00A0A602 /* OddSDK.h */,
 				135E686E1C245FFE00A0A602 /* Info.plist */,
-				135A60FC1C6A7D36004ABDE7 /* BETAInfo.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -444,7 +441,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				135A60FD1C6A7D36004ABDE7 /* BETAInfo.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
