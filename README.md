@@ -8,7 +8,9 @@ An [Oddworks](https://github.com/oddnetworks/oddworks) device client SDK for App
 * Augment your existing iOS or tvOS app with video streaming content from [Oddworks](https://github.com/oddnetworks/oddworks).
 * Take down the establishment.
 
-> The iOS/tvOS SDK is currently under the microscope in an internal security audit before being made available in this repository. We're planning for a release inside a week - (March 5 - 12, 2016).
+The iOS/tvOS Frameworks for Odd Networks are written in Swift. Objective-C target applications are fully supported. You may refer to our [sample apps](https://github.com/oddnetworks/odd-sample-apps) for how to work with the SDK in both Swift and Objective-C.
+
+
 
 Resources
 ---------

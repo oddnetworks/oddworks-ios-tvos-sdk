@@ -1,0 +1,925 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		135E68D41C24654D00A0A602 /* Build Framework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 135E68D51C24654D00A0A602 /* Build configuration list for PBXAggregateTarget "Build Framework" */;
+			buildPhases = (
+				135E68D81C24656500A0A602 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Build Framework";
+			productName = "Build Framework";
+		};
+		13B9F50A1C3ADAA300AC04B1 /* Build tvOS Framework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 13B9F50C1C3ADAA300AC04B1 /* Build configuration list for PBXAggregateTarget "Build tvOS Framework" */;
+			buildPhases = (
+				13B9F50B1C3ADAA300AC04B1 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Build tvOS Framework";
+			productName = "Build Framework";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		130AA71B1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
+		130AA71C1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
+		130AA71D1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
+		132B776A1C5BCAD400703B21 /* NSData+Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132B77691C5BCAD400703B21 /* NSData+Object.swift */; };
+		132B776B1C5BCAD400703B21 /* NSData+Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132B77691C5BCAD400703B21 /* NSData+Object.swift */; };
+		132B776C1C5BCAD400703B21 /* NSData+Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132B77691C5BCAD400703B21 /* NSData+Object.swift */; };
+		134386611C3D574C0042CCC8 /* OddLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134386601C3D574C0042CCC8 /* OddLogger.swift */; };
+		134386621C3D574C0042CCC8 /* OddLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134386601C3D574C0042CCC8 /* OddLogger.swift */; };
+		1347977A1C51424800876D39 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134797791C51424800876D39 /* Keychain.swift */; };
+		1347977B1C51424800876D39 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134797791C51424800876D39 /* Keychain.swift */; };
+		1347977C1C51424800876D39 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134797791C51424800876D39 /* Keychain.swift */; };
+		1353FA831C46F0B200B57A83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1353FA821C46F0B200B57A83 /* AppDelegate.swift */; };
+		1353FA851C46F0B200B57A83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1353FA841C46F0B200B57A83 /* ViewController.swift */; };
+		1353FA881C46F0B200B57A83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1353FA861C46F0B200B57A83 /* Main.storyboard */; };
+		1353FA8A1C46F0B200B57A83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1353FA891C46F0B200B57A83 /* Assets.xcassets */; };
+		1353FA8D1C46F0B200B57A83 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1353FA8B1C46F0B200B57A83 /* LaunchScreen.storyboard */; };
+		1353FA921C46F10400B57A83 /* CMTimeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A41C24611800A0A602 /* CMTimeExtension.swift */; };
+		1353FA931C46F10400B57A83 /* String+NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A51C24611800A0A602 /* String+NSDate.swift */; };
+		1353FA941C46F10400B57A83 /* NSDate+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A61C24611800A0A602 /* NSDate+String.swift */; };
+		1353FA951C46F10400B57A83 /* NSObject+ClassName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A71C24611800A0A602 /* NSObject+ClassName.swift */; };
+		1353FA961C46F10400B57A83 /* UIImage+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A81C24611800A0A602 /* UIImage+Gradient.swift */; };
+		1353FA971C46F10400B57A83 /* UIViewController+TitleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A91C24611800A0A602 /* UIViewController+TitleImage.swift */; };
+		1353FA981C46F10400B57A83 /* Double+Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AA1C24611800A0A602 /* Double+Time.swift */; };
+		1353FA991C46F10400B57A83 /* UIApplication+TopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */; };
+		1353FA9A1C46F10400B57A83 /* NSURL+query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AC1C24611800A0A602 /* NSURL+query.swift */; };
+		1353FA9B1C46F10400B57A83 /* Array+Bounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AD1C24611800A0A602 /* Array+Bounds.swift */; };
+		1353FA9E1C46F10400B57A83 /* OddMetricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A01C2460E900A0A602 /* OddMetricService.swift */; };
+		1353FAA21C46F10400B57A83 /* OddContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68841C2460BA00A0A602 /* OddContentStore.swift */; };
+		1353FAA31C46F10400B57A83 /* OddEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68851C2460BA00A0A602 /* OddEvent.swift */; };
+		1353FAA41C46F10400B57A83 /* OddArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68861C2460BA00A0A602 /* OddArticle.swift */; };
+		1353FAA51C46F10400B57A83 /* OddConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68871C2460BA00A0A602 /* OddConfig.swift */; };
+		1353FAA61C46F10400B57A83 /* OddExternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68881C2460BA00A0A602 /* OddExternal.swift */; };
+		1353FAA71C46F10400B57A83 /* OddPromotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68891C2460BA00A0A602 /* OddPromotion.swift */; };
+		1353FAA81C46F10400B57A83 /* OddVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688C1C2460BA00A0A602 /* OddVideo.swift */; };
+		1353FAA91C46F10400B57A83 /* OddMediaObjectCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688D1C2460BA00A0A602 /* OddMediaObjectCollection.swift */; };
+		1353FAAA1C46F10400B57A83 /* OddMediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688E1C2460BA00A0A602 /* OddMediaObject.swift */; };
+		1353FAAB1C46F10400B57A83 /* OddMenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688F1C2460BA00A0A602 /* OddMenuItems.swift */; };
+		1353FAAD1C46F10400B57A83 /* OddConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C1DFA21C2876000091BCBA /* OddConstants.swift */; };
+		1353FAAE1C46F10400B57A83 /* OddLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134386601C3D574C0042CCC8 /* OddLogger.swift */; };
+		1353FAB21C46F10400B57A83 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E687B1C24608200A0A602 /* APIService.swift */; };
+		135A60FD1C6A7D36004ABDE7 /* BETAInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 135A60FC1C6A7D36004ABDE7 /* BETAInfo.plist */; };
+		135E686D1C245FFE00A0A602 /* OddSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 135E686C1C245FFE00A0A602 /* OddSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		135E68801C24608200A0A602 /* OddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68791C24608200A0A602 /* OddView.swift */; };
+		135E68821C24608200A0A602 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E687B1C24608200A0A602 /* APIService.swift */; };
+		135E68911C2460BA00A0A602 /* OddContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68841C2460BA00A0A602 /* OddContentStore.swift */; };
+		135E68921C2460BA00A0A602 /* OddEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68851C2460BA00A0A602 /* OddEvent.swift */; };
+		135E68931C2460BA00A0A602 /* OddArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68861C2460BA00A0A602 /* OddArticle.swift */; };
+		135E68941C2460BA00A0A602 /* OddConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68871C2460BA00A0A602 /* OddConfig.swift */; };
+		135E68951C2460BA00A0A602 /* OddExternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68881C2460BA00A0A602 /* OddExternal.swift */; };
+		135E68961C2460BA00A0A602 /* OddPromotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68891C2460BA00A0A602 /* OddPromotion.swift */; };
+		135E68991C2460BA00A0A602 /* OddVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688C1C2460BA00A0A602 /* OddVideo.swift */; };
+		135E689A1C2460BA00A0A602 /* OddMediaObjectCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688D1C2460BA00A0A602 /* OddMediaObjectCollection.swift */; };
+		135E689B1C2460BA00A0A602 /* OddMediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688E1C2460BA00A0A602 /* OddMediaObject.swift */; };
+		135E689C1C2460BA00A0A602 /* OddMenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688F1C2460BA00A0A602 /* OddMenuItems.swift */; };
+		135E68A21C2460E900A0A602 /* OddMetricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A01C2460E900A0A602 /* OddMetricService.swift */; };
+		135E68AF1C24611800A0A602 /* CMTimeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A41C24611800A0A602 /* CMTimeExtension.swift */; };
+		135E68B01C24611800A0A602 /* String+NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A51C24611800A0A602 /* String+NSDate.swift */; };
+		135E68B11C24611800A0A602 /* NSDate+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A61C24611800A0A602 /* NSDate+String.swift */; };
+		135E68B21C24611800A0A602 /* NSObject+ClassName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A71C24611800A0A602 /* NSObject+ClassName.swift */; };
+		135E68B31C24611800A0A602 /* UIImage+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A81C24611800A0A602 /* UIImage+Gradient.swift */; };
+		135E68B41C24611800A0A602 /* UIViewController+TitleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A91C24611800A0A602 /* UIViewController+TitleImage.swift */; };
+		135E68B51C24611800A0A602 /* Double+Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AA1C24611800A0A602 /* Double+Time.swift */; };
+		135E68B61C24611800A0A602 /* UIApplication+TopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */; };
+		135E68B71C24611800A0A602 /* NSURL+query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AC1C24611800A0A602 /* NSURL+query.swift */; };
+		135E68B81C24611800A0A602 /* Array+Bounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AD1C24611800A0A602 /* Array+Bounds.swift */; };
+		13B4D73F1C8A1A040067590B /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 13B4D73E1C8A1A040067590B /* README.md */; };
+		13B9F4E51C3AD32B00AC04B1 /* OddSDKtvOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 13B9F4E41C3AD32B00AC04B1 /* OddSDKtvOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13B9F4EB1C3AD34B00AC04B1 /* OddContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68841C2460BA00A0A602 /* OddContentStore.swift */; };
+		13B9F4EC1C3AD34B00AC04B1 /* OddConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68871C2460BA00A0A602 /* OddConfig.swift */; };
+		13B9F4ED1C3AD34B00AC04B1 /* OddPromotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68891C2460BA00A0A602 /* OddPromotion.swift */; };
+		13B9F4EE1C3AD34B00AC04B1 /* OddVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688C1C2460BA00A0A602 /* OddVideo.swift */; };
+		13B9F4EF1C3AD34B00AC04B1 /* OddMediaObjectCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688D1C2460BA00A0A602 /* OddMediaObjectCollection.swift */; };
+		13B9F4F01C3AD34B00AC04B1 /* OddMediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688E1C2460BA00A0A602 /* OddMediaObject.swift */; };
+		13B9F4F11C3AD34B00AC04B1 /* OddMenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688F1C2460BA00A0A602 /* OddMenuItems.swift */; };
+		13B9F4F31C3AD34B00AC04B1 /* OddConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C1DFA21C2876000091BCBA /* OddConstants.swift */; };
+		13B9F4F71C3AD34B00AC04B1 /* OddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68791C24608200A0A602 /* OddView.swift */; };
+		13B9F4F91C3AD34B00AC04B1 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E687B1C24608200A0A602 /* APIService.swift */; };
+		13B9F4FA1C3AD35500AC04B1 /* CMTimeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A41C24611800A0A602 /* CMTimeExtension.swift */; };
+		13B9F4FB1C3AD35500AC04B1 /* String+NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A51C24611800A0A602 /* String+NSDate.swift */; };
+		13B9F4FC1C3AD35500AC04B1 /* NSDate+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A61C24611800A0A602 /* NSDate+String.swift */; };
+		13B9F4FD1C3AD35500AC04B1 /* NSObject+ClassName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A71C24611800A0A602 /* NSObject+ClassName.swift */; };
+		13B9F4FE1C3AD35500AC04B1 /* UIImage+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A81C24611800A0A602 /* UIImage+Gradient.swift */; };
+		13B9F4FF1C3AD35500AC04B1 /* UIViewController+TitleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A91C24611800A0A602 /* UIViewController+TitleImage.swift */; };
+		13B9F5001C3AD35500AC04B1 /* Double+Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AA1C24611800A0A602 /* Double+Time.swift */; };
+		13B9F5021C3AD35500AC04B1 /* NSURL+query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AC1C24611800A0A602 /* NSURL+query.swift */; };
+		13B9F5031C3AD35500AC04B1 /* Array+Bounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AD1C24611800A0A602 /* Array+Bounds.swift */; };
+		13B9F5061C3AD35A00AC04B1 /* OddMetricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A01C2460E900A0A602 /* OddMetricService.swift */; };
+		13C1DFA31C2876000091BCBA /* OddConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C1DFA21C2876000091BCBA /* OddConstants.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddGateKeeper.swift; sourceTree = "<group>"; };
+		132B77691C5BCAD400703B21 /* NSData+Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Object.swift"; sourceTree = "<group>"; };
+		134386601C3D574C0042CCC8 /* OddLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddLogger.swift; sourceTree = "<group>"; };
+		134797791C51424800876D39 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		1353FA801C46F0B200B57A83 /* DebugApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebugApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1353FA821C46F0B200B57A83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1353FA841C46F0B200B57A83 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1353FA871C46F0B200B57A83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1353FA891C46F0B200B57A83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1353FA8C1C46F0B200B57A83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1353FA8E1C46F0B200B57A83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		135A60FC1C6A7D36004ABDE7 /* BETAInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BETAInfo.plist; sourceTree = "<group>"; };
+		135E68691C245FFE00A0A602 /* OddSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OddSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		135E686C1C245FFE00A0A602 /* OddSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OddSDK.h; sourceTree = "<group>"; };
+		135E686E1C245FFE00A0A602 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		135E68791C24608200A0A602 /* OddView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddView.swift; sourceTree = "<group>"; };
+		135E687B1C24608200A0A602 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		135E68841C2460BA00A0A602 /* OddContentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = OddContentStore.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		135E68851C2460BA00A0A602 /* OddEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddEvent.swift; sourceTree = "<group>"; };
+		135E68861C2460BA00A0A602 /* OddArticle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddArticle.swift; sourceTree = "<group>"; };
+		135E68871C2460BA00A0A602 /* OddConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddConfig.swift; sourceTree = "<group>"; };
+		135E68881C2460BA00A0A602 /* OddExternal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddExternal.swift; sourceTree = "<group>"; };
+		135E68891C2460BA00A0A602 /* OddPromotion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddPromotion.swift; sourceTree = "<group>"; };
+		135E688C1C2460BA00A0A602 /* OddVideo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddVideo.swift; sourceTree = "<group>"; };
+		135E688D1C2460BA00A0A602 /* OddMediaObjectCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = OddMediaObjectCollection.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		135E688E1C2460BA00A0A602 /* OddMediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = OddMediaObject.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		135E688F1C2460BA00A0A602 /* OddMenuItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddMenuItems.swift; sourceTree = "<group>"; };
+		135E68A01C2460E900A0A602 /* OddMetricService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddMetricService.swift; sourceTree = "<group>"; };
+		135E68A41C24611800A0A602 /* CMTimeExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CMTimeExtension.swift; sourceTree = "<group>"; };
+		135E68A51C24611800A0A602 /* String+NSDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+NSDate.swift"; sourceTree = "<group>"; };
+		135E68A61C24611800A0A602 /* NSDate+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+String.swift"; sourceTree = "<group>"; };
+		135E68A71C24611800A0A602 /* NSObject+ClassName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+ClassName.swift"; sourceTree = "<group>"; };
+		135E68A81C24611800A0A602 /* UIImage+Gradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Gradient.swift"; sourceTree = "<group>"; };
+		135E68A91C24611800A0A602 /* UIViewController+TitleImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+TitleImage.swift"; sourceTree = "<group>"; };
+		135E68AA1C24611800A0A602 /* Double+Time.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Double+Time.swift"; sourceTree = "<group>"; };
+		135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+TopVC.swift"; sourceTree = "<group>"; };
+		135E68AC1C24611800A0A602 /* NSURL+query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+query.swift"; sourceTree = "<group>"; };
+		135E68AD1C24611800A0A602 /* Array+Bounds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Bounds.swift"; sourceTree = "<group>"; };
+		13B4D73E1C8A1A040067590B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		13B9F4E21C3AD32B00AC04B1 /* OddSDKtvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OddSDKtvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B9F4E41C3AD32B00AC04B1 /* OddSDKtvOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OddSDKtvOS.h; sourceTree = "<group>"; };
+		13B9F4E61C3AD32B00AC04B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		13C1DFA21C2876000091BCBA /* OddConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddConstants.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1353FA7D1C46F0B200B57A83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		135E68651C245FFE00A0A602 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		13B9F4DE1C3AD32B00AC04B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1353FA811C46F0B200B57A83 /* DebugApp */ = {
+			isa = PBXGroup;
+			children = (
+				1353FA821C46F0B200B57A83 /* AppDelegate.swift */,
+				1353FA841C46F0B200B57A83 /* ViewController.swift */,
+				1353FA861C46F0B200B57A83 /* Main.storyboard */,
+				1353FA891C46F0B200B57A83 /* Assets.xcassets */,
+				1353FA8B1C46F0B200B57A83 /* LaunchScreen.storyboard */,
+				1353FA8E1C46F0B200B57A83 /* Info.plist */,
+			);
+			path = DebugApp;
+			sourceTree = "<group>";
+		};
+		135E685F1C245FFE00A0A602 = {
+			isa = PBXGroup;
+			children = (
+				13B4D73E1C8A1A040067590B /* README.md */,
+				135E686B1C245FFE00A0A602 /* OddSDK */,
+				13B9F4E31C3AD32B00AC04B1 /* OddSDKtvOS */,
+				1353FA811C46F0B200B57A83 /* DebugApp */,
+				135E686A1C245FFE00A0A602 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		135E686A1C245FFE00A0A602 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				135E68691C245FFE00A0A602 /* OddSDK.framework */,
+				13B9F4E21C3AD32B00AC04B1 /* OddSDKtvOS.framework */,
+				1353FA801C46F0B200B57A83 /* DebugApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		135E686B1C245FFE00A0A602 /* OddSDK */ = {
+			isa = PBXGroup;
+			children = (
+				135E68A31C24610700A0A602 /* Extensions */,
+				135E68831C2460A100A0A602 /* Models */,
+				13B4D73D1C8A18B90067590B /* Services */,
+				135E68741C24604300A0A602 /* Supporting Files */,
+			);
+			path = OddSDK;
+			sourceTree = "<group>";
+		};
+		135E68741C24604300A0A602 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				135E686C1C245FFE00A0A602 /* OddSDK.h */,
+				135E686E1C245FFE00A0A602 /* Info.plist */,
+				135A60FC1C6A7D36004ABDE7 /* BETAInfo.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		135E68831C2460A100A0A602 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				135E68841C2460BA00A0A602 /* OddContentStore.swift */,
+				135E68851C2460BA00A0A602 /* OddEvent.swift */,
+				135E68861C2460BA00A0A602 /* OddArticle.swift */,
+				135E68871C2460BA00A0A602 /* OddConfig.swift */,
+				135E68881C2460BA00A0A602 /* OddExternal.swift */,
+				135E68891C2460BA00A0A602 /* OddPromotion.swift */,
+				135E688C1C2460BA00A0A602 /* OddVideo.swift */,
+				135E688D1C2460BA00A0A602 /* OddMediaObjectCollection.swift */,
+				135E688E1C2460BA00A0A602 /* OddMediaObject.swift */,
+				135E688F1C2460BA00A0A602 /* OddMenuItems.swift */,
+				13C1DFA21C2876000091BCBA /* OddConstants.swift */,
+				134386601C3D574C0042CCC8 /* OddLogger.swift */,
+				135E68791C24608200A0A602 /* OddView.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		135E68A31C24610700A0A602 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				135E68A41C24611800A0A602 /* CMTimeExtension.swift */,
+				135E68A51C24611800A0A602 /* String+NSDate.swift */,
+				135E68A61C24611800A0A602 /* NSDate+String.swift */,
+				135E68A71C24611800A0A602 /* NSObject+ClassName.swift */,
+				135E68A81C24611800A0A602 /* UIImage+Gradient.swift */,
+				135E68A91C24611800A0A602 /* UIViewController+TitleImage.swift */,
+				135E68AA1C24611800A0A602 /* Double+Time.swift */,
+				135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */,
+				135E68AC1C24611800A0A602 /* NSURL+query.swift */,
+				135E68AD1C24611800A0A602 /* Array+Bounds.swift */,
+				132B77691C5BCAD400703B21 /* NSData+Object.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		13B4D73D1C8A18B90067590B /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				134797791C51424800876D39 /* Keychain.swift */,
+				130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */,
+				135E68A01C2460E900A0A602 /* OddMetricService.swift */,
+				135E687B1C24608200A0A602 /* APIService.swift */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
+		13B9F4E31C3AD32B00AC04B1 /* OddSDKtvOS */ = {
+			isa = PBXGroup;
+			children = (
+				13B9F4E41C3AD32B00AC04B1 /* OddSDKtvOS.h */,
+				13B9F4E61C3AD32B00AC04B1 /* Info.plist */,
+			);
+			path = OddSDKtvOS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		135E68661C245FFE00A0A602 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				135E686D1C245FFE00A0A602 /* OddSDK.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		13B9F4DF1C3AD32B00AC04B1 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				13B9F4E51C3AD32B00AC04B1 /* OddSDKtvOS.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		1353FA7F1C46F0B200B57A83 /* DebugApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1353FA911C46F0B200B57A83 /* Build configuration list for PBXNativeTarget "DebugApp" */;
+			buildPhases = (
+				1353FA7C1C46F0B200B57A83 /* Sources */,
+				1353FA7D1C46F0B200B57A83 /* Frameworks */,
+				1353FA7E1C46F0B200B57A83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DebugApp;
+			productName = DebugApp;
+			productReference = 1353FA801C46F0B200B57A83 /* DebugApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		135E68681C245FFE00A0A602 /* OddSDK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 135E68711C245FFE00A0A602 /* Build configuration list for PBXNativeTarget "OddSDK" */;
+			buildPhases = (
+				135E68641C245FFE00A0A602 /* Sources */,
+				135E68651C245FFE00A0A602 /* Frameworks */,
+				135E68661C245FFE00A0A602 /* Headers */,
+				135E68671C245FFE00A0A602 /* Resources */,
+				13C1DFA11C24A0E70091BCBA /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OddSDK;
+			productName = OddSDK;
+			productReference = 135E68691C245FFE00A0A602 /* OddSDK.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		13B9F4E11C3AD32B00AC04B1 /* OddSDKtvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 13B9F4E71C3AD32B00AC04B1 /* Build configuration list for PBXNativeTarget "OddSDKtvOS" */;
+			buildPhases = (
+				13B9F4DD1C3AD32B00AC04B1 /* Sources */,
+				13B9F4DE1C3AD32B00AC04B1 /* Frameworks */,
+				13B9F4DF1C3AD32B00AC04B1 /* Headers */,
+				13B9F4E01C3AD32B00AC04B1 /* Resources */,
+				135A60871C6A56EE004ABDE7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OddSDKtvOS;
+			productName = OddSDKtvOS;
+			productReference = 13B9F4E21C3AD32B00AC04B1 /* OddSDKtvOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		135E68601C245FFE00A0A602 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Patrick McConnell";
+				TargetAttributes = {
+					1353FA7F1C46F0B200B57A83 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					135E68681C245FFE00A0A602 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					135E68D41C24654D00A0A602 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					13B9F4E11C3AD32B00AC04B1 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = 135E68631C245FFE00A0A602 /* Build configuration list for PBXProject "OddSDK" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 135E685F1C245FFE00A0A602;
+			productRefGroup = 135E686A1C245FFE00A0A602 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				135E68681C245FFE00A0A602 /* OddSDK */,
+				135E68D41C24654D00A0A602 /* Build Framework */,
+				13B9F4E11C3AD32B00AC04B1 /* OddSDKtvOS */,
+				13B9F50A1C3ADAA300AC04B1 /* Build tvOS Framework */,
+				1353FA7F1C46F0B200B57A83 /* DebugApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1353FA7E1C46F0B200B57A83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1353FA8D1C46F0B200B57A83 /* LaunchScreen.storyboard in Resources */,
+				1353FA8A1C46F0B200B57A83 /* Assets.xcassets in Resources */,
+				1353FA881C46F0B200B57A83 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		135E68671C245FFE00A0A602 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				135A60FD1C6A7D36004ABDE7 /* BETAInfo.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		13B9F4E01C3AD32B00AC04B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		135A60871C6A56EE004ABDE7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:\"\necho \"searching ${SRCROOT} for ${TAGS}\"\nfind \"${SRCROOT}\" \\( -name \"*.swift\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"\n\necho \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\nbuildVersion=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
+		135E68D81C24656500A0A602 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Merge Script\n\n# 1\n# Set bash script to exit immediately if any commands fail.\nset -e\n\n# 2\n# Setup some constants for use later on.\nFRAMEWORK_NAME=\"OddSDK\"\n\n# 3\n# If remnants from a previous build exist, delete them.\nif [ -d \"${SRCROOT}/build\" ]; then\nrm -rf \"${SRCROOT}/build\"\nfi\n\n# 4\n# Build the framework for device and for simulator (using\n# all needed architectures).\nxcodebuild -target \"${FRAMEWORK_NAME}\" -configuration Release -arch arm64 -arch armv7 -arch armv7s only_active_arch=no defines_module=yes -sdk \"iphoneos\"\nxcodebuild -target \"${FRAMEWORK_NAME}\" -configuration Release -arch x86_64 -arch i386 only_active_arch=no defines_module=yes -sdk \"iphonesimulator\"\n\n# 5\n# Remove .framework file if exists on Desktop from previous run.\nif [ -d \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework\" ]; then\nrm -rf \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework\"\nfi\n\n# 6\n# Copy the device version of framework to Desktop.\ncp -r \"${SRCROOT}/build/Release-iphoneos/${FRAMEWORK_NAME}.framework\" \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework\"\n\n# 7\n# Replace the framework executable within the framework with\n# a new version created by merging the device and simulator\n# frameworks' executables with lipo.\nlipo -create -output \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${SRCROOT}/build/Release-iphoneos/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${SRCROOT}/build/Release-iphonesimulator/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n\n# 8\n# Copy the Swift module mappings for the simulator into the\n# framework.  The device mappings already exist from step 6.\ncp -r \"${SRCROOT}/build/Release-iphonesimulator/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule/\" \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule\"\n\n# 9\n# Delete the most recent build.\nif [ -d \"${SRCROOT}/build\" ]; then\nrm -rf \"${SRCROOT}/build\"\nfi";
+		};
+		13B9F50B1C3ADAA300AC04B1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Merge Script\n\n# 1\n# Set bash script to exit immediately if any commands fail.\nset -e\n\n# 2\n# Setup some constants for use later on.\nFRAMEWORK_NAME=\"OddSDKtvOS\"\n\n# 3\n# If remnants from a previous build exist, delete them.\nif [ -d \"${SRCROOT}/build\" ]; then\nrm -rf \"${SRCROOT}/build\"\nfi\n\n# 4\n# Build the framework for device and for simulator (using\n# all needed architectures).\nxcodebuild -target \"${FRAMEWORK_NAME}\" -configuration Release -arch arm64 only_active_arch=no defines_module=yes -sdk \"appletvos\"\nxcodebuild -target \"${FRAMEWORK_NAME}\" -configuration Release -arch x86_64 only_active_arch=no defines_module=yes -sdk \"appletvsimulator\"\n\n# 5\n# Remove .framework file if exists on Desktop from previous run.\nif [ -d \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework\" ]; then\nrm -rf \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework\"\nfi\n\n# 6\n# Copy the device version of framework to Desktop.\ncp -r \"${SRCROOT}/build/Release-appletvos/${FRAMEWORK_NAME}.framework\" \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework\"\n\n# 7\n# Replace the framework executable within the framework with\n# a new version created by merging the device and simulator\n# frameworks' executables with lipo.\nlipo -create -output \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${SRCROOT}/build/Release-appletvos/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${SRCROOT}/build/Release-appletvsimulator/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n\n# 8\n# Copy the Swift module mappings for the simulator into the\n# framework.  The device mappings already exist from step 6.\ncp -r \"${SRCROOT}/build/Release-appletvsimulator/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule/\" \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule\"\n\n# 9\n# Delete the most recent build.\nif [ -d \"${SRCROOT}/build\" ]; then\nrm -rf \"${SRCROOT}/build\"\nfi";
+		};
+		13C1DFA11C24A0E70091BCBA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:\"\necho \"searching ${SRCROOT} for ${TAGS}\"\nfind \"${SRCROOT}\" \\( -name \"*.swift\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"\n\necho \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\nbuildVersion=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1353FA7C1C46F0B200B57A83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1353FA921C46F10400B57A83 /* CMTimeExtension.swift in Sources */,
+				1353FA931C46F10400B57A83 /* String+NSDate.swift in Sources */,
+				1353FA941C46F10400B57A83 /* NSDate+String.swift in Sources */,
+				1353FA951C46F10400B57A83 /* NSObject+ClassName.swift in Sources */,
+				1353FA961C46F10400B57A83 /* UIImage+Gradient.swift in Sources */,
+				1353FA971C46F10400B57A83 /* UIViewController+TitleImage.swift in Sources */,
+				1353FA981C46F10400B57A83 /* Double+Time.swift in Sources */,
+				1353FA991C46F10400B57A83 /* UIApplication+TopVC.swift in Sources */,
+				1353FA9A1C46F10400B57A83 /* NSURL+query.swift in Sources */,
+				1353FA9B1C46F10400B57A83 /* Array+Bounds.swift in Sources */,
+				132B776C1C5BCAD400703B21 /* NSData+Object.swift in Sources */,
+				1347977C1C51424800876D39 /* Keychain.swift in Sources */,
+				1353FA9E1C46F10400B57A83 /* OddMetricService.swift in Sources */,
+				1353FAA21C46F10400B57A83 /* OddContentStore.swift in Sources */,
+				1353FAA31C46F10400B57A83 /* OddEvent.swift in Sources */,
+				1353FAA41C46F10400B57A83 /* OddArticle.swift in Sources */,
+				130AA71D1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */,
+				1353FAA51C46F10400B57A83 /* OddConfig.swift in Sources */,
+				1353FAA61C46F10400B57A83 /* OddExternal.swift in Sources */,
+				1353FAA71C46F10400B57A83 /* OddPromotion.swift in Sources */,
+				1353FAA81C46F10400B57A83 /* OddVideo.swift in Sources */,
+				1353FAA91C46F10400B57A83 /* OddMediaObjectCollection.swift in Sources */,
+				1353FAAA1C46F10400B57A83 /* OddMediaObject.swift in Sources */,
+				1353FAAB1C46F10400B57A83 /* OddMenuItems.swift in Sources */,
+				1353FAAD1C46F10400B57A83 /* OddConstants.swift in Sources */,
+				1353FAAE1C46F10400B57A83 /* OddLogger.swift in Sources */,
+				1353FAB21C46F10400B57A83 /* APIService.swift in Sources */,
+				1353FA851C46F0B200B57A83 /* ViewController.swift in Sources */,
+				1353FA831C46F0B200B57A83 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		135E68641C245FFE00A0A602 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				135E689C1C2460BA00A0A602 /* OddMenuItems.swift in Sources */,
+				135E68B81C24611800A0A602 /* Array+Bounds.swift in Sources */,
+				135E68AF1C24611800A0A602 /* CMTimeExtension.swift in Sources */,
+				1347977A1C51424800876D39 /* Keychain.swift in Sources */,
+				134386611C3D574C0042CCC8 /* OddLogger.swift in Sources */,
+				135E68821C24608200A0A602 /* APIService.swift in Sources */,
+				135E68B21C24611800A0A602 /* NSObject+ClassName.swift in Sources */,
+				135E68951C2460BA00A0A602 /* OddExternal.swift in Sources */,
+				135E689A1C2460BA00A0A602 /* OddMediaObjectCollection.swift in Sources */,
+				135E68931C2460BA00A0A602 /* OddArticle.swift in Sources */,
+				135E68B01C24611800A0A602 /* String+NSDate.swift in Sources */,
+				135E68941C2460BA00A0A602 /* OddConfig.swift in Sources */,
+				132B776A1C5BCAD400703B21 /* NSData+Object.swift in Sources */,
+				13B4D73F1C8A1A040067590B /* README.md in Sources */,
+				13C1DFA31C2876000091BCBA /* OddConstants.swift in Sources */,
+				135E68991C2460BA00A0A602 /* OddVideo.swift in Sources */,
+				135E689B1C2460BA00A0A602 /* OddMediaObject.swift in Sources */,
+				135E68921C2460BA00A0A602 /* OddEvent.swift in Sources */,
+				135E68961C2460BA00A0A602 /* OddPromotion.swift in Sources */,
+				135E68B71C24611800A0A602 /* NSURL+query.swift in Sources */,
+				135E68801C24608200A0A602 /* OddView.swift in Sources */,
+				135E68B51C24611800A0A602 /* Double+Time.swift in Sources */,
+				135E68B61C24611800A0A602 /* UIApplication+TopVC.swift in Sources */,
+				135E68B31C24611800A0A602 /* UIImage+Gradient.swift in Sources */,
+				135E68911C2460BA00A0A602 /* OddContentStore.swift in Sources */,
+				135E68B11C24611800A0A602 /* NSDate+String.swift in Sources */,
+				130AA71B1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */,
+				135E68A21C2460E900A0A602 /* OddMetricService.swift in Sources */,
+				135E68B41C24611800A0A602 /* UIViewController+TitleImage.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		13B9F4DD1C3AD32B00AC04B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				13B9F5031C3AD35500AC04B1 /* Array+Bounds.swift in Sources */,
+				13B9F4EC1C3AD34B00AC04B1 /* OddConfig.swift in Sources */,
+				13B9F4F31C3AD34B00AC04B1 /* OddConstants.swift in Sources */,
+				13B9F4FD1C3AD35500AC04B1 /* NSObject+ClassName.swift in Sources */,
+				13B9F4FE1C3AD35500AC04B1 /* UIImage+Gradient.swift in Sources */,
+				13B9F4F91C3AD34B00AC04B1 /* APIService.swift in Sources */,
+				13B9F5001C3AD35500AC04B1 /* Double+Time.swift in Sources */,
+				13B9F5021C3AD35500AC04B1 /* NSURL+query.swift in Sources */,
+				13B9F4EB1C3AD34B00AC04B1 /* OddContentStore.swift in Sources */,
+				1347977B1C51424800876D39 /* Keychain.swift in Sources */,
+				134386621C3D574C0042CCC8 /* OddLogger.swift in Sources */,
+				13B9F4F11C3AD34B00AC04B1 /* OddMenuItems.swift in Sources */,
+				132B776B1C5BCAD400703B21 /* NSData+Object.swift in Sources */,
+				13B9F4FF1C3AD35500AC04B1 /* UIViewController+TitleImage.swift in Sources */,
+				13B9F4FC1C3AD35500AC04B1 /* NSDate+String.swift in Sources */,
+				13B9F4EF1C3AD34B00AC04B1 /* OddMediaObjectCollection.swift in Sources */,
+				13B9F4EE1C3AD34B00AC04B1 /* OddVideo.swift in Sources */,
+				13B9F4FB1C3AD35500AC04B1 /* String+NSDate.swift in Sources */,
+				130AA71C1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */,
+				13B9F4FA1C3AD35500AC04B1 /* CMTimeExtension.swift in Sources */,
+				13B9F4ED1C3AD34B00AC04B1 /* OddPromotion.swift in Sources */,
+				13B9F4F71C3AD34B00AC04B1 /* OddView.swift in Sources */,
+				13B9F4F01C3AD34B00AC04B1 /* OddMediaObject.swift in Sources */,
+				13B9F5061C3AD35A00AC04B1 /* OddMetricService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		1353FA861C46F0B200B57A83 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1353FA871C46F0B200B57A83 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1353FA8B1C46F0B200B57A83 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1353FA8C1C46F0B200B57A83 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1353FA8F1C46F0B200B57A83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DebugApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.dogboystudios.DebugApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1353FA901C46F0B200B57A83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DebugApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.dogboystudios.DebugApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		135E686F1C245FFE00A0A602 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		135E68701C245FFE00A0A602 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		135E68721C245FFE00A0A602 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = OddSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_SWIFT_FLAGS = "-DBETA";
+				PRODUCT_BUNDLE_IDENTIFIER = io.oddnetworks.OddSDK;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		135E68731C245FFE00A0A602 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = OddSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_SWIFT_FLAGS = "-DBETA";
+				PRODUCT_BUNDLE_IDENTIFIER = io.oddnetworks.OddSDK;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		135E68D61C24654D00A0A602 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		135E68D71C24654D00A0A602 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		13B9F4E81C3AD32B00AC04B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = OddSDKtvOS/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_CFLAGS = "";
+				OTHER_SWIFT_FLAGS = "-DBETA";
+				PRODUCT_BUNDLE_IDENTIFIER = io.oddnetworks.OddSDKtvOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Debug;
+		};
+		13B9F4E91C3AD32B00AC04B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = OddSDKtvOS/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_CFLAGS = "";
+				OTHER_SWIFT_FLAGS = "-DBETA";
+				PRODUCT_BUNDLE_IDENTIFIER = io.oddnetworks.OddSDKtvOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Release;
+		};
+		13B9F50D1C3ADAA300AC04B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+			};
+			name = Debug;
+		};
+		13B9F50E1C3ADAA300AC04B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1353FA911C46F0B200B57A83 /* Build configuration list for PBXNativeTarget "DebugApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1353FA8F1C46F0B200B57A83 /* Debug */,
+				1353FA901C46F0B200B57A83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		135E68631C245FFE00A0A602 /* Build configuration list for PBXProject "OddSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				135E686F1C245FFE00A0A602 /* Debug */,
+				135E68701C245FFE00A0A602 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		135E68711C245FFE00A0A602 /* Build configuration list for PBXNativeTarget "OddSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				135E68721C245FFE00A0A602 /* Debug */,
+				135E68731C245FFE00A0A602 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		135E68D51C24654D00A0A602 /* Build configuration list for PBXAggregateTarget "Build Framework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				135E68D61C24654D00A0A602 /* Debug */,
+				135E68D71C24654D00A0A602 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		13B9F4E71C3AD32B00AC04B1 /* Build configuration list for PBXNativeTarget "OddSDKtvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13B9F4E81C3AD32B00AC04B1 /* Debug */,
+				13B9F4E91C3AD32B00AC04B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		13B9F50C1C3ADAA300AC04B1 /* Build configuration list for PBXAggregateTarget "Build tvOS Framework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13B9F50D1C3ADAA300AC04B1 /* Debug */,
+				13B9F50E1C3ADAA300AC04B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 135E68601C245FFE00A0A602 /* Project object */;
+}
