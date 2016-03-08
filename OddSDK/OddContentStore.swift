@@ -828,37 +828,33 @@ public typealias jsonArray = Array<jsonObject>
       })
     } else {
       var objects: Array<AnyObject> = Array()
+      var unMatchedIds: Array<String> = []
       
-      var index = 0
       for id: String in ids {
         var match = false
-        
         // check store for existing videos
-        
         for object in self.mediaObjects {
           if let objectId = object.id {
             if objectId == id && useCacheTTL && !object.cacheHasExpired {
               objects.append(object)
               match = true
-              index++
               break
             }
           }
         }
-        
-        // we didn't find this object so fetch it via API
+        // Add to list of objectsIds that need fetching
         if !match {
-          fetchObjectType(type, id: id, callback: { (object) -> () in
-            if object != nil {
-              objects.append(object!)
-            }
-            index++
-            if index == ids.count { callback(objects) }
-          })
+          unMatchedIds.append(id)
         }
-        
-        if index == ids.count { callback(objects) }
       }
+      
+      //fetch the batch of unmatched objects
+      fetchObjectsOfType(type, ids: unMatchedIds, callback: { (fetchedObjects) -> () in
+        fetchedObjects.forEach({ (obj) -> () in
+          objects.append(obj)
+        })
+        callback(objects)
+      })
     }
   }
   
