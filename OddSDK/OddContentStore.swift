@@ -935,6 +935,9 @@ public typealias jsonArray = Array<jsonObject>
   /// if no entities wer found
   public func fetchObjectsOfType ( type: OddMediaObjectType, ids: Array<String>, callback: ( Array<OddMediaObject> ) -> () ) {
     var responseArray: Array<OddMediaObject> = Array()
+    
+    if ids.isEmpty { callback(responseArray) }
+    
     var callbackCount = 0
     for id : String in ids {
       fetchObjectType(type, id: id, callback: { (item) -> () in
