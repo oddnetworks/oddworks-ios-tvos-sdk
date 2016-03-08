@@ -156,8 +156,8 @@ public typealias jsonArray = Array<jsonObject>
   
   /// The id for the featured `OddMediaObject` object in the media objects store
   /// Typically this is an `OddVideo` instance.
-  /// no public access. Clients should access the featuredPromotion via
-  /// the featuredPromotion instance variable
+  /// no public access. Clients should access the featuredMediaObject via
+  /// the featuredMediaObject instance variable
   var featuredMediaObjectId: String?
   
   /// The featured `OddMediaObject` to be displayed by client applications
@@ -167,10 +167,10 @@ public typealias jsonArray = Array<jsonObject>
     }
   }
 
-  /// The id for the featured `OddMediaObject` object in the media objects store
-  /// Typically this is an `OddVideo` instance.
-  /// no public access. Clients should access the featuredPromotion via
-  /// the featuredPromotion instance variable
+  /// The ids for the featured `OddMediaObjectCollection`s in the media objects store
+  ///
+  /// no public access. Clients should access the featuredCollections via
+  /// the featuredCollections instance variable
   var featuredCollectionIds: Array<String>?
   
   /// The featured `OddMediaCollections` to be displayed by client applications
@@ -876,7 +876,7 @@ public typealias jsonArray = Array<jsonObject>
   /// 
   /// See also: `fetchObjectsOfType ( type: String, ids: Array<String>, callback: ( Array<AnyObject> ) -> Void )`
   /// to fetch multiple objects of a given type
-  public func fetchObjectType( type: OddMediaObjectType, id: String, callback: ( AnyObject? ) -> Void ) {
+  public func fetchObjectType( type: OddMediaObjectType, id: String, callback: ( OddMediaObject? ) -> Void ) {
 
     API.get(nil , url: "\(type.toString() )s/\(id)") { (response, error) -> () in
       if error != nil {
@@ -934,14 +934,11 @@ public typealias jsonArray = Array<jsonObject>
   /// - parameter type: String the media object type as defined on the server
   /// ("video" or "collection") are the currently supported types
   /// - parameter id: `Array<String>` the id of the entity to be fetched
-  /// - parameter callback: `( Array<AnyObject> ) -> Void` a callback executed once the search is complete
+  /// - parameter callback: `( Array<OddMediaObject> ) -> Void` a callback executed once the search is complete
   /// The array passed to `callback` will either contain the entities matching the query or be empty
   /// if no entities wer found
-  ///
-  /// Note: the return type of `Array<AnyObject>` will be changing to `Array<OddMediaObject>` in a future
-  /// update
-  public func fetchObjectsOfType ( type: OddMediaObjectType, ids: Array<String>, callback: ( Array<AnyObject> ) -> () ) {
-    var responseArray: Array<AnyObject> = Array()
+  public func fetchObjectsOfType ( type: OddMediaObjectType, ids: Array<String>, callback: ( Array<OddMediaObject> ) -> () ) {
+    var responseArray: Array<OddMediaObject> = Array()
     var callbackCount = 0
     for id : String in ids {
       fetchObjectType(type, id: id, callback: { (item) -> () in
