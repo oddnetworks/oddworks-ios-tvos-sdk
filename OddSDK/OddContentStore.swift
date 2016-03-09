@@ -527,26 +527,38 @@ public typealias jsonArray = Array<jsonObject>
   /// the collections that were created
   ///
   /// - parameter json: `jsonObject` a `jsonObject` containing the data to be parsed
+  ///
+  /// Note: The server may return the featuredCollections as either an array of collections
+  /// or a single collection. We handle both
   func buildFeaturedCollections(json: jsonObject) {
-    if let featuredCollections = json["featuredCollections"] as? jsonObject,
-      json = featuredCollections["data"] as? jsonArray {
-        self.featuredCollectionIds = Array()
-
-        json.forEach({ (data) -> () in
-          if let itemId = data["id"] as? String,
-            itemType = data["type"] as? String {
-              if let newObjectJson = findJsonObjectOfType(itemType, id: itemId) {
-                let result = objectFromJson(newObjectJson)
-                
-                if let mediaObjectCollection = result.object as? OddMediaObjectCollection,
-                  id = mediaObjectCollection.id {
-                    self.featuredCollectionIds?.append(id)
-                    self.mediaObjects.insert(mediaObjectCollection)
-                }
-              }
+    
+    func buildObjects(data: jsonObject) {
+      if let itemId = data["id"] as? String,
+        itemType = data["type"] as? String {
+          if let newObjectJson = findJsonObjectOfType(itemType, id: itemId) {
+            let result = objectFromJson(newObjectJson)
+            
+            if let mediaObjectCollection = result.object as? OddMediaObjectCollection,
+              id = mediaObjectCollection.id {
+                self.featuredCollectionIds?.append(id)
+                self.mediaObjects.insert(mediaObjectCollection)
+            }
           }
+      }
+    }
+    
+    if let featuredCollections = json["featuredCollections"] as? jsonObject {
+      
+      self.featuredCollectionIds = Array()
+
+      if let json = featuredCollections["data"] as? jsonArray {
+        json.forEach({ (data) -> () in
+          buildObjects(data)
         })
-        
+      } else if let data = featuredCollections["data"] as? jsonObject {
+        buildObjects(data)
+      }
+      
     } // featured collections
     
     NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedCollectionsLoadedNotification, object: self ) )
