@@ -96,7 +96,6 @@
 		135E68B61C24611800A0A602 /* UIApplication+TopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */; };
 		135E68B71C24611800A0A602 /* NSURL+query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AC1C24611800A0A602 /* NSURL+query.swift */; };
 		135E68B81C24611800A0A602 /* Array+Bounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AD1C24611800A0A602 /* Array+Bounds.swift */; };
-		13B4D73F1C8A1A040067590B /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 13B4D73E1C8A1A040067590B /* README.md */; };
 		13B9F4E51C3AD32B00AC04B1 /* OddSDKtvOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 13B9F4E41C3AD32B00AC04B1 /* OddSDKtvOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13B9F4EB1C3AD34B00AC04B1 /* OddContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68841C2460BA00A0A602 /* OddContentStore.swift */; };
 		13B9F4EC1C3AD34B00AC04B1 /* OddConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68871C2460BA00A0A602 /* OddConfig.swift */; };
@@ -562,7 +561,6 @@
 				135E68B01C24611800A0A602 /* String+NSDate.swift in Sources */,
 				135E68941C2460BA00A0A602 /* OddConfig.swift in Sources */,
 				132B776A1C5BCAD400703B21 /* NSData+Object.swift in Sources */,
-				13B4D73F1C8A1A040067590B /* README.md in Sources */,
 				13C1DFA31C2876000091BCBA /* OddConstants.swift in Sources */,
 				135E68991C2460BA00A0A602 /* OddVideo.swift in Sources */,
 				135E689B1C2460BA00A0A602 /* OddMediaObject.swift in Sources */,
