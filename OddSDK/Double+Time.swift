@@ -1,6 +1,6 @@
 //
 //  NSTimeInterval+String.swift
-//  PokerCentral
+//  
 //
 //  Created by Patrick McConnell on 9/1/15.
 //  Copyright (c) 2015 Patrick McConnell. All rights reserved.

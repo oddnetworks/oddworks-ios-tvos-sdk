@@ -54,18 +54,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func configureOnContentLoaded() {
     print("Store Info: \( OddContentStore.sharedStore.mediaObjectInfo() )")
+    if let featured = OddContentStore.sharedStore.featuredCollections,
+      collection = featured.first {
+        collection.fetchAllObjects({ (objects) -> Void in
+          print("Objects: \(objects)")
+      })
+    }
+
   }
 
   func initializeSDK() {
     registerForNotifications()
     
-    OddContentStore.sharedStore.API.serverMode = .Production
+    OddContentStore.sharedStore.API.serverMode = .Staging
     
 //    Uncomment to see additional log messages from the SDK.
 //    OddLogger.logLevel = .Info
 
 //    Enter your authToken here
 //    OddContentStore.sharedStore.API.authToken = "YOUR AUTHTOKEN"
+    
+    OddContentStore.sharedStore.API.authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJkZXZpY2VJRCI6ImFiMGUzNTAwLWU1NDQtMTFlNS04MGQxLTY1MTMzMTM1ZDk1MiIsInNjb3BlIjpbImRldmljZSJdLCJpYXQiOjE0NTc0NjI5MDR9.49KEckf_NvAAFmKp6GrC5sqFUAOzmJ1xI6IpzT4UhgY"
 
     OddContentStore.sharedStore.initialize()
   }
