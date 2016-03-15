@@ -1,6 +1,6 @@
 //
 //  OddMediaObject.swift
-//  
+//
 //
 //  Created by Patrick McConnell on 9/9/15.
 //  Copyright (c) 2015 Odd Networks, LLC. All rights reserved.
@@ -9,7 +9,7 @@
 import UIKit
 
 // have to use @objc here to get optional methods
-/// Protocol for media objects to implement that helps with 
+/// Protocol for media objects to implement that helps with
 /// displaying their data in a `UITableviewcell`
 @objc protocol DynamicMediaObject {
   /// The height of the tableviewcell when displaying
@@ -22,14 +22,14 @@ import UIKit
   /// Method called by the `UITableViewController` to allow the media
   /// item to configure the cell accordingly
   ///
-  /// - parameter cell: The cell to be configured. Cell will be of the 
+  /// - parameter cell: The cell to be configured. Cell will be of the
   /// type set in `cellReuseIdentifier`
   func configureCell(cell: UITableViewCell)
   
   /// Optional method to allow the media item to initiate an action
   /// upon being selected from a table view.
   ///
-  /// - parameter vc: The view controller that is the root of the 
+  /// - parameter vc: The view controller that is the root of the
   /// `UITableViewController` that contains the cell. Typically this
   /// is a UINavigationController. This is provided to allow the media
   /// item to push a new view controller on the stack if desired
@@ -50,7 +50,7 @@ import UIKit
 //}
 
 // while we would prefer this was a string type
-// for interoperability with ObjC this must be 
+// for interoperability with ObjC this must be
 // an Int type with a helper to convert from string
 @objc public enum OddMediaObjectType: Int {
   case Video
@@ -104,27 +104,27 @@ import UIKit
       case .External: return "external"
       }
     #endif
-
+    
   }
   
   func toObject(data: jsonObject) -> OddMediaObject {
     #if os(tvOS)
-    switch self {
-    case .Video: return OddVideo.videoFromJson(data)
-    case .LiveStream: return OddVideo.videoFromJson(data)
-    case .Collection: return OddMediaObjectCollection.mediaCollectionFromJson(data)
-    case .Promotion: return OddPromotion.promotionFromJson(data)
-    }
+      switch self {
+      case .Video: return OddVideo.videoFromJson(data)
+      case .LiveStream: return OddVideo.videoFromJson(data)
+      case .Collection: return OddMediaObjectCollection.mediaCollectionFromJson(data)
+      case .Promotion: return OddPromotion.promotionFromJson(data)
+      }
     #else
-    switch self {
-    case .Video: return OddVideo.videoFromJson(data)
-    case .LiveStream: return OddVideo.videoFromJson(data)
-    case .Collection: return OddMediaObjectCollection.mediaCollectionFromJson(data)
-    case .Promotion: return OddPromotion.promotionFromJson(data)
-    case .Article: return OddArticle.articleFromJson(data)
-    case .Event: return OddEvent.eventFromJson(data)
-    case .External: return OddExternal.externalFromJson(data)
-    }
+      switch self {
+      case .Video: return OddVideo.videoFromJson(data)
+      case .LiveStream: return OddVideo.videoFromJson(data)
+      case .Collection: return OddMediaObjectCollection.mediaCollectionFromJson(data)
+      case .Promotion: return OddPromotion.promotionFromJson(data)
+      case .Article: return OddArticle.articleFromJson(data)
+      case .Event: return OddEvent.eventFromJson(data)
+      case .External: return OddExternal.externalFromJson(data)
+      }
     #endif
   }
 }
@@ -133,7 +133,7 @@ import UIKit
 ///
 /// Provides instance variables for common fields
 @objc public class OddMediaObject: NSObject, NSCoding, DynamicMediaObject {
-
+  
   /// The id of the media object in the database
   public var id: String?
   
@@ -141,7 +141,7 @@ import UIKit
   public var assetId: String?
   
   /// Is the user able to access this content (i.e. authorization/entitlement)
-  /// 
+  ///
   /// Note, content is publicly accessible by default. Client applications must
   /// implement methods to check for authorization and set accordingly
   public var accessible: Bool = true
@@ -190,7 +190,7 @@ import UIKit
   ///
   /// Must be overwritten by subclasses
   var contentTypeString: String { return "media" }
-
+  
   /// A string denoting the type of cell to use when displaying this objects information.
   ///
   /// Must be overwritten by subclasses
@@ -210,13 +210,13 @@ import UIKit
   /// Customer specific information
   /// A customer may require data that only their application can make
   /// use of. In these cases this information is passed along in json
-  /// format under the meta tag. The individual fields of the meta 
+  /// format under the meta tag. The individual fields of the meta
   /// section are not accessible directly via this API. It is the
   /// application developers responsibitly to parse this additional
   /// data
   public var meta : Dictionary<String, AnyObject?>?
   
-  /// How long to cache this object for. Based on 
+  /// How long to cache this object for. Based on
   /// HTTP header data.
   public var cacheTime: Int? = nil
   
@@ -317,7 +317,7 @@ import UIKit
     }
     return interval.stringFromTimeInterval()
   }
-
+  
   
   /// Loads the media objects thumbnail image asset
   ///
@@ -327,65 +327,49 @@ import UIKit
   /// callback closure is executed with the image as a parameter
   ///
   /// parameter callback: A closure taking a `UIImage` as a parameter to be executed when the image is loaded
-    public func thumbnail( callback: (UIImage?) -> Void  ) {
-      if _thumbnail == nil {
-  
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) { [ weak self] in
-  
-          if let weakSelf = self {
-            if let link = weakSelf.thumbnailLink {
-              if let thumbnailURL = NSURL(string: link) {
-                if let imgData = NSData(contentsOfURL: thumbnailURL) {
-                  weakSelf._thumbnail = UIImage(data: imgData )
-                  weakSelf._thumbnail?.accessibilityIdentifier = "placeholderId"
+  public func thumbnail( callback: (UIImage?) -> Void  ) {
+    if _thumbnail == nil {
+      if let path = self.thumbnailLink {
+        let request = NSMutableURLRequest(URL: NSURL(string: path)!)
+        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+//        config.HTTPMaximumConnectionsPerHost = 1
+        let session = NSURLSession(configuration: config)
+        request.HTTPMethod = "GET"
+        
+        let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
+          
+          if let e = error {
+            if e.code < -999 {
+              NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "networkConnectionDidFail", object: e) )
+            }
+            callback(nil)
+            return
+          }
+          
+          if let res = response as? NSHTTPURLResponse {
+            if res.statusCode == 200 {
+              if let imageData = data {
+                if let image = UIImage(data: imageData) {
+                  self._thumbnail = image
+                  callback(self._thumbnail)
+                } else {
+                  callback(nil)
                 }
-    
-                dispatch_async(dispatch_get_main_queue(), { [ weakSelf ] in
-                  callback(weakSelf._thumbnail )
-                })
-  
               }
+            } else {
+              callback(nil)
             }
           }
-        }
-      } else {
-        callback(_thumbnail)
+        })
+        
+        task.resume()
       }
+    } else {
+      callback(self._thumbnail)
     }
-
-//  public func thumbnail( callback: (UIImage) -> Void  ) {
-//    if _thumbnail == nil {
-//      
-//      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) { [ weak self] in
-//
-//        if let weakSelf = self {
-//          if let link = weakSelf.thumbnailLink {
-//            if let thumbnailURL = NSURL(string: link) {
-//              if let imgData = NSData(contentsOfURL: thumbnailURL) {
-//                weakSelf._thumbnail = UIImage(data: imgData )
-//                weakSelf._thumbnail?.accessibilityIdentifier = "placeholderId"
-//              }
-//              
-//              // if thumbnail is still nil use our default
-//              if weakSelf._thumbnail == nil {
-//                weakSelf._thumbnail = UIImage(named: "oddworksDefaultThumbnail")
-//              }
-//              
-//              dispatch_async(dispatch_get_main_queue(), { [ weakSelf ] in
-//                callback(weakSelf._thumbnail! )
-//              })
-//              
-//            }
-//          }
-//        }
-//      }
-//    } else {
-//      callback(_thumbnail!)
-//    }
-//  }
+  }
   
-  
-  /// Convenience method to retun all keys in the 
+  /// Convenience method to retun all keys in the
   /// mediaObjects meta dictionary
   public func metaKeys() -> Set<String>? {
     var result = Set<String>()
@@ -425,10 +409,10 @@ import UIKit
   
   /// A method to provide a `UIView` to be used for a header when displayed
   /// in a `UITableView`
-  /// 
-  /// Note: This default implementation provides no view (nil). This 
+  ///
+  /// Note: This default implementation provides no view (nil). This
   /// method is typically only used for `OddMediaObjectsCollection` types
-  /// 
+  ///
   /// - parameter tableView: The `UITableView` that will display the header
   ///
   /// - returns: An optional `UIView` to be used as the header view
