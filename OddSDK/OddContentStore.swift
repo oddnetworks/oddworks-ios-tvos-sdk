@@ -1,6 +1,6 @@
 //
 //  OddContentStore.swift
-//  PokerCentral
+//
 //
 //  Created by Patrick McConnell on 8/6/15.
 //  Copyright (c) 2015 Odd Networks, LLC. All rights reserved.
@@ -631,7 +631,6 @@ public typealias jsonArray = Array<jsonObject>
   //MARK: Menu
   #if os(iOS)
   // this will be moved to menuItem.swift once menu is in the API data
-  // POKER CENTRAL Specific right now...
   func buildDefaultMenu(callback: (Bool) -> () ) {
     self.homeMenu = OddMenu()
     let search = OddMenuItem(title: "Search", type: .Search, objectId: nil)
@@ -843,14 +842,14 @@ public typealias jsonArray = Array<jsonObject>
   /// Note: Objects are first looked for in the local cache (`mediaObjects`) if no matching object is
   /// found in the cache the server will be polled for a matching object. If no objects
   /// are found an empty `array` is returned
-  public func objectsOfType( type: OddMediaObjectType, ids : Array<String>, callback: (Array<AnyObject>) ->Void )  {
+  public func objectsOfType( type: OddMediaObjectType, ids : Array<String>, callback: (Array<OddMediaObject>) ->Void )  {
     
     if self.mediaObjects.isEmpty {
       fetchObjectsOfType(type, ids: ids, callback: { (objects) -> () in
         callback(objects)
       })
     } else {
-      var objects: Array<AnyObject> = Array()
+      var objects: Array<OddMediaObject> = Array()
       var unMatchedIds: Array<String> = []
       
       for id: String in ids {

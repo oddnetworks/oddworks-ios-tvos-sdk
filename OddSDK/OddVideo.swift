@@ -1,6 +1,6 @@
 //
 //  OddVideo.swift
-//  PokerCentral
+//
 //
 //  Created by Patrick McConnell on 7/31/15.
 //  Copyright (c) 2015 Odd Networks, LLC. All rights reserved.
@@ -60,8 +60,8 @@ import UIKit
     let newVideo = OddVideo()
     newVideo.configureWithJson(json)
 
-    newVideo.defaultTitle = "Poker Central Video"
-    newVideo.defaultSubtitle = "Another fine video from Poker Central"
+    newVideo.defaultTitle = "A Video"
+    newVideo.defaultSubtitle = "Another fine video from Odd Networks"
 
     return newVideo
   }
