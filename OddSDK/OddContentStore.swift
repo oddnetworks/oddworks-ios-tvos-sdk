@@ -222,16 +222,14 @@ public typealias jsonArray = Array<jsonObject>
     }
   }
 #endif
-  /// The `Array` of ids for the `OddMenuItemCollections` in the media objects store.
-  /// No public access. Clients should access menu item collections via
-  /// the `menuCollections` instance variable
-  var menuCollectionIds: Array<String>?
+  /// The `Array` of ids for the `OddMediaObjects` in the menu stored in the media objects store.
+  /// No public access. Clients should access menu items via
+  /// the `menuItems` instance variable
+  var menuItemIds: Array<String>?
   
-  // The `Array` of `OddMenuItemCollections` stored in the media objects store
-  public var menuCollections: Array<OddMediaObjectCollection>? {
-    get {
-      return storedMediaObjectsWithIds(menuCollectionIds, mediaType: OddMediaObjectCollection() )
-    }
+    // The `Array` of `OddMediabjects` in the menu stored in the media objects store
+  public var menuItems: Array<OddMediaObject>? {
+    return storedMediaObjectsWithIds(menuItemIds, mediaType: OddMediaObject())
   }
   
   
@@ -321,7 +319,7 @@ public typealias jsonArray = Array<jsonObject>
       self.externalIds?.removeAll()
       self.homeMenu = nil
     #endif
-    self.menuCollectionIds?.removeAll()
+    self.menuItemIds?.removeAll()
   }
   
   /// Loads the OddConfig instance for the OddContentStore
@@ -615,7 +613,7 @@ public typealias jsonArray = Array<jsonObject>
   func buildIncludedMenuMediaObjects(json: Array<jsonObject>) {
     self.eventIds = Array()
     self.articleIds = Array()
-    self.menuCollectionIds = Array()
+    self.menuItemIds = Array()
     self.externalIds = Array()
     
     json.forEach { (includedMediaObject) -> () in
@@ -625,7 +623,7 @@ public typealias jsonArray = Array<jsonObject>
     
     OddLogger.info("Built \(self.eventIds?.count) events")
     OddLogger.info("Built \(self.articleIds?.count) articles")
-    OddLogger.info("Built \(self.menuCollectionIds?.count) featuredMenuCollections")
+    OddLogger.info("Built \(self.menuItemIds?.count) Menu Items")
     OddLogger.info("Built \(self.externalIds?.count) externals")
   }
   #endif
@@ -652,10 +650,23 @@ public typealias jsonArray = Array<jsonObject>
   /// Note: A work in progress. Needs additional server side support
   /// Currently only suppored for iOS apps. No tvOS support
   func buildMenu(json: jsonObject, callback: (Bool) -> Void ) {
-    self.homeMenu = OddMenu()
     if let included = self.included {
       buildIncludedMenuMediaObjects(included)
     }
+    
+    
+    //USED
+    if let relationships = json["relationships"] as? jsonObject, items = relationships["items"] as? jsonObject, data = items["data"] as? Array<jsonObject> {
+      for item in data {
+        if let id = item["id"] as? String {
+          self.menuItemIds?.append(id)
+        }
+      }
+    }
+    
+    
+    //OLD CODE
+    self.homeMenu = OddMenu()
     buildMenuItems(json)
 
     let search = OddMenuItem(title: "Search", type: .Search, objectId: nil)
