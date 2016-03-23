@@ -952,7 +952,7 @@ public typealias jsonArray = Array<jsonObject>
     var callbackCount = 0
     for id : String in ids {
       fetchObjectType(type, id: id, callback: { (item) -> () in
-        callbackCount++
+        callbackCount += 1
         if item is OddVideo {
           if let foundVideo = item as? OddVideo {
             responseArray.append(foundVideo)

@@ -271,7 +271,8 @@ public class OddGateKeeper: NSObject {
   
   func checkForAuthentication() {
     if authAttemptCount < numberOfAuthAttempts {
-      print("Checking for change in auth status: \(++authAttemptCount)")
+      authAttemptCount += 1
+      print("Checking for change in auth status: \(authAttemptCount)")
       fetchAuthenticationToken()
     } else {
       print("Stopping check for change in auth status")
@@ -285,7 +286,7 @@ public class OddGateKeeper: NSObject {
     pollingTimer?.invalidate()
     // timer must be configured on the main thread or it will not fire
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-      self.pollingTimer = NSTimer.scheduledTimerWithTimeInterval(self.authAttemptTimeDelta, target: self, selector: "checkForAuthentication", userInfo: nil, repeats: true)
+      self.pollingTimer = NSTimer.scheduledTimerWithTimeInterval(self.authAttemptTimeDelta, target: self, selector: #selector(OddGateKeeper.checkForAuthentication), userInfo: nil, repeats: true)
     })
     print("Timer started")
   }

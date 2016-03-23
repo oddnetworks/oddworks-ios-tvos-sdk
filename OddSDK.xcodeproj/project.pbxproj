@@ -35,9 +35,6 @@
 		130AA71B1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
 		130AA71C1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
 		130AA71D1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
-		132B776A1C5BCAD400703B21 /* NSData+Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132B77691C5BCAD400703B21 /* NSData+Object.swift */; };
-		132B776B1C5BCAD400703B21 /* NSData+Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132B77691C5BCAD400703B21 /* NSData+Object.swift */; };
-		132B776C1C5BCAD400703B21 /* NSData+Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132B77691C5BCAD400703B21 /* NSData+Object.swift */; };
 		134386611C3D574C0042CCC8 /* OddLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134386601C3D574C0042CCC8 /* OddLogger.swift */; };
 		134386621C3D574C0042CCC8 /* OddLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134386601C3D574C0042CCC8 /* OddLogger.swift */; };
 		1347977A1C51424800876D39 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134797791C51424800876D39 /* Keychain.swift */; };
@@ -522,7 +519,6 @@
 				1353FA991C46F10400B57A83 /* UIApplication+TopVC.swift in Sources */,
 				1353FA9A1C46F10400B57A83 /* NSURL+query.swift in Sources */,
 				1353FA9B1C46F10400B57A83 /* Array+Bounds.swift in Sources */,
-				132B776C1C5BCAD400703B21 /* NSData+Object.swift in Sources */,
 				1347977C1C51424800876D39 /* Keychain.swift in Sources */,
 				1353FA9E1C46F10400B57A83 /* OddMetricService.swift in Sources */,
 				1353FAA21C46F10400B57A83 /* OddContentStore.swift in Sources */,
@@ -560,7 +556,6 @@
 				135E68931C2460BA00A0A602 /* OddArticle.swift in Sources */,
 				135E68B01C24611800A0A602 /* String+NSDate.swift in Sources */,
 				135E68941C2460BA00A0A602 /* OddConfig.swift in Sources */,
-				132B776A1C5BCAD400703B21 /* NSData+Object.swift in Sources */,
 				13C1DFA31C2876000091BCBA /* OddConstants.swift in Sources */,
 				135E68991C2460BA00A0A602 /* OddVideo.swift in Sources */,
 				135E689B1C2460BA00A0A602 /* OddMediaObject.swift in Sources */,
@@ -595,7 +590,6 @@
 				1347977B1C51424800876D39 /* Keychain.swift in Sources */,
 				134386621C3D574C0042CCC8 /* OddLogger.swift in Sources */,
 				13B9F4F11C3AD34B00AC04B1 /* OddMenuItems.swift in Sources */,
-				132B776B1C5BCAD400703B21 /* NSData+Object.swift in Sources */,
 				13B9F4FF1C3AD35500AC04B1 /* UIViewController+TitleImage.swift in Sources */,
 				13B9F4FC1C3AD35500AC04B1 /* NSDate+String.swift in Sources */,
 				13B9F4EF1C3AD34B00AC04B1 /* OddMediaObjectCollection.swift in Sources */,

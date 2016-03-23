@@ -48,19 +48,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   func registerForNotifications() {
     OddLogger.info("Registering For Notifications")
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: "configureOnContentLoaded", name: OddConstants.OddContentStoreCompletedInitialLoadNotification, object: nil)
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.configureOnContentLoaded), name: OddConstants.OddContentStoreCompletedInitialLoadNotification, object: nil)
   }
   
 
   func configureOnContentLoaded() {
     print("Store Info: \( OddContentStore.sharedStore.mediaObjectInfo() )")
-    if let featured = OddContentStore.sharedStore.featuredCollections,
-      collection = featured.first {
-        collection.fetchAllObjects({ (objects) -> Void in
-          print("Objects: \(objects)")
-      })
-    }
-
   }
 
   func initializeSDK() {
@@ -74,8 +67,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //    Enter your authToken here
 //    OddContentStore.sharedStore.API.authToken = "YOUR AUTHTOKEN"
     
-    OddContentStore.sharedStore.API.authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJkZXZpY2VJRCI6ImFiMGUzNTAwLWU1NDQtMTFlNS04MGQxLTY1MTMzMTM1ZDk1MiIsInNjb3BlIjpbImRldmljZSJdLCJpYXQiOjE0NTc0NjI5MDR9.49KEckf_NvAAFmKp6GrC5sqFUAOzmJ1xI6IpzT4UhgY"
-
     OddContentStore.sharedStore.initialize()
   }
   
