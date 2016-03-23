@@ -331,9 +331,13 @@ import UIKit
     if _thumbnail == nil {
       if let path = self.thumbnailLink {
         let request = NSMutableURLRequest(URL: NSURL(string: path)!)
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+// some optimization of this may be possible by configuring the maximum number of connections
+// for your session. Your mileage may vary. Uncomment the next 3 lines and comment line 340 out
+// to adjust number of connections used per sesssion
+//        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
 //        config.HTTPMaximumConnectionsPerHost = 1
-        let session = NSURLSession(configuration: config)
+//        let session = NSURLSession(configuration: config)
+        let session = NSURLSession.sharedSession()
         request.HTTPMethod = "GET"
         
         let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
