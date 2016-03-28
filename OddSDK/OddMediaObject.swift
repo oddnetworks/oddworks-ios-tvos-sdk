@@ -62,6 +62,7 @@ import UIKit
   case Event
   case External
   #endif
+  
   static func fromString(str: String) -> OddMediaObjectType? {
     #if os(tvOS)
       switch str {
@@ -267,7 +268,7 @@ import UIKit
   
   func configureWithJson(json: jsonObject) {
     self.id = json["id"] as? String
-    
+print("CREATED: \(self.id)")
     if let links = json["links"] as? jsonObject,
       selfLink = links["self"] as? String {
         self.link = selfLink

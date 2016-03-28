@@ -978,7 +978,6 @@ public typealias jsonArray = Array<jsonObject>
     }
   }
   
-  
   // MARK: - Helpers
   
   /// Returns the media object in the `mediaStore` with a specified id

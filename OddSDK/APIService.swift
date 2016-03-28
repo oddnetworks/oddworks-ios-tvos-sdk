@@ -99,8 +99,7 @@ public class APIService: NSObject {
   var baseURL: String {
     get {
       switch serverMode {
-      //case .Staging: return "https://device-staging.oddworks.io"
-      case .Staging: return "https://odd-device-api-prod-redis.herokuapp.com"
+      case .Staging: return "https://device-staging.oddworks.io"
       case .Beta: return "https://beta.oddworks.io"
       case .Local: return "http://127.0.0.1:8000"
       default: return "https://device.oddworks.io"
