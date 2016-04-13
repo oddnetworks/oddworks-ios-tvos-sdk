@@ -181,6 +181,9 @@ import UIKit
   /// The date the content was released
   public var releaseDate: String? // convert to date object
   
+  /// The date the media object was downloaded to the device
+  public var downloadDate: NSDate?
+  
   /// A placeholder string for the title
   public var defaultTitle = "OddNetworks Media Object"
   
@@ -249,6 +252,7 @@ import UIKit
     coder.encodeObject(self.urlString, forKey: "urlString")
     coder.encodeObject(self.duration, forKey: "duration")
     coder.encodeObject(self.subtitle, forKey: "subtitle")
+    coder.encodeObject(self.downloadDate, forKey: "downloadDate")
   }
   
   // Method for saving Media Objects
@@ -262,13 +266,14 @@ import UIKit
     self.urlString = decoder.decodeObjectForKey("urlString") as? String
     self.duration = decoder.decodeObjectForKey("duration") as? Int
     self.subtitle = decoder.decodeObjectForKey("subtitle") as? String
+    self.downloadDate = decoder.decodeObjectForKey("downloadDate") as? NSDate
   }
   
   
   
   func configureWithJson(json: jsonObject) {
     self.id = json["id"] as? String
-print("CREATED: \(self.id)")
+//print("CREATED: \(self.id)")
     if let links = json["links"] as? jsonObject,
       selfLink = links["self"] as? String {
         self.link = selfLink
