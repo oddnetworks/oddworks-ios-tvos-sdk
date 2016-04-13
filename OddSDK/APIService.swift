@@ -99,8 +99,8 @@ public class APIService: NSObject {
   var baseURL: String {
     get {
       switch serverMode {
-      //case .Staging: return "https://device-staging.oddworks.io"
-      case .Staging: return "https://odd-device-api-prod-redis.herokuapp.com"
+      case .Staging: return "https://device-staging.oddworks.io"
+//      case .Production: return "https://odd-device-api-prod-redis.herokuapp.com"
       case .Beta: return "https://beta.oddworks.io"
       case .Local: return "http://127.0.0.1:8000"
       default: return "https://device.oddworks.io"
@@ -248,7 +248,7 @@ public class APIService: NSObject {
       
       if let e = error {
         if e.code < -999 { // NSURLError.NotConnectedToInternet.rawValue {
-          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "networkConnectionDidFail", object: e) )
+          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddConnectionOfflineNotification, object: e) )
         }
         callback(nil, e)
         return
@@ -266,10 +266,12 @@ public class APIService: NSObject {
           cacheTime = Int(cache)
         }
 
-        //        if res.statusCode == 401 { // unauthorized
-        //          println("Error server responded with 401: Unauthorized")
-        //          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "errorUnauthorizedNotification", object: nil))
-        //        }
+        if res.statusCode == 401 { // unauthorized
+          print("Error server responded with 401: Unauthorized to \(url)")
+          OddGateKeeper.sharedKeeper.blowAwayCredentials()
+          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "unauthorizedResponseReturned", object: nil))
+        }
+        
         if res.statusCode == 201 {
           OddLogger.info("Server responded with \(res.statusCode). Object created.")
           callback(nil, nil)

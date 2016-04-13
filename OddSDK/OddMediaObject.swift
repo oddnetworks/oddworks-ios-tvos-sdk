@@ -344,7 +344,7 @@ import UIKit
           
           if let e = error {
             if e.code < -999 {
-              NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "networkConnectionDidFail", object: e) )
+              NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddImageLoadDidFail, object: e) )
             }
             callback(nil)
             return

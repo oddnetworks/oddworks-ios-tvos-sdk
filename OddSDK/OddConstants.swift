@@ -53,4 +53,10 @@ import Foundation
   
   // The notification posted by the 'OddGateKeeper' if it receives an error (excluding 401) when checking for auth token
   public static let OddAuthenticationErrorCheckingStateNotification = "OddAuthenticationErrorCheckingStateNotification"
+  
+  // The notification posted by 'APIService' when they get an offline error
+  public static let OddConnectionOfflineNotification = "OddConnectionOfflineNotification"
+  
+  // The notification posted by 'OddMediaObject' when an image doesn't load
+  public static let OddImageLoadDidFail = "OddImageLoadDidFail"
 }

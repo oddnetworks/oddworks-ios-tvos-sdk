@@ -216,6 +216,16 @@ public class OddGateKeeper: NSObject {
     }
   }
   
+  public func blowAwayCredentials() {
+    self.authenticationCredentials.updateAuthenticationCredentials( url: nil,
+      userCode: nil,
+      deviceToken: nil,
+      state: .Uninitialized,
+      accessToken: nil,
+      entitlementCredentials: nil
+    )
+  }
+  
   public func fetchAuthenticationToken() {
     print("checking for Authentication")
   
