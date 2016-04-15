@@ -172,6 +172,9 @@ import UIKit
   /// A URL string to a thumbnail image to be used in conjunction with the media object
   public var thumbnailLink: String?
   
+  /// A customizable URL string that enables formatting on the thumbnailLink
+  public var formattedThumbnailLink: String?
+  
   /// The thumbnail image asset for the media object.
   ///
   /// Fetched as needed. No public access. Client applications should access
@@ -333,9 +336,20 @@ import UIKit
   /// callback closure is executed with the image as a parameter
   ///
   /// parameter callback: A closure taking a `UIImage` as a parameter to be executed when the image is loaded
-  public func thumbnail( callback: (UIImage?) -> Void  ) {
-    if _thumbnail == nil {
-      if let path = self.thumbnailLink {
+  public func thumbnail(callback: (UIImage?) -> Void  ) {
+    let storedThumbnail = getThumbnail()
+    if let thumbnail = storedThumbnail {
+      callback(thumbnail)
+    } else {
+      var path: String?
+      // allows developer to override the thumbnail link with custom formatting
+      if let thumbnailLink = thumbnailLink {
+        path = thumbnailLink
+      }
+      if let formattedPath = self.formattedThumbnailLink {
+        path = formattedPath
+      }
+      if let path = path {
         let request = NSMutableURLRequest(URL: NSURL(string: path)!)
 // some optimization of this may be possible by configuring the maximum number of connections
 // for your session. Your mileage may vary. Uncomment the next 3 lines and comment line 340 out
@@ -360,8 +374,8 @@ import UIKit
             if res.statusCode == 200 {
               if let imageData = data {
                 if let image = UIImage(data: imageData) {
-                  self._thumbnail = image
-                  callback(self._thumbnail)
+                  self.setThumbnail(image)
+                  callback(image)
                 } else {
                   callback(nil)
                 }
@@ -371,11 +385,8 @@ import UIKit
             }
           }
         })
-        
         task.resume()
       }
-    } else {
-      callback(self._thumbnail)
     }
   }
   
@@ -427,6 +438,19 @@ import UIKit
   ///
   /// - returns: An optional `UIView` to be used as the header view
   func viewForTableViewHeader(tableView: UITableView) -> UIView? {
+    return nil
+  }
+  
+  func setThumbnail(image: UIImage) {
+    if let url = self.thumbnailLink {
+      OddContentStore.sharedStore.imageCache.setObject(image, forKey: url)
+    }
+  }
+  
+  func getThumbnail() -> UIImage? {
+    if let url = self.thumbnailLink {
+      return OddContentStore.sharedStore.imageCache.objectForKey(url) as? UIImage
+    }
     return nil
   }
   

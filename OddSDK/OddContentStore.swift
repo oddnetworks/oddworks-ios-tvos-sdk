@@ -243,6 +243,8 @@ public typealias jsonArray = Array<jsonObject>
   var homeMenu: OddMenu = OddMenu()
   #endif
   
+  var imageCache = NSCache()
+  
 
   /// Determines which view should be fetched via API.
   /// Depending on client apps need for authentication
