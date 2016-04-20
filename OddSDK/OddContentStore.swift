@@ -12,6 +12,12 @@ import UIKit
 public typealias jsonObject = Dictionary<String, AnyObject>
 public typealias jsonArray = Array<jsonObject>
 
+enum OddFeatureType {
+  case Media
+  case Collection
+  case Promotion
+}
+
 /// Class to load and store the various OddMediaObject types
 /// Applications should only maintain one instance of the
 /// content store and access that instance through the
@@ -140,7 +146,7 @@ public typealias jsonArray = Array<jsonObject>
   var responseData: jsonObject?
   
   /// Temporary object to hold to json response data during the parsing process
-  var included: Array<jsonObject>?
+//  var included: Array<jsonObject>?
   
   /// The id for the featured `OddPromotion` object in the media objects store
   /// no public access. Clients should access the featuredPromotion via 
@@ -311,7 +317,7 @@ public typealias jsonArray = Array<jsonObject>
     self.config = nil
     self.mediaObjects.removeAll()
     self.responseData = nil
-    self.included?.removeAll()
+//    self.included?.removeAll()
     self.featuredPromotionId = nil
     self.featuredMediaObjectId = nil
     self.featuredCollectionIds?.removeAll()
@@ -375,21 +381,21 @@ public typealias jsonArray = Array<jsonObject>
   /// be posted later when the parsing process is complete
   func loadHomeView () {
     if let viewId = self.viewToLoad {
-      self.API.get( nil, url: "views/\(viewId)?include=4") { (response, error) -> () in
+      self.API.get( nil, url: "views/\(viewId)") { (response, error) -> () in
         if error != nil {
           OddLogger.error("Error fetching view: \(viewId)")
           NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddErrorFetchingHomeViewNotification, object: self, userInfo: nil)
         } else {
           OddLogger.info("Fetched View Info building object graph...")
           if let json = response as? jsonObject,
-            data = json["data"] as? jsonObject,
-            included = json["included"] as? Array<jsonObject> {
+            data = json["data"] as? jsonObject {
+//            included = json["included"] as? Array<jsonObject> {
               OddLogger.info("JSON: \(json)")
 //                              OddLogger.info("VIEW DATA: \(data)")
               self.responseData = data
               //                OddLogger.info("INCLUDED: \(included)")
-              self.included = included
-              
+//              self.included = included
+
               self.buildObjectGraph()
           }
         }
@@ -413,21 +419,21 @@ public typealias jsonArray = Array<jsonObject>
   func loadMenuView( callback: (Bool) -> () ) {
     #if os(iOS)
     if let viewId = self.config?.menuViewId {
-      API.get(nil, url: "views/\(viewId)?include=2") { (response, error) -> () in
+      API.get(nil, url: "views/\(viewId)") { (response, error) -> () in
         if error != nil {
           OddLogger.error("Error fetching menu view: \(viewId)")
           NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddErrorFetchingMenuViewNotification, object: self, userInfo: nil)
         } else {
           OddLogger.info("Fetched Menu View Info building object graph...")
           if let json = response as? jsonObject,
-            data = json["data"] as? jsonObject,
-            included = json["included"] as? Array<jsonObject> {
+            data = json["data"] as? jsonObject {
+//            included = json["included"] as? Array<jsonObject> {
               OddLogger.info("menu data: \(data)")
               self.responseData = data
-              self.included = included
-              self.buildMenu(data) { (complete) in
-                callback(true)
-              }
+//              self.included = included
+//              self.buildMenu(data) { (complete) in
+//                callback(true)
+//              }
           }
         }
       }
@@ -456,22 +462,25 @@ public typealias jsonArray = Array<jsonObject>
   func buildObjectGraph() {
     if let relationships = self.responseData?["relationships"] as? jsonObject {
       
-      self.buildFeaturedMediaObject(relationships)
+//      self.buildFeaturedMediaObject(relationships)
+      self.buildFeature(.Media, json: relationships)
       
 //      self.buildSplashCollection(relationships)
       
-      self.buildFeaturedCollections(relationships)
+//      self.buildFeaturedCollections(relationships)
+      self.buildFeature(.Collection, json: relationships)
       
-      self.buildFeaturedPromotion(relationships)
+//      self.buildFeaturedPromotion(relationships)
+      self.buildFeature(.Promotion, json: relationships)
       
     } // relationships
     
-    if let included = self.included {
-      OddLogger.info("******** HAVE INCLUDED ********")
-      buildIncludedMediaObjects(included)
-    } else {
-      OddLogger.info("??????? NO INCLUDED ???????")
-    }
+//    if let included = self.included {
+//      OddLogger.info("******** HAVE INCLUDED ********")
+//      buildIncludedMediaObjects(included)
+//    } else {
+//      OddLogger.info("??????? NO INCLUDED ???????")
+//    }
     
     initialDataLoadComplete = true
     NSNotificationCenter.defaultCenter().postNotification( NSNotification(name: OddConstants.OddContentStoreCompletedInitialLoadNotification, object: self) )
@@ -483,22 +492,61 @@ public typealias jsonArray = Array<jsonObject>
   /// Upon success an OddFeaturedMediaObjectLoadedNotification is posted
   ///
   /// - parameter json: `jsonObject` a `jsonObject` containing the data to be parsed
-  func buildFeaturedMediaObject(json: jsonObject) {
-    if let featuredMediaObject = json["featuredMedia"] as? jsonObject {
-      if let data = featuredMediaObject["data"] as? jsonObject {
-        if let itemId = data["id"] as? String,
-          itemType = data["type"] as? String {
-            if let newObjectJson = findJsonObjectOfType(itemType, id: itemId) {
-              let result = objectFromJson(newObjectJson)
-              if let object = result.object {
-                self.featuredMediaObjectId = itemId
-                self.mediaObjects.insert(object)
-                NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedMediaObjectLoadedNotification, object: self ) )
-              }
-            } // newObjectJson
-        } // itemId
-      }
+//  func buildFeaturedMediaObject(json: jsonObject) {
+//    if let featuredMediaObject = json["featuredMedia"] as? jsonObject {
+//      if let data = featuredMediaObject["data"] as? jsonObject {
+//        if let itemId = data["id"] as? String,
+//          itemType = data["type"] as? String {
+//            if let newObjectJson = findJsonObjectOfType(itemType, id: itemId) {
+//              let result = objectFromJson(newObjectJson)
+//              if let object = result.object {
+//                self.featuredMediaObjectId = itemId
+//                self.mediaObjects.insert(object)
+//                NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedMediaObjectLoadedNotification, object: self ) )
+//              }
+//            } // newObjectJson
+//        } // itemId
+//      }
+//    }
+//  }
+  
+  func buildFeatureDispatch(featureType: OddFeatureType, json: jsonObject) {
+    switch featureType {
+    case .Media: print("Media: \(json["featuredMedia"])")
+    case .Collection: print("Collection: \(json["featuredCollections"])")
+    case .Promotion: print("Promo: \(json["promotion"])")
     }
+  }
+  
+  func buildFeature(featureType: OddFeatureType, json: jsonObject) {
+    guard let data = json["data"] as? jsonObject,
+      let itemId = data["id"] as? String,
+      let itemType = data["type"] as? String,
+      let theType = OddMediaObjectType.fromString(itemType) else { return }
+    
+    self.fetchObjectType(theType, id: itemId, callback: { (mediaObject) in
+      switch featureType {
+      case .Media:
+        if let mediaObject = mediaObject  {
+          self.featuredMediaObjectId = itemId
+          self.mediaObjects.insert(mediaObject)
+          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedMediaObjectLoadedNotification, object: self ) )
+        }
+      case .Collection:
+        if let collection = mediaObject as? OddMediaObjectCollection {
+          self.featuredCollectionIds = [itemId]
+          self.mediaObjects.insert(collection)
+          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedCollectionsLoadedNotification, object: self ) )
+        }
+      
+      case .Promotion:
+        if let promo = mediaObject as? OddPromotion {
+          self.featuredPromotionId = itemId
+          self.mediaObjects.insert(promo)
+          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedPromotionLoadedNotification, object: self ) )
+        }
+      }
+    })
   }
   
   /*
@@ -530,64 +578,64 @@ public typealias jsonArray = Array<jsonObject>
   ///
   /// Note: The server may return the featuredCollections as either an array of collections
   /// or a single collection. We handle both
-  func buildFeaturedCollections(json: jsonObject) {
-    
-    func buildObjects(data: jsonObject) {
-      if let itemId = data["id"] as? String,
-        itemType = data["type"] as? String {
-          if let newObjectJson = findJsonObjectOfType(itemType, id: itemId) {
-            let result = objectFromJson(newObjectJson)
-            
-            if let mediaObjectCollection = result.object as? OddMediaObjectCollection,
-              id = mediaObjectCollection.id {
-                self.featuredCollectionIds?.append(id)
-                self.mediaObjects.insert(mediaObjectCollection)
-            }
-          }
-      }
-    }
-    
-    if let featuredCollections = json["featuredCollections"] as? jsonObject {
-      
-      self.featuredCollectionIds = Array()
-
-      if let json = featuredCollections["data"] as? jsonArray {
-        json.forEach({ (data) -> () in
-          buildObjects(data)
-        })
-      } else if let data = featuredCollections["data"] as? jsonObject {
-        buildObjects(data)
-      }
-      
-    } // featured collections
-    
-    NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedCollectionsLoadedNotification, object: self ) )
-    OddLogger.info("Created \(self.featuredCollectionIds?.count) featured collections")
-  }
+//  func buildFeaturedCollections(json: jsonObject) {
+//    
+//    func buildObjects(data: jsonObject) {
+//      if let itemId = data["id"] as? String,
+//        itemType = data["type"] as? String {
+//          if let newObjectJson = findJsonObjectOfType(itemType, id: itemId) {
+//            let result = objectFromJson(newObjectJson)
+//            
+//            if let mediaObjectCollection = result.object as? OddMediaObjectCollection,
+//              id = mediaObjectCollection.id {
+//                self.featuredCollectionIds?.append(id)
+//                self.mediaObjects.insert(mediaObjectCollection)
+//            }
+//          }
+//      }
+//    }
+//    
+//    if let featuredCollections = json["featuredCollections"] as? jsonObject {
+//      
+//      self.featuredCollectionIds = Array()
+//
+//      if let json = featuredCollections["data"] as? jsonArray {
+//        json.forEach({ (data) -> () in
+//          buildObjects(data)
+//        })
+//      } else if let data = featuredCollections["data"] as? jsonObject {
+//        buildObjects(data)
+//      }
+//      
+//    } // featured collections
+//    
+//    NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedCollectionsLoadedNotification, object: self ) )
+//    OddLogger.info("Created \(self.featuredCollectionIds?.count) featured collections")
+//  }
   
   /// Builds the `featuredPromotion` for the current view
   ///
   /// Upon success, posts an OddFeaturedPromotionLoadedNotification
   ///
   /// - parameter json: `jsonObject` a `jsonObject` containing the data to be parsed
-  func buildFeaturedPromotion(json: jsonObject) {
-    if let featuredPromo = json["promotion"] as? jsonObject,
-      data = featuredPromo["data"] as? jsonObject,
-      promoId = data["id"] as? String {
-        if let promoJson = findJsonObjectOfType("promotion", id: promoId) {
-          let newPromo = OddPromotion.promotionFromJson(promoJson)
-          if let meta = featuredPromo["meta"], promoTimer = meta["displayDuration"] as? Double {
-            newPromo.timer = promoTimer
-          }
-        
-          self.mediaObjects.insert(newPromo)
-          self.featuredPromotionId = promoId
-          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedPromotionLoadedNotification, object: self ) )
-        }
-    } else {
-      self.featuredPromotionId = nil
-    }
-  }
+//  func buildFeaturedPromotion(json: jsonObject) {
+//    if let featuredPromo = json["promotion"] as? jsonObject,
+//      data = featuredPromo["data"] as? jsonObject,
+//      promoId = data["id"] as? String {
+//        if let promoJson = findJsonObjectOfType("promotion", id: promoId) {
+//          let newPromo = OddPromotion.promotionFromJson(promoJson)
+//          if let meta = featuredPromo["meta"], promoTimer = meta["displayDuration"] as? Double {
+//            newPromo.timer = promoTimer
+//          }
+//        
+//          self.mediaObjects.insert(newPromo)
+//          self.featuredPromotionId = promoId
+//          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedPromotionLoadedNotification, object: self ) )
+//        }
+//    } else {
+//      self.featuredPromotionId = nil
+//    }
+//  }
   
   
   /// Builds the related `OddMediaObjects` for the current view.
@@ -651,37 +699,37 @@ public typealias jsonArray = Array<jsonObject>
   ///
   /// Note: A work in progress. Needs additional server side support
   /// Currently only suppored for iOS apps. No tvOS support
-  func buildMenu(json: jsonObject, callback: (Bool) -> Void ) {
-    if let included = self.included {
-      buildIncludedMenuMediaObjects(included)
-    }
-    
-    
-    //USED
-    if let relationships = json["relationships"] as? jsonObject, items = relationships["items"] as? jsonObject, data = items["data"] as? Array<jsonObject> {
-      for item in data {
-        if let id = item["id"] as? String {
-          self.menuItemIds?.append(id)
-        }
-      }
-    }
-    
-    
-    //OLD CODE
-    self.homeMenu = OddMenu()
-    buildMenuItems(json)
-
-    let search = OddMenuItem(title: "Search", type: .Search, objectId: nil)
-    let home = OddMenuItem(title: "Home", type: .Home, objectId: nil)
-    var menuItems: Array<OddMenuItem> = [ search, home ]
-    
-    menuItems += buildMenuItems(json)
-    
-    let links = OddMenuItemCollection(title: nil, menuItems: menuItems)
-    self.homeMenu.menuItemCollections.append(links)
-    
-    callback(true)
-  }
+//  func buildMenu(json: jsonObject, callback: (Bool) -> Void ) {
+//    if let included = self.included {
+//      buildIncludedMenuMediaObjects(included)
+//    }
+//    
+//    
+//    //USED
+//    if let relationships = json["relationships"] as? jsonObject, items = relationships["items"] as? jsonObject, data = items["data"] as? Array<jsonObject> {
+//      for item in data {
+//        if let id = item["id"] as? String {
+//          self.menuItemIds?.append(id)
+//        }
+//      }
+//    }
+//    
+//    
+//    //OLD CODE
+//    self.homeMenu = OddMenu()
+//    buildMenuItems(json)
+//
+//    let search = OddMenuItem(title: "Search", type: .Search, objectId: nil)
+//    let home = OddMenuItem(title: "Home", type: .Home, objectId: nil)
+//    var menuItems: Array<OddMenuItem> = [ search, home ]
+//    
+//    menuItems += buildMenuItems(json)
+//    
+//    let links = OddMenuItemCollection(title: nil, menuItems: menuItems)
+//    self.homeMenu.menuItemCollections.append(links)
+//    
+//    callback(true)
+//  }
   
   /// Builds the individual `OddMenuItems` in the json for an `OddMenuItemCollection`
   /// - parameter json: `jsonObject` a `jsonObject` containing the data to be parsed
@@ -689,24 +737,24 @@ public typealias jsonArray = Array<jsonObject>
   ///
   /// Note: A work in progress. Needs additional server side support
   /// Currently only suppored for iOS apps. No tvOS support
-  func buildMenuItems(json: jsonObject) -> Array<OddMenuItem> {
-    var itemArray: Array<OddMenuItem> = []
-    if let relationships = json["relationships"] as? jsonObject, items = relationships["items"] as? jsonObject, data = items["data"] as? Array<jsonObject> {
-      for item in data {
-        if let id = item["id"] as? String, type = item["type"] as? String {
-          //NO, need to search included
-          if type != "view" {
-            if let object = self.findJsonObjectOfType(type, id: id) {
-              var newItem = OddMenuItem()
-              newItem.menuItemFromJson(object)
-              itemArray.append(newItem)
-            }
-          }
-        }
-      }
-    }
-    return itemArray
-  }
+//  func buildMenuItems(json: jsonObject) -> Array<OddMenuItem> {
+//    var itemArray: Array<OddMenuItem> = []
+//    if let relationships = json["relationships"] as? jsonObject, items = relationships["items"] as? jsonObject, data = items["data"] as? Array<jsonObject> {
+//      for item in data {
+//        if let id = item["id"] as? String, type = item["type"] as? String {
+//          //NO, need to search included
+//          if type != "view" {
+//            if let object = self.findJsonObjectOfType(type, id: id) {
+//              var newItem = OddMenuItem()
+//              newItem.menuItemFromJson(object)
+//              itemArray.append(newItem)
+//            }
+//          }
+//        }
+//      }
+//    }
+//    return itemArray
+//  }
   #endif
   
   /// Builds an `OddMediaObject` of a type specified in the provided `jsonObject`
@@ -818,19 +866,19 @@ public typealias jsonArray = Array<jsonObject>
   /// - parameter id: The id of the item to find
   ///
   /// - returns: jsonObject? The media object found or nil if none is found
-  func findJsonObjectOfType(type: String, id: String) -> jsonObject? {
-    if let included = self.included {
-      for include: jsonObject in included {
-        if let type = include["type"] as? String,
-          anId = include["id"] as? String {
-            if type == type && anId == id {
-              return include
-            }
-        }
-      }
-    }
-    return nil
-  }
+//  func findJsonObjectOfType(type: String, id: String) -> jsonObject? {
+//    if let included = self.included {
+//      for include: jsonObject in included {
+//        if let type = include["type"] as? String,
+//          anId = include["id"] as? String {
+//            if type == type && anId == id {
+//              return include
+//            }
+//        }
+//      }
+//    }
+//    return nil
+//  }
   
   
   /// Locates media objects by type and id

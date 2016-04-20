@@ -101,7 +101,7 @@ public class APIService: NSObject {
       switch serverMode {
       case .Staging: return "https://device-staging.oddworks.io"
       case .Beta: return "https://beta.oddworks.io"
-      case .Local: return "http://127.0.0.1:8000"
+      case .Local: return "http://127.0.0.1:3000"
       default: return "https://device.oddworks.io"
       }
     }
@@ -115,7 +115,7 @@ public class APIService: NSObject {
   /// 
   /// This string is a combination of the `baseURL` and the currently supported 
   /// API version
-  var apiURL: String { return "\(baseURL)/v2/" }
+  var apiURL: String { return "\(baseURL)/" }
   
   /// A `String` built from various device infomation fields to be sent to the API server 
   /// with each request

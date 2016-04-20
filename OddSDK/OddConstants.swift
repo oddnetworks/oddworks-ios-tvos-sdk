@@ -36,7 +36,7 @@ import Foundation
   public static let OddFeaturedMediaObjectLoadedNotification = "OddFeaturedMediaObjectLoadedNotification"
   
   /// The notification posted by the `OddContentStore` after the featured collections have been loaded
-  public static let OddFeaturedCollectionsLoadedNotification = "OddFeaturedCollectionsLoadedNotifications"
+  public static let OddFeaturedCollectionsLoadedNotification = "OddFeaturedCollectionsLoadedNotification"
   
   /// The notification posted by the `OddContentStore` after the featured promotion has been loaded
   public static let OddFeaturedPromotionLoadedNotification = "OddFeaturedPromotionLoadedNotification"
