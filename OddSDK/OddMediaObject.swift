@@ -182,7 +182,7 @@ import UIKit
   var _thumbnail: UIImage?
   
   /// The date the content was released
-  public var releaseDate: String? // convert to date object
+  public var releaseDate: NSDate? // convert to date object
   
   /// The date the media object was downloaded to the device
   public var downloadDate: NSDate?
@@ -289,7 +289,8 @@ import UIKit
       self.subtitle = attribs["subtitle"] as? String
       self.urlString = attribs["url"] as? String
       self.duration = attribs["duration"] as? Int
-      self.releaseDate = attribs["releaseDate"] as? String
+      let releaseDateStr = attribs["releaseDate"] as? String
+      self.releaseDate = releaseDateStr?.toDateFromFormatString("yyyy-MM-dd'T'HH:mm:ssZ")
       if let images = attribs["images"] as? jsonObject {
         self.thumbnailLink = images["aspect16x9"] as? String
       }
