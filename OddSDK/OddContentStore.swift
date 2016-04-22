@@ -870,7 +870,7 @@ public typealias jsonArray = Array<jsonObject>
         if !match {
           unMatchedIds.append(id)
         }
-      }
+      } // check store complete
       
       //fetch the batch of unmatched objects
       fetchObjectsOfType(type, ids: unMatchedIds, callback: { (fetchedObjects) -> () in
