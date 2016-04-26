@@ -290,23 +290,22 @@ enum OddFeatureType {
     }
   }
   
-  /// Initializes the content store. If the config is successfully loaded upon completion the
-  /// OddContentStore instance will contain an instance of OddConfig. If the loading of the
-  /// config is successful this method will call `fetchViewInfo()` to begin loading the home 
-  /// view and associated objects
-  public func initialize() {
+  func showSDKInfo() {
     #if BETA
       showVersionInfo(beta: true)
     #else
       showVersionInfo()
     #endif
+  }
+  
+  /// Initializes the content store. If the config is successfully loaded upon completion the
+  /// OddContentStore instance will contain an instance of OddConfig. If the loading of the
+  /// config is successful this method will call `fetchViewInfo()` to begin loading the home 
+  /// view and associated objects
+  public func initialize() {
     OddLogger.info("INITIALIZE CONTENT STORE")
-    fetchConfig { (newConfig) -> () in
-      if newConfig != nil {
-        OddMetricService.postAppInitMetric()
-        self.fetchViewInfo()
-      }
-    }
+    self.showSDKInfo()
+    fetchConfig()
   }
   
   public func resetStore() {
@@ -339,23 +338,20 @@ enum OddFeatureType {
   ///
   /// Callback will be executed with the config instance or nil
   /// depending on the success of the loading call
-  func fetchConfig( callback: (OddConfig?) -> Void ) {
+  func fetchConfig() {
     OddLogger.info("FETCHING CONFIG")
     API.get( nil, url: "config") { ( response, error ) -> () in
       if let e = error {
         OddLogger.error("Error fetching config: \(e.localizedDescription)")
         NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddErrorFetchingConfigNotification, object: self, userInfo: nil)
-        callback(nil)
       } else {
-        if let json = response as? Dictionary<String, AnyObject> {
-          OddLogger.info("CONFIG: \(json)")
-          if let newConfig = OddConfig.configFromJson(json) {
-            self.config = newConfig
-            callback(newConfig)
-          } else {
-            callback(nil)
-          }
+        guard let json = response as? jsonObject,
+          let newConfig = OddConfig.configFromJson(json) else {
+            NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddErrorFetchingConfigNotification, object: self, userInfo: nil)
+            return
         }
+        self.config = newConfig
+        NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddFetchedConfigNotification, object: self, userInfo: ["config" : newConfig])
       }
     }
   }

@@ -15,7 +15,8 @@ import Security
 struct Keychain {
   
   static func serviceName() -> String {
-    let bundleName = NSBundle.mainBundle().infoDictionary!["CFBundleName"] as! String
+    // we return a default in case the SDK is run in a unit test with no bundle. derp.
+    guard let bundleName = NSBundle.mainBundle().infoDictionary!["CFBundleName"] as? String else { return "OddKeychainService_test" }
     return "OddKeychainService_\(bundleName)"
   }
   

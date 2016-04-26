@@ -22,6 +22,9 @@ import Foundation
   
   /// The notification posted by the `OddContentStore` when there is an error fetching the app config
   public static let OddErrorFetchingConfigNotification = "OddErrorFetchingConfigNotification"
+  
+  /// The notification posted by the `OddContentStore` when the `OddConfig` has been successfully fetched from the server
+  public static let OddFetchedConfigNotification = "OddFetchedConfigNotification"
 
   /// The notification posted by the `OddContentStore` when there is an error fetching the main/home view information
   public static let OddErrorFetchingHomeViewNotification = "OddErrorFetchingHomeViewNotification"
