@@ -416,10 +416,10 @@ public class OddGateKeeper: NSObject {
 
   public func autoLoginWithURL(url: String, success: (Bool) -> Void) {
     let defaults = NSUserDefaults.standardUserDefaults()
-    guard let name = defaults.stringForKey(OddConstants.kOddLoginName),
+    guard let email = defaults.stringForKey(OddConstants.kOddLoginName),
       let password = defaults.stringForKey(OddConstants.kOddLoginPassword) else { success(false); return }
-    
-    self.loginWithURL(url, email: name, password: password) { (result, error) -> () in
+    print("Attempting autologin with: \(email) - \(password)")
+    self.loginWithURL(url, email: email, password: password) { (result, error) -> () in
       success(result)
     }
   }
@@ -439,10 +439,21 @@ public class OddGateKeeper: NSObject {
           self.userMeta = meta
           OddLogger.info("Received Login Meta: \(self.userMeta)");
         }
+        if success {
+          self.updateLoginCredentialsWithEmail(email, password: password)
+        }
         OddLogger.info("Login User Result: \(success)")
         callback(success, nil)
       }
     }
+  }
+  
+  func updateLoginCredentialsWithEmail(email: String, password: String) {
+    print("Saving login info")
+    let defaults = NSUserDefaults.standardUserDefaults()
+    defaults.setValue(email, forKey: OddConstants.kOddLoginName)
+    defaults.setValue(password, forKey: OddConstants.kOddLoginPassword)
+    defaults.synchronize()
   }
   
 }
