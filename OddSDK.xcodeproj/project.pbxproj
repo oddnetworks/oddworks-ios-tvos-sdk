@@ -131,7 +131,6 @@
 
 /* Begin PBXFileReference section */
 		130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddGateKeeper.swift; sourceTree = "<group>"; };
-		132B77691C5BCAD400703B21 /* NSData+Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Object.swift"; sourceTree = "<group>"; };
 		134386601C3D574C0042CCC8 /* OddLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddLogger.swift; sourceTree = "<group>"; };
 		134797791C51424800876D39 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		1351934E1CC90A2D00FF947B /* OddSDKTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddSDKTests.swift; sourceTree = "<group>"; };
@@ -318,7 +317,6 @@
 				135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */,
 				135E68AC1C24611800A0A602 /* NSURL+query.swift */,
 				135E68AD1C24611800A0A602 /* Array+Bounds.swift */,
-				132B77691C5BCAD400703B21 /* NSData+Object.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -975,6 +973,7 @@
 				1351935F1CC90B7000FF947B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1353FA911C46F0B200B57A83 /* Build configuration list for PBXNativeTarget "DebugApp" */ = {
 			isa = XCConfigurationList;
