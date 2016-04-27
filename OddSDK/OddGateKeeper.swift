@@ -181,6 +181,8 @@ public class OddGateKeeper: NSObject {
   /// The device token for this user/device
   var deviceToken: String?
   
+  var userMeta: jsonObject?
+  
   /// The user/device Authentication Status
   public var authenticationStatus: AuthenticationStatus {
     get {
@@ -343,4 +345,104 @@ public class OddGateKeeper: NSObject {
       entitlementCredentials: creds
     )
   }
+  
+  
+  // MARK: - Login
+  typealias JSONCallback = ( (jsonObject?, NSError?) -> Void)
+  
+  private func get(params: [ String : String ]?, url: String, callback: JSONCallback) {
+    request("GET", params: params, url: url, callback: callback)
+  }
+  
+  private func post(params: [ String : AnyObject ]?, url: String, callback: JSONCallback) {
+    request("POST", params: params, url: url, callback: callback)
+  }
+  
+  private func request(type: String, params: [ String : AnyObject ]?, url: String, callback: JSONCallback) {
+    let request = NSMutableURLRequest(URL: NSURL(string: url)!)
+    let session = NSURLSession.sharedSession()
+    request.HTTPMethod = type
+    
+    let err: NSError?
+    
+    if let parameters = params {
+      do {
+        request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(parameters, options: [])
+      } catch let error as NSError {
+        err = error
+        request.HTTPBody = nil
+        OddLogger.error("Error attaching HTTP request params: \(err?.localizedDescription)")
+      }
+    }
+    
+    //Utility Headers:
+    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.addValue("application/json", forHTTPHeaderField: "Accept")
+    
+    let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
+      
+      if let e = error {
+        if e.code < -999 { // NSURLError.NotConnectedToInternet.rawValue {
+          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddConnectionOfflineNotification, object: e) )
+        }
+        callback(nil, e)
+        return
+      }
+      
+      if let res = response as! NSHTTPURLResponse! {
+        
+        if res.statusCode != 200 {
+          OddLogger.error("Error, server responded with: \(res.statusCode)" )
+          let e = NSError(domain: "ODD", code: 101, userInfo: [ "statusCode": res.statusCode, "message" : "unable to complete http request" ])
+          callback(nil, e)
+          return
+        }
+      }
+      
+      if error == nil {
+        do {
+          let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as? jsonObject
+          callback(json, nil)
+          return
+        } catch {
+          let e = NSError(domain: "ODD", code: 102, userInfo: [ "message" : "JSON Parsing Error" ])
+          callback(nil, e)
+        }
+      }
+    })
+    
+    task.resume()
+  }
+
+  public func autoLoginWithURL(url: String, success: (Bool) -> Void) {
+    let defaults = NSUserDefaults.standardUserDefaults()
+    guard let name = defaults.stringForKey(OddConstants.kOddLoginName),
+      let password = defaults.stringForKey(OddConstants.kOddLoginPassword) else { success(false); return }
+    
+    self.loginWithURL(url, email: name, password: password) { (result, error) -> () in
+      success(result)
+    }
+  }
+  
+  // the server should return 200 with a payload of any credentials required for metrics, etc
+  public func loginWithURL(url: String, email: String, password: String, callback: (Bool, NSError?) -> Void) {
+    let params = [ "email" : email, "password" : password ]
+    
+    self.post(params, url: url) { (response, error) in
+      if error != nil {
+        callback(false, error)
+      }
+      else {
+        guard let json = response,
+          let success = json["success"] as? Bool else { callback(false, nil); return }
+        if let meta = json["meta"] as? jsonObject {
+          self.userMeta = meta
+          OddLogger.info("Received Login Meta: \(self.userMeta)");
+        }
+        OddLogger.info("Login User Result: \(success)")
+        callback(success, nil)
+      }
+    }
+  }
+  
 }

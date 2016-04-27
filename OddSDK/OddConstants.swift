@@ -20,6 +20,9 @@ import Foundation
   static let kAuthenticationCredentialsAccessTokenKey = "AuthenticationCredentialsAccessTokenKey"
   static let kAuthenticationCredentialsEntitlementCredentialsKey = "AuthenticationCredentialsEntitlementCredentialsKey"
   
+  static let kOddLoginName = "OddLoginName"
+  static let kOddLoginPassword = "OddLoginPassword"
+  
   /// The notification posted by the `OddContentStore` when there is an error fetching the app config
   public static let OddErrorFetchingConfigNotification = "OddErrorFetchingConfigNotification"
 
