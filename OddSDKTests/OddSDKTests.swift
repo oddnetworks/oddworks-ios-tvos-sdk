@@ -15,6 +15,7 @@
 // Oddworks server using the NASA data
 //
 // https://github.com/oddnetworks/oddworks
+// The 'nasa_data' tag can be used as a reference
 //
 
 import XCTest
