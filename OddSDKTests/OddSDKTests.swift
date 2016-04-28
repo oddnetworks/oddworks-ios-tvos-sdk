@@ -7,38 +7,32 @@
 //
 // http://masilotti.com/xctest-documentation/
 //
+//
+// NOTE ABOUT THESE TESTS
+//
+// Tests are setup to be full 'end to end' tests hitting a real server
+// These tests should be run against a copy of the most recent
+// Oddworks server using the NASA data
+//
+// https://github.com/oddnetworks/oddworks
+//
 
 import XCTest
 @testable import OddSDK
 
 class OddSDKTests: XCTestCase {
   
-  func registerForNotifications() {
-    print("Registering For Notifications")
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(OddSDKTests.configLoaded), name: OddConstants.OddFetchedConfigNotification, object: nil)
-  }
-  
-  func configLoaded() {
-    print("@@@@@@@@@@@@@@@@@@ CONFIG LOADED @@@@@@@@@@@@@@@@@@@")
-  }
-  
-  func initializeSDK() {
-    registerForNotifications()
-    
+  func configureSDK() {
     OddContentStore.sharedStore.API.serverMode = .Local
     
-    //    Uncomment to see additional log messages from the SDK.
     OddLogger.logLevel = .Info
     
-    //    Enter your authToken here
     OddContentStore.sharedStore.API.authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtaW9zIiwic2NvcGUiOlsicGxhdGZvcm0iXSwiaWF0IjoxNDYxMzMxNTI5fQ.lsVlk7ftYKxxrYTdl8rP-dCUfk9odhCxvwm9jsUE1dU"
-    
-    OddContentStore.sharedStore.initialize()
   }
   
   override func setUp() {
     super.setUp()
-    initializeSDK()
+    configureSDK()
   }
   
   override func tearDown() {
@@ -51,28 +45,181 @@ class OddSDKTests: XCTestCase {
   func testCanFetchConfig() {
     let okExpectation = expectationWithDescription("ok")
     
-    var configFound = false
-    
-    while !configFound {
-      guard let config = OddContentStore.sharedStore.config else { continue }
-      configFound = true
-      XCTAssertNotNil(config, "SDK should load config")
-      okExpectation.fulfill()
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        guard let config = OddContentStore.sharedStore.config else { return }
+        XCTAssertNotNil(config, "SDK should load config")
+        XCTAssertEqual(config.viewNames()?.count, 3, "Config should have correct number of views")
+        okExpectation.fulfill()
+      }
     }
-
+    
     waitForExpectationsWithTimeout(5, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
+  func testConfigHasCorrectViews() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        guard let config = OddContentStore.sharedStore.config else { return }
+        XCTAssertEqual(config.viewNames()?.count, 3, "Config should have correct number of views")
+        XCTAssertEqual(config.idForViewName("homepage"), "homepage", "Config should have the correct views")
+        XCTAssertEqual(config.idForViewName("splash"), "splash", "Config should have the correct views")
+        XCTAssertEqual(config.idForViewName("menu"), "menu", "Config should have the correct views")
+        okExpectation.fulfill()
+      }
+    }
+    
+    waitForExpectationsWithTimeout(5, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
   
-//  DataSource *dataSource = [[DataSource alloc] init];
-//  [dataSource loadData];
-//  XCTestExpectation *expectation = [self expectationWithDescription:@"Dummy expectation"];
-//  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//  XCTAssert(dataSource.dataArray.count > 0, @"Data source has populated array after initializing and, you know, giving it some time to breath, man.");
-//  [expectation fulfill];
-//  });
-//  [self waitForExpectationsWithTimeout:20.0 handler:nil];
+  func testCanLoadHomeView() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        guard let config = OddContentStore.sharedStore.config,
+          let homeViewId = config.idForViewName("homepage") else { return }
+        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], callback: { (objects, errors) in
+          guard let view = objects.first as? OddView else { return }
+          XCTAssertNotNil(view, "SDK should load a view")
+          XCTAssertEqual(view.id, "homepage", "Config should have correct home view id")
+          XCTAssertEqual(view.title, "Nasa Sample Homepage", "Config should have correct home view title")
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
+  
+  func testHomeViewHasCorrectRelationships() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        guard let config = OddContentStore.sharedStore.config,
+          let homeViewId = config.idForViewName("homepage") else { return }
+        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], callback: { (objects, errors) in
+          guard let view = objects.first as? OddView else { return }
+          
+          if let promo = view.relationshipWithName("promotion") {
+            XCTAssertNotNil(promo, "View should have a relationship for promotion")
+            XCTAssertEqual(promo.id, "daily-show", "View should have promotion relationship with correct id")
+            XCTAssertEqual(promo.mediaObjectType.toString(), "promotion", "View should have promotion relationship with correct type")
+          }
+
+          if let featuredMedia = view.relationshipWithName("featuredMedia") {
+            XCTAssertNotNil(featuredMedia, "View should have a relationship for featuredMedia")
+            XCTAssertEqual(featuredMedia.id, "0db5528d4c3c7ae4d5f24cce1c9fae51", "View should have featuredMedia relationship with correct id")
+            XCTAssertEqual(featuredMedia.mediaObjectType.toString(), "video", "View should have featuredMedia relationship with correct type")
+          }
+
+          if let featuredCollections = view.relationshipWithName("featuredCollections") {
+            XCTAssertNotNil(featuredCollections, "View should have a relationship for featuredCollections")
+            XCTAssertEqual(featuredCollections.id, "ab2d92ee98b6309299e92024a487d4c0", "View should have featuredCollections relationship with correct id")
+            XCTAssertEqual(featuredCollections.mediaObjectType.toString(), "collection", "View should have featuredCollections relationship with correct type")
+          }
+
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
+  
+  func testContentStoreLaunchesWithEmptyCache() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 0, "Upon launch content store should have an empty media object cache")
+        
+        okExpectation.fulfill()
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
+  
+  
+  func testFetchedObjectIsAddedToCache() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 0, "Upon launch content store should have an empty media object cache")
+        guard let config = OddContentStore.sharedStore.config,
+          let homeViewId = config.idForViewName("homepage") else { return }
+        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], callback: { (objects, errors) in
+          guard let view = objects.first as? OddView,
+            let cachedView = OddContentStore.sharedStore.mediaObjects.first as? OddView else { return }
+          
+          XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 1, "After fetching a media object it is added to the content store cache")
+          XCTAssertEqual(view.id, cachedView.id, "After fetching a media object the correct object is in the content store cache")
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
+  
+  func testSearchReturnsResults() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        OddContentStore.sharedStore.searchForTerm("space", onResults: { (videos, collections) in
+          
+          XCTAssertEqual(videos?.count, 11, "Search should return the correct number of video results")
+          XCTAssertEqual(collections?.count, 7, "Search should return the correct number of video results")
+          
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
+  
+  func testSearchResultsAreAddedToStoreCache() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        OddContentStore.sharedStore.searchForTerm("space", onResults: { (videos, collections) in
+          
+          XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 18, "Search should return the correct number of video results")
+          
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
+  
+  
+  
+  
   
 }

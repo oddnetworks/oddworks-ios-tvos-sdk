@@ -89,7 +89,6 @@
 		135E2E491CCA70FE002A3ADA /* OddMetricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A01C2460E900A0A602 /* OddMetricService.swift */; };
 		135E2E4A1CCA70FE002A3ADA /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E687B1C24608200A0A602 /* APIService.swift */; };
 		135E2E4B1CCA7121002A3ADA /* UIApplication+TopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */; };
-		135E2E4C1CCA7121002A3ADA /* NSData+Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132B77691C5BCAD400703B21 /* NSData+Object.swift */; };
 		135E2E4D1CCA7121002A3ADA /* CMTimeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A41C24611800A0A602 /* CMTimeExtension.swift */; };
 		135E2E4E1CCA7121002A3ADA /* Double+Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AA1C24611800A0A602 /* Double+Time.swift */; };
 		135E2E4F1CCA7121002A3ADA /* NSObject+ClassName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A71C24611800A0A602 /* NSObject+ClassName.swift */; };
@@ -159,7 +158,6 @@
 
 /* Begin PBXFileReference section */
 		130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddGateKeeper.swift; sourceTree = "<group>"; };
-		132B77691C5BCAD400703B21 /* NSData+Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Object.swift"; sourceTree = "<group>"; };
 		134386601C3D574C0042CCC8 /* OddLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddLogger.swift; sourceTree = "<group>"; };
 		134797791C51424800876D39 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		1353FA801C46F0B200B57A83 /* DebugApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebugApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -336,7 +334,6 @@
 				135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */,
 				135E68AC1C24611800A0A602 /* NSURL+query.swift */,
 				135E68AD1C24611800A0A602 /* Array+Bounds.swift */,
-				132B77691C5BCAD400703B21 /* NSData+Object.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -662,7 +659,6 @@
 				135E2E471CCA70FE002A3ADA /* Keychain.swift in Sources */,
 				135E2E4A1CCA70FE002A3ADA /* APIService.swift in Sources */,
 				135E2E491CCA70FE002A3ADA /* OddMetricService.swift in Sources */,
-				135E2E4C1CCA7121002A3ADA /* NSData+Object.swift in Sources */,
 				135E2E541CCA7121002A3ADA /* NSDate+String.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1030,6 +1026,7 @@
 				135E2E381CCA5C50002A3ADA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		135E68631C245FFE00A0A602 /* Build configuration list for PBXProject "OddSDK" */ = {
 			isa = XCConfigurationList;

@@ -8,6 +8,11 @@
 
 import UIKit
 
+public struct OddRelationship {
+  var id: String
+  var mediaObjectType: OddMediaObjectType
+}
+
 // have to use @objc here to get optional methods
 /// Protocol for media objects to implement that helps with
 /// displaying their data in a `UITableviewcell`
@@ -53,6 +58,7 @@ import UIKit
 // for interoperability with ObjC this must be
 // an Int type with a helper to convert from string
 @objc public enum OddMediaObjectType: Int {
+  case View
   case Video
   case LiveStream
   case Collection
@@ -66,6 +72,7 @@ import UIKit
   static func fromString(str: String) -> OddMediaObjectType? {
     #if os(tvOS)
       switch str {
+      case "view": return .View
       case "video": return .Video
       case "liveStream": return .LiveStream
       case "collection": return .Collection
@@ -74,6 +81,7 @@ import UIKit
       }
     #else
       switch str {
+      case "view": return .View
       case "video": return .Video
       case "liveStream": return .LiveStream
       case "collection": return .Collection
@@ -89,6 +97,7 @@ import UIKit
   func toString() -> String {
     #if os(tvOS)
       switch self {
+      case .View: return "view"
       case .Video: return "video"
       case .LiveStream: return "liveStream"
       case .Collection: return "collection"
@@ -96,6 +105,7 @@ import UIKit
       }
     #else
       switch self {
+      case .View: return "view"
       case .Video: return "video"
       case .LiveStream: return "liveStream"
       case .Collection: return "collection"
@@ -111,6 +121,7 @@ import UIKit
   func toObject(data: jsonObject) -> OddMediaObject {
     #if os(tvOS)
       switch self {
+      case .View: return OddView.viewFromJson(data)
       case .Video: return OddVideo.videoFromJson(data)
       case .LiveStream: return OddVideo.videoFromJson(data)
       case .Collection: return OddMediaObjectCollection.mediaCollectionFromJson(data)
@@ -118,6 +129,7 @@ import UIKit
       }
     #else
       switch self {
+      case .View: return OddView.viewFromJson(data)
       case .Video: return OddVideo.videoFromJson(data)
       case .LiveStream: return OddVideo.videoFromJson(data)
       case .Collection: return OddMediaObjectCollection.mediaCollectionFromJson(data)
@@ -221,7 +233,7 @@ import UIKit
   /// section are not accessible directly via this API. It is the
   /// application developers responsibitly to parse this additional
   /// data
-  public var meta : Dictionary<String, AnyObject?>?
+  public var meta : jsonObject?
   
   /// How long to cache this object for. Based on
   /// HTTP header data.
@@ -237,6 +249,8 @@ import UIKit
       return expireTime.timeIntervalSinceNow.isSignMinus
     }
   }
+  
+  var relationShips: Dictionary<String, OddRelationship> = [:]
   
   /// Given the json for the object type parses the data and sets the
   /// instance variables as appropriate
@@ -276,7 +290,6 @@ import UIKit
   
   func configureWithJson(json: jsonObject) {
     self.id = json["id"] as? String
-//print("CREATED: \(self.id)")
     if let links = json["links"] as? jsonObject,
       selfLink = links["self"] as? String {
         self.link = selfLink
@@ -298,10 +311,27 @@ import UIKit
       }
     }
     
+    // relationships
+    if let related = json["relationships"] as? jsonObject {
+      for (key, value) in related {
+        guard let value = value as? jsonObject,
+          data = value["data"] as? jsonObject,
+          id = data["id"] as? String,
+          type = data["type"] as? String,
+          kind = OddMediaObjectType.fromString( type ) else { continue }
+        let newRelationship = OddRelationship(id: id, mediaObjectType: kind)
+        self.relationShips[key] = newRelationship
+      }
+    }
+    
     self.meta = json["meta"] as? jsonObject
     
     self.cacheTime = json["cacheTime"] as? Int
     self.lastUpdate = NSDate()
+    
+//    for (key, value) in self.relationShips {
+//      print("\(key) - \(value.id): \(value.mediaObjectType.toString())")
+//    }
   }
   
   /// Helper method to return the media objects duration as an `NSTimeInterval`
@@ -414,6 +444,29 @@ import UIKit
     return nil
   }
   
+  /// Convenience method to retun all keys in the
+  /// mediaObjects meta dictionary
+  public func relationshipNames() -> Set<String>? {
+    if self.relationShips.count == 0 { return nil }
+    
+    var result = Set<String>()
+    
+    self.relationShips.keys.forEach({ (key) -> () in
+      result.insert(key)
+    })
+    return result
+  }
+  
+  /// Convenience method to return a given keys value
+  /// or nil if it is not found
+  public func relationshipWithName(name: String) -> OddRelationship? {
+    if let names = relationshipNames() {
+      if names.contains(name) {
+        return self.relationShips[name]!
+      }
+    }
+    return nil
+  }
   
   //MARK: - Dynamic Media Object
   

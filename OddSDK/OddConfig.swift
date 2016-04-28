@@ -110,42 +110,74 @@ struct AnalyticsConfiguration {
 }
 
 @objc public class OddConfig: NSObject {
-  var homeViewId: String?
-  var splashViewId: String?
-  var menuViewId: String?
+  var views: jsonObject?
+//  var homeViewId: String?
+//  var splashViewId: String?
+//  var menuViewId: String?
   var analyticsManager = AnalyticsConfiguration()
   var adManager = AdServiceConfiguration()
   var requiresAuthentication: Bool = false
   
   class func configFromJson( json : Dictionary<String, AnyObject> ) -> OddConfig? {
     let newConfig = OddConfig()
-    if let data = json["data"] as? Dictionary<String, AnyObject>, attribs = data["attributes"] as? Dictionary<String, AnyObject>, views = attribs["views"] as? Dictionary<String, AnyObject> {
-      newConfig.homeViewId = views["homepage"] as? String
-      newConfig.splashViewId = views["splash"] as? String
-      newConfig.menuViewId = views["menu"] as? String
-      
-      //MARK: FEATURES
-      if let features = attribs["features"] as? Dictionary<String, AnyObject> {
-        //Mark: Ads
-        if let ads = features["ads"] as? Dictionary<String, AnyObject> {
-          newConfig.adManager.configureWithJSON(ads)
-        } //end ads
-        
-        //Mark: Metrics
-        if let metrics = features["metrics"] as? Dictionary<String, AnyObject> {
-          newConfig.analyticsManager.configureWithJSON(metrics)
-        }
-  
-        // authentication -> enabled only used for fully paywalled applications
-//        MARK: Authentication
-        if let auth = features["authentication"] as? Dictionary<String, AnyObject> {
-          newConfig.requiresAuthentication = auth["enabled"] as! Bool
-//          AuthenticationCredentials.credentialsFromJson(auth)
-        }
-      
-      } // end features
+    guard let data = json["data"] as? Dictionary<String, AnyObject>,
+      attribs = data["attributes"] as? Dictionary<String, AnyObject>,
+      viewJson = attribs["views"] as? Dictionary<String, AnyObject> else {
+        return newConfig
     }
+    
+    newConfig.views = viewJson
+//    if let data = json["data"] as? Dictionary<String, AnyObject>, attribs = data["attributes"] as? Dictionary<String, AnyObject>, views = attribs["views"] as? Dictionary<String, AnyObject> {
+//      newConfig.homeViewId = views["homepage"] as? String
+//      newConfig.splashViewId = views["splash"] as? String
+//      newConfig.menuViewId = views["menu"] as? String
+    
+    //MARK: FEATURES
+    if let features = attribs["features"] as? Dictionary<String, AnyObject> {
+      //Mark: Ads
+      if let ads = features["ads"] as? Dictionary<String, AnyObject> {
+        newConfig.adManager.configureWithJSON(ads)
+      } //end ads
+      
+      //Mark: Metrics
+      if let metrics = features["metrics"] as? Dictionary<String, AnyObject> {
+        newConfig.analyticsManager.configureWithJSON(metrics)
+      }
+
+      // authentication -> enabled only used for fully paywalled applications
+//        MARK: Authentication
+      if let auth = features["authentication"] as? Dictionary<String, AnyObject> {
+        newConfig.requiresAuthentication = auth["enabled"] as! Bool
+//          AuthenticationCredentials.credentialsFromJson(auth)
+      }
+    
+    } // end features
+    
     return newConfig
   }
-  
+
+  /// Convenience method to retun all view names in the
+  /// views dictionary
+  public func viewNames() -> Set<String>? {
+    var result = Set<String>()
+    if let views = self.views {
+      views.keys.forEach({ (key) -> () in
+        result.insert(key)
+      })
+      return result
+    }
+    return nil
+  }
+
+  /// Convenience method to return a given views id
+  /// or nil if it is not found
+  public func idForViewName(viewName: String) -> String? {
+    if let keys = viewNames() {
+      if keys.contains(viewName) {
+        return self.views![viewName]! as? String
+      }
+    }
+    return nil
+  }
+
 }

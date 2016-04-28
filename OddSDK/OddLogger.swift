@@ -26,17 +26,17 @@ public class OddLogger: NSObject {
   
   public static func info(message: String) {
     if OddLogger.logLevel.atLeast(.Info)   {
-      print("\(message)")
+      print("✅ \(message)")
     }
   }
   
   public static func warn(message: String) {
     if OddLogger.logLevel.atLeast(.Warn)  {
-      print("\(message)")
+      print("⚠️ \(message)")
     }
   }
   
   public static func error(message: String) {
-    print("\(message)")
+    print("❌ \(message)")
   }
 }

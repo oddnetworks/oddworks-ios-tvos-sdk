@@ -124,7 +124,7 @@ enum OddMediaObjectCollectionType {
     typesOfObjects.forEach { (type) -> () in
       let ids = idsOfAllObjectsOfType(type)
       if !ids.isEmpty {
-        OddContentStore.sharedStore.objectsOfType(type, ids: ids, callback: { (fetchedObjects) -> () in
+        OddContentStore.sharedStore.objectsOfType(type, ids: ids, callback: { (fetchedObjects, errors) -> () in
           objects.appendContentsOf( fetchedObjects )
         })
       }

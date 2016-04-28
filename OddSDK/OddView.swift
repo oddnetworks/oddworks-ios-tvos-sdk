@@ -8,18 +8,21 @@
 
 import UIKit
 
-class OddView: NSObject {
-  var featuredPromotion: OddPromotion?
-  var featuredMediaObject: OddMediaObject?
-  var featuredVideos: Array<OddVideo>?
-  var featuredVideoCollections : Array<OddMediaObjectCollection>?
-  var generatedVideoCollections: Array<OddMediaObjectCollection>?
-  
-  class func oddViewFromJson(json : Dictionary<String, AnyObject>) -> OddView {
-    let newOddView = OddView()
+@objc public class OddView: OddMediaObject {
+
+  class func viewFromJson(json : jsonObject) -> OddView {
+    let newView = OddView()
+    newView.configureWithJson(json)
     
-    
-    return newOddView
+    return newView
   }
-   
+  
+//  override func configureWithJson(json: jsonObject) {
+//    super.configureWithJson(json)
+//    addAdditionalMetaData(json)
+//  }
+//  
+//  func addAdditionalMetaData(json: jsonObject) {
+//  }
+  
 }
