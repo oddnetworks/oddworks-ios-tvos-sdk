@@ -218,8 +218,54 @@ class OddSDKTests: XCTestCase {
     })
   }
   
+  func testLocatesVideoWhenNotCached() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        let videoId = "42baaa6e1e9ce2bb6d96d53007656f02"
+        OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], callback: { (objects, errors) in
+          guard let video = objects.first as? OddVideo else { return }
+          XCTAssertNotNil(video, "SDK should load a video")
+          XCTAssertEqual(video.id, "42baaa6e1e9ce2bb6d96d53007656f02", "Loaded video should have correct id")
+          XCTAssertEqual(video.title, "What's Up - April 2016", "Loaded video should have correct title")
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
   
-  
-  
+  func testLocatesVideoWhenCached() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        let videoId = "42baaa6e1e9ce2bb6d96d53007656f02"
+        OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], callback: { (objects, errors) in
+          guard let video = objects.first as? OddVideo,
+            let cachedVideo = OddContentStore.sharedStore.mediaObjects.first as? OddVideo else { return }
+          XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 1, "Fetched Video should be cached")
+          XCTAssertEqual(video.id, cachedVideo.id, "The correct video should be cached")
+          
+          // now fetch again
+          OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], callback: { (objects, errors) in
+            guard let video = objects.first as? OddVideo else { return }
+            XCTAssertEqual(objects.count, 1, "Fetching from cache returns the correct number of objects")
+            XCTAssertEqual(video.id, cachedVideo.id, "Fetching from cache returns the correct video")
+            okExpectation.fulfill()
+          })
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
+
   
 }
