@@ -429,9 +429,7 @@ enum OddFeatureType {
     
     API.get(nil , url: "\(type.toString() )s/\(id)") { (response, error) -> () in
       if error != nil {
-        self.returnError("Error fetching \(type): \(id)", errorCode: 105, notification: nil, callback: callback)
-//        OddLogger.error("Error fetching \(type): \(id)")
-//        callback(nil)
+        self.returnError("Error fetching \(type.toString()): \(id)", errorCode: 105, notification: nil, callback: callback)
       } else {
         if let json = response as? jsonObject,
           data = json["data"] as? jsonObject {
@@ -449,7 +447,7 @@ enum OddFeatureType {
           case .Collection:
             if mediaObject is OddMediaObjectCollection { callback(mediaObject, nil) }
           default:
-            self.returnError("Error fetching \(type): \(id)", errorCode: 105, notification: nil, callback: callback)
+            self.returnError("Error fetching \(type.toString()): \(id)", errorCode: 105, notification: nil, callback: callback)
 //            callback(nil)
           }
         } // if

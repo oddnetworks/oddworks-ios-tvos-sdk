@@ -120,15 +120,21 @@ enum OddMediaObjectCollectionType {
   
   public func fetchAllObjects( callback: (Array<OddMediaObject>) -> Void ) {
     var objects = Array<OddMediaObject>()
-    
-    typesOfObjects.forEach { (type) -> () in
-      let ids = idsOfAllObjectsOfType(type)
-      if !ids.isEmpty {
-        OddContentStore.sharedStore.objectsOfType(type, ids: ids, callback: { (fetchedObjects, errors) -> () in
-          objects.appendContentsOf( fetchedObjects )
-        })
-      }
+
+    for (id, type) in self.relationships {
+//      print("LOAD: \(type.toString()) - \(id)")
     }
+
+      
+    
+//    typesOfObjects.forEach { (type) -> () in
+//      let ids = idsOfAllObjectsOfType(type)
+//      if !ids.isEmpty {
+//        OddContentStore.sharedStore.objectsOfType(type, ids: ids, callback: { (fetchedObjects, errors) -> () in
+//          objects.appendContentsOf( fetchedObjects )
+//        })
+//      }
+//    }
     
     callback(objects)
   }

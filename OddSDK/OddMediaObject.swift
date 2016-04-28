@@ -9,8 +9,8 @@
 import UIKit
 
 public struct OddRelationship {
-  var id: String
-  var mediaObjectType: OddMediaObjectType
+  public var id: String
+  public var mediaObjectType: OddMediaObjectType
 }
 
 // have to use @objc here to get optional methods
@@ -250,7 +250,7 @@ public struct OddRelationship {
     }
   }
   
-  var relationShips: Dictionary<String, OddRelationship> = [:]
+  var relationships: Dictionary<String, OddRelationship> = [:]
   
   /// Given the json for the object type parses the data and sets the
   /// instance variables as appropriate
@@ -320,7 +320,7 @@ public struct OddRelationship {
           type = data["type"] as? String,
           kind = OddMediaObjectType.fromString( type ) else { continue }
         let newRelationship = OddRelationship(id: id, mediaObjectType: kind)
-        self.relationShips[key] = newRelationship
+        self.relationships[key] = newRelationship
       }
     }
     
@@ -447,11 +447,11 @@ public struct OddRelationship {
   /// Convenience method to retun all keys in the
   /// mediaObjects meta dictionary
   public func relationshipNames() -> Set<String>? {
-    if self.relationShips.count == 0 { return nil }
+    if self.relationships.count == 0 { return nil }
     
     var result = Set<String>()
     
-    self.relationShips.keys.forEach({ (key) -> () in
+    self.relationships.keys.forEach({ (key) -> () in
       result.insert(key)
     })
     return result
@@ -462,7 +462,7 @@ public struct OddRelationship {
   public func relationshipWithName(name: String) -> OddRelationship? {
     if let names = relationshipNames() {
       if names.contains(name) {
-        return self.relationShips[name]!
+        return self.relationships[name]!
       }
     }
     return nil
