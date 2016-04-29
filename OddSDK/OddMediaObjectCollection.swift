@@ -118,12 +118,12 @@ enum OddMediaObjectCollectionType {
     return objects
   }
   
-  public func fetchAllObjects( callback: (Array<OddMediaObject>) -> Void ) {
-    var objects = Array<OddMediaObject>()
-
-    for (id, type) in self.relationships {
-//      print("LOAD: \(type.toString()) - \(id)")
-    }
+//  public func fetchAllObjects( callback: (Array<OddMediaObject>) -> Void ) {
+//    var objects = Array<OddMediaObject>()
+//
+//    for (id, type) in self.relationships {
+////      print("LOAD: \(type.toString()) - \(id)")
+//    }
 
       
     
@@ -136,7 +136,7 @@ enum OddMediaObjectCollectionType {
 //      }
 //    }
     
-    callback(objects)
-  }
+//    callback(objects)
+//  }
   
 }

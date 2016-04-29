@@ -86,7 +86,7 @@ class OddSDKTests: XCTestCase {
       if success {
         guard let config = OddContentStore.sharedStore.config,
           let homeViewId = config.idForViewName("homepage") else { return }
-        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: nil, callback: { (objects, errors) in
           guard let view = objects.first as? OddView else { return }
           XCTAssertNotNil(view, "SDK should load a view")
           XCTAssertEqual(view.id, "homepage", "Config should have correct home view id")
@@ -108,7 +108,7 @@ class OddSDKTests: XCTestCase {
       if success {
         guard let config = OddContentStore.sharedStore.config,
           let homeViewId = config.idForViewName("homepage") else { return }
-        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: nil, callback: { (objects, errors) in
           guard let view = objects.first as? OddView else { return }
           
           if let node = view.relationshipWithName("promotion") as? OddRelationshipNode {
@@ -152,7 +152,7 @@ class OddSDKTests: XCTestCase {
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         let collectionId = "ab2d92ee98b6309299e92024a487d4c0"
-        OddContentStore.sharedStore.objectsOfType(.Collection, ids: [collectionId], callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.Collection, ids: [collectionId], include: "entities", callback: { (objects, errors) in
           guard let collection = objects.first as? OddMediaObjectCollection else { return }
           
           if let node = collection.relationshipWithName("entities") as? OddRelationshipNode {
@@ -198,7 +198,7 @@ class OddSDKTests: XCTestCase {
         XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 0, "Upon launch content store should have an empty media object cache")
         guard let config = OddContentStore.sharedStore.config,
           let homeViewId = config.idForViewName("homepage") else { return }
-        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: nil, callback: { (objects, errors) in
           guard let view = objects.first as? OddView,
             let cachedView = OddContentStore.sharedStore.mediaObjects.first as? OddView else { return }
           
@@ -259,7 +259,7 @@ class OddSDKTests: XCTestCase {
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         let videoId = "42baaa6e1e9ce2bb6d96d53007656f02"
-        OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], include: nil, callback: { (objects, errors) in
           guard let video = objects.first as? OddVideo else { return }
           XCTAssertNotNil(video, "SDK should load a video")
           XCTAssertEqual(video.id, "42baaa6e1e9ce2bb6d96d53007656f02", "Loaded video should have correct id")
@@ -280,14 +280,14 @@ class OddSDKTests: XCTestCase {
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         let videoId = "42baaa6e1e9ce2bb6d96d53007656f02"
-        OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], include: nil, callback: { (objects, errors) in
           guard let video = objects.first as? OddVideo,
             let cachedVideo = OddContentStore.sharedStore.mediaObjects.first as? OddVideo else { return }
           XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 1, "Fetched Video should be cached")
           XCTAssertEqual(video.id, cachedVideo.id, "The correct video should be cached")
           
           // now fetch again
-          OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], callback: { (objects, errors) in
+          OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], include: nil, callback: { (objects, errors) in
             guard let video = objects.first as? OddVideo else { return }
             XCTAssertEqual(objects.count, 1, "Fetching from cache returns the correct number of objects")
             XCTAssertEqual(video.id, cachedVideo.id, "Fetching from cache returns the correct video")

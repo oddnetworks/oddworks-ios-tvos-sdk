@@ -327,10 +327,10 @@ enum OddFeatureType {
   /// Note: Objects are first looked for in the local cache (`mediaObjects`) if no matching object is
   /// found in the cache the server will be polled for a matching object. If no objects
   /// are found an empty `array` is returned
-  public func objectsOfType( type: OddMediaObjectType, ids : Array<String>, callback: (Array<OddMediaObject>, Array<NSError>?) -> Void )  {
+  public func objectsOfType( type: OddMediaObjectType, ids : Array<String>, include: String?, callback: (Array<OddMediaObject>, Array<NSError>?) -> Void )  {
     
     if self.mediaObjects.isEmpty {
-      fetchObjectsOfType(type, ids: ids, callback: { (objects, errors) -> () in
+      fetchObjectsOfType(type, ids: ids, include: include, callback: { (objects, errors) -> () in
         callback(objects, errors)
       })
     } else {
@@ -356,7 +356,7 @@ enum OddFeatureType {
       }
       
       //fetch the batch of unmatched objects
-      fetchObjectsOfType(type, ids: unMatchedIds, callback: { (fetchedObjects, errors) -> () in
+      fetchObjectsOfType(type, ids: unMatchedIds, include: nil, callback: { (fetchedObjects, errors) -> () in
         fetchedObjects.forEach({ (obj) -> () in
           objects.append(obj)
         })
@@ -373,7 +373,7 @@ enum OddFeatureType {
   /// - parameter callback: `( Array<OddMediaObject> ) -> Void` a callback executed once the search is complete
   /// The array passed to `callback` will either contain the entities matching the query or be empty
   /// if no entities wer found
-  public func fetchObjectsOfType ( type: OddMediaObjectType, ids: Array<String>, callback: ( Array<OddMediaObject>, Array<NSError>? ) -> () ) {
+  public func fetchObjectsOfType ( type: OddMediaObjectType, ids: Array<String>, include: String?, callback: ( Array<OddMediaObject>, Array<NSError>? ) -> () ) {
     var responseArray: Array<OddMediaObject> = Array()
     var errorArray: Array<NSError> = Array()
     
@@ -381,7 +381,7 @@ enum OddFeatureType {
     
     var callbackCount = 0
     for id : String in ids {
-      fetchObjectType(type, id: id, callback: { (item, err) -> () in
+      fetchObjectType(type, id: id, include: include, callback: { (item, err) -> () in
         callbackCount += 1
         
         if let error = err {
@@ -425,9 +425,12 @@ enum OddFeatureType {
   ///
   /// See also: `fetchObjectsOfType ( type: String, ids: Array<String>, callback: ( Array<AnyObject> ) -> Void )`
   /// to fetch multiple objects of a given type
-  public func fetchObjectType( type: OddMediaObjectType, id: String, callback: ( OddMediaObject?, NSError? ) -> Void ) {
+  public func fetchObjectType( type: OddMediaObjectType, id: String, include: String?, callback: ( OddMediaObject?, NSError? ) -> Void ) {
     
-    API.get(nil , url: "\(type.toString() )s/\(id)") { (response, error) -> () in
+    var urlStr = "\(type.toString() )s/\(id)"
+    if let include = include { urlStr = "\(urlStr)?include=\(include)" }
+    
+    API.get(nil , url: urlStr ) { (response, error) -> () in
       if error != nil {
         self.returnError("Error fetching \(type.toString()): \(id)", errorCode: 105, notification: nil, callback: callback)
       } else {
