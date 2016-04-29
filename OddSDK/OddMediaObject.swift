@@ -13,6 +13,17 @@ public struct OddRelationship {
   public var mediaObjectType: OddMediaObjectType
 }
 
+public struct OddRelationshipNode {
+  var single: OddRelationship?
+  var multiple: Array<OddRelationship>?
+  
+  public var relationship: Any? {
+    get {
+      return single != nil ? single : multiple
+    }
+  }
+}
+
 // have to use @objc here to get optional methods
 /// Protocol for media objects to implement that helps with
 /// displaying their data in a `UITableviewcell`
@@ -250,7 +261,7 @@ public struct OddRelationship {
     }
   }
   
-  var relationships: Dictionary<String, OddRelationship> = [:]
+  var relationships: Dictionary<String, OddRelationshipNode> = [:]
   
   /// Given the json for the object type parses the data and sets the
   /// instance variables as appropriate
@@ -314,13 +325,26 @@ public struct OddRelationship {
     // relationships
     if let related = json["relationships"] as? jsonObject {
       for (key, value) in related {
-        guard let value = value as? jsonObject,
-          data = value["data"] as? jsonObject,
-          id = data["id"] as? String,
-          type = data["type"] as? String,
-          kind = OddMediaObjectType.fromString( type ) else { continue }
-        let newRelationship = OddRelationship(id: id, mediaObjectType: kind)
-        self.relationships[key] = newRelationship
+        guard let value = value as? jsonObject else { return }
+        
+        if let data = value["data"] as? jsonObject,
+            id = data["id"] as? String,
+            type = data["type"] as? String,
+            kind = OddMediaObjectType.fromString( type ) {
+          let newRelationship = OddRelationship(id: id, mediaObjectType: kind)
+          let newNode = OddRelationshipNode(single: newRelationship, multiple: nil)
+          self.relationships[key] = newNode
+        } else if let data = value["data"] as? jsonArray {
+          var relationships = Array<OddRelationship>()
+          data.forEach({ (dict) in
+            guard let id = dict["id"] as? String,
+              type = dict["type"] as? String,
+              kind = OddMediaObjectType.fromString(type) else { return }
+            relationships.append(OddRelationship(id: id, mediaObjectType: kind))
+          })
+          let newNode = OddRelationshipNode(single: nil, multiple: relationships)
+          self.relationships[key] = newNode
+        }
       }
     }
     
@@ -459,7 +483,7 @@ public struct OddRelationship {
   
   /// Convenience method to return a given keys value
   /// or nil if it is not found
-  public func relationshipWithName(name: String) -> OddRelationship? {
+  public func relationshipWithName(name: String) -> Any? {
     if let names = relationshipNames() {
       if names.contains(name) {
         return self.relationships[name]!
