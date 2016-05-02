@@ -15,7 +15,10 @@
 // Oddworks server using the NASA data
 //
 // https://github.com/oddnetworks/oddworks
-// The 'nasa_data' tag can be used as a reference
+// 
+// specifically https://github.com/oddnetworks/oddworks/commit/33d14cbd5da6ae8c63ab86332262a8c22a2046d7
+// is required to fix prior issues with included objects in api requests
+// this commit will also include updated test data
 //
 
 import XCTest
@@ -152,7 +155,7 @@ class OddSDKTests: XCTestCase {
             XCTAssertNil(node.multiple, "View should only have singular relationships" )
             if let featuredCollections = node.relationship as? OddRelationship {
               XCTAssertNotNil(featuredCollections, "View should have a relationship for featuredCollections")
-              XCTAssertEqual(featuredCollections.id, "ab2d92ee98b6309299e92024a487d4c0", "View should have featuredCollections relationship with correct id")
+              XCTAssertEqual(featuredCollections.id, "51c12f4b70ff4a70925a1be26b8442af", "View should have featuredCollections relationship with correct id")
               XCTAssertEqual(featuredCollections.mediaObjectType.toString(), "collection", "View should have featuredCollections relationship with correct type")
             }
           }
@@ -177,14 +180,13 @@ class OddSDKTests: XCTestCase {
         guard let config = OddContentStore.sharedStore.config,
           let homeViewId = config.idForViewName("homepage") else { return }
         OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: "featuredMedia,featuredCollections", callback: { (objects, errors) in
-//          guard let _ = objects.first as? OddView else { return }
           
           let cache = OddContentStore.sharedStore.mediaObjects
           XCTAssertEqual(cache.count, 3, "Loading a view should build included objects")
           
           XCTAssertTrue(cache.containsObjectWithId("homepage"), "Lodaing a view should build the view and included objects")
           XCTAssertTrue(cache.containsObjectWithId("0db5528d4c3c7ae4d5f24cce1c9fae51"), "Lodaing a view should build the view and included objects")
-          XCTAssertTrue(cache.containsObjectWithId("ab2d92ee98b6309299e92024a487d4c0"), "Lodaing a view should build the view and included objects")
+          XCTAssertTrue(cache.containsObjectWithId("51c12f4b70ff4a70925a1be26b8442af"), "Lodaing a view should build the view and included objects")
           okExpectation.fulfill()
         })
       }
@@ -303,7 +305,7 @@ class OddSDKTests: XCTestCase {
         OddContentStore.sharedStore.searchForTerm("space", onResults: { (videos, collections) in
           
           XCTAssertEqual(videos?.count, 11, "Search should return the correct number of video results")
-          XCTAssertEqual(collections?.count, 7, "Search should return the correct number of video results")
+          XCTAssertEqual(collections?.count, 8, "Search should return the correct number of video results")
           
           okExpectation.fulfill()
         })
@@ -322,7 +324,7 @@ class OddSDKTests: XCTestCase {
       if success {
         OddContentStore.sharedStore.searchForTerm("space", onResults: { (videos, collections) in
           
-          XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 18, "Search should return the correct number of video results")
+          XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 19, "Search should return the correct number of video results")
           
           okExpectation.fulfill()
         })
