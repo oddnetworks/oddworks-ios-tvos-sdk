@@ -389,7 +389,6 @@ OddLogger.info("URL: \(request.URL)")
       }
       else {
         if let parsedJSON: AnyObject = json {
-                  print("RESPONSE: \(parsedJSON)")
           callback(parsedJSON, nil)
         }
         else {

@@ -21,6 +21,27 @@
 import XCTest
 @testable import OddSDK
 
+protocol Idable {
+  var id: String? { get set }
+}
+
+extension Set where Element : Idable {
+  func containsObjectWithId(id: String) -> Bool {
+    var result = false
+    for (entity) in self {
+      if let entityId = entity.id {
+        if entityId == id {
+          result = true
+          break
+        }
+      }
+    }
+    return result
+  }
+}
+
+extension OddMediaObject : Idable {}
+
 class OddSDKTests: XCTestCase {
   
   func configureSDK() {
@@ -145,6 +166,35 @@ class OddSDKTests: XCTestCase {
       XCTAssertNil(error, "Error")
     })
   }
+
+  
+  
+  func testViewFetchesIncludedObjects() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        guard let config = OddContentStore.sharedStore.config,
+          let homeViewId = config.idForViewName("homepage") else { return }
+        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: "featuredMedia,featuredCollections", callback: { (objects, errors) in
+//          guard let _ = objects.first as? OddView else { return }
+          
+          let cache = OddContentStore.sharedStore.mediaObjects
+          XCTAssertEqual(cache.count, 3, "Loading a view should build included objects")
+          
+          XCTAssertTrue(cache.containsObjectWithId("homepage"), "Lodaing a view should build the view and included objects")
+          XCTAssertTrue(cache.containsObjectWithId("0db5528d4c3c7ae4d5f24cce1c9fae51"), "Lodaing a view should build the view and included objects")
+          XCTAssertTrue(cache.containsObjectWithId("ab2d92ee98b6309299e92024a487d4c0"), "Lodaing a view should build the view and included objects")
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
+
   
   func testCollectionsHaveCorrectRelationships() {
     let okExpectation = expectationWithDescription("ok")
@@ -170,6 +220,37 @@ class OddSDKTests: XCTestCase {
     
     waitForExpectationsWithTimeout(10, handler: { error in
     XCTAssertNil(error, "Error")
+    })
+  }
+  
+  func testCollectionsFetchIncludedObjects() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        let collectionId = "ab2d92ee98b6309299e92024a487d4c0"
+        OddContentStore.sharedStore.objectsOfType(.Collection, ids: [collectionId], include: "entities", callback: { (objects, errors) in
+          guard let collection = objects.first as? OddMediaObjectCollection else { return }
+          
+          let cache = OddContentStore.sharedStore.mediaObjects
+          XCTAssertEqual(cache.count, 7, "Loading a collection should build included objects")
+          
+          XCTAssertTrue(cache.containsObjectWithId("ab2d92ee98b6309299e92024a487d4c0"), "Loading a view should build the view and included objects")
+          guard let node = collection.relationshipWithName("entities") as? OddRelationshipNode,
+            let entities = node.relationship as? Array<OddRelationship> else  { return }
+          
+          entities.forEach({ (mediaObject) in
+            OddLogger.info("Checking for \(mediaObject.id) in media cache")
+            XCTAssertTrue(cache.containsObjectWithId(mediaObject.id), "Loading a view should build the view and included objects")
+          })
+          
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
     })
   }
   

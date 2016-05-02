@@ -442,6 +442,11 @@ enum OddFeatureType {
             callback(nil, error )
             return
           }
+          
+          if let included = json["included"] as? jsonArray {
+            self.buildIncludedMediaObjects(included, cacheTime: data["cacheTime"] as? Int )
+          }
+          
           switch type {
           case .View:
             if mediaObject is OddView { callback(mediaObject, nil) }
@@ -453,6 +458,8 @@ enum OddFeatureType {
             self.returnError("Error fetching \(type.toString()): \(id)", errorCode: 105, notification: nil, callback: callback)
 //            callback(nil)
           }
+          
+          
         } // if
       }
     }
@@ -505,10 +512,31 @@ enum OddFeatureType {
       break
     } // switch
     if let object = mediaObject {
+      print("Adding: \(object.title!) \(object.id!)")
       self.mediaObjects.insert(object)
       return object
     } else {
       return nil
+    }
+  }
+  
+  /// builds any json objects in the 'include' field of a json 
+  /// response.
+  ///
+  /// - parameter json: `jsonArray` an array of `jsonObject`s describing the included objects
+  ///
+  func buildIncludedMediaObjects(json: jsonArray, cacheTime: Int?) {
+    json.forEach { (someJson) in
+      var objectJson = someJson
+      guard let typeString = objectJson["type"] as? String else { return }
+      if let type = OddMediaObjectType.fromString(typeString) {
+        var newJson: jsonObject = [:]
+        newJson["attributes"] = objectJson
+        newJson["meta"] = objectJson["meta"] as? jsonObject
+        newJson["id"] = objectJson["id"] as? String
+        if let cacheTime = cacheTime { newJson["cacheTime"] = cacheTime }
+        buildObjectFromJson(newJson, ofType: type)
+      }
     }
   }
   
