@@ -468,7 +468,7 @@ import UIKit
   
   /// Convenience method to return a given keys value
   /// or nil if it is not found
-  public func relationshipNodeWithName(name: String) -> Any? {
+  public func relationshipNodeWithName(name: String) -> OddRelationshipNode? {
     if let names = relationshipNodeNames() {
       if names.contains(name) {
         return self.relationshipNodes[name]!
@@ -478,7 +478,7 @@ import UIKit
   }
   
   public func numberOfItemsInRelationshipNodeWithName(name: String) -> Int {
-    guard let node = relationshipNodeWithName(name) as? OddRelationshipNode else { return 0 }
+    guard let node = relationshipNodeWithName(name) else { return 0 }
     
     return node.numberOfRelationships
   }

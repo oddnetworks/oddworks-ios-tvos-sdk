@@ -135,7 +135,7 @@ class OddSDKTests: XCTestCase {
         OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: nil, callback: { (objects, errors) in
           guard let view = objects.first as? OddView else { return }
           
-          if let node = view.relationshipNodeWithName("promotion") as? OddRelationshipNode {
+          if let node = view.relationshipNodeWithName("promotion") {
             XCTAssertEqual(node.numberOfRelationships, 1, "View should have the correct number of relationships")
             XCTAssertEqual(node.allIds!.count, 1, "Views relationship nodes should return the correct number of ids")
             if let promo = node.relationship as? OddRelationship {
@@ -146,7 +146,7 @@ class OddSDKTests: XCTestCase {
             }
           }
 
-          if let node = view.relationshipNodeWithName("featuredMedia") as? OddRelationshipNode {
+          if let node = view.relationshipNodeWithName("featuredMedia") {
             XCTAssertEqual(node.numberOfRelationships, 1, "View should have the correct number of relationships")
             XCTAssertEqual(node.allIds!.count, 1, "Views relationship nodes should return the correct number of ids")
             if let featuredMedia = node.relationship as? OddRelationship {
@@ -156,7 +156,7 @@ class OddSDKTests: XCTestCase {
             }
           }
 
-          if let node = view.relationshipNodeWithName("featuredCollections") as? OddRelationshipNode {
+          if let node = view.relationshipNodeWithName("featuredCollections") {
             XCTAssertEqual(node.numberOfRelationships, 1, "View should have the correct number of relationships")
             XCTAssertEqual(node.allIds!.count, 1, "Views relationship nodes should return the correct number of ids")
             XCTAssertNil(node.multiple, "View should only have singular relationships" )
@@ -214,7 +214,7 @@ class OddSDKTests: XCTestCase {
         OddContentStore.sharedStore.objectsOfType(.Collection, ids: [collectionId], include: "entities", callback: { (objects, errors) in
           guard let collection = objects.first as? OddMediaObjectCollection else { return }
           
-          if let node = collection.relationshipNodeWithName("entities") as? OddRelationshipNode {
+          if let node = collection.relationshipNodeWithName("entities") {
             XCTAssertEqual(node.numberOfRelationships, 6, "Collection should have the correct number of relationships")
             XCTAssertEqual(node.allIds!.count, 6, "Collections relationship node should return the correct number of ids")
             if let videos = node.relationship as? Array<OddRelationship> {
@@ -247,7 +247,7 @@ class OddSDKTests: XCTestCase {
           XCTAssertEqual(cache.count, 7, "Loading a collection should build included objects")
           
           XCTAssertTrue(cache.containsObjectWithId("ab2d92ee98b6309299e92024a487d4c0"), "Loading a view should build the view and included objects")
-          guard let node = collection.relationshipNodeWithName("entities") as? OddRelationshipNode,
+          guard let node = collection.relationshipNodeWithName("entities"),
             let entities = node.relationship as? Array<OddRelationship> else  { return }
           
           entities.forEach({ (mediaObject) in
