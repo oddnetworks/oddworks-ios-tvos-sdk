@@ -384,6 +384,32 @@ class OddSDKTests: XCTestCase {
       XCTAssertNil(error, "Error")
     })
   }
+  
+  func testVideoHasCorrectData() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        let videoId = "42baaa6e1e9ce2bb6d96d53007656f02"
+        OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], include: nil, callback: { (objects, errors) in
+          guard let video = objects.first as? OddVideo else { return }
+          XCTAssertNotNil(video, "SDK should load a video")
+          XCTAssertEqual(video.id, "42baaa6e1e9ce2bb6d96d53007656f02", "Video should have correct id")
+          XCTAssertEqual(video.title, "What's Up - April 2016", "Video should have correct title")
+          XCTAssertEqual(video.notes, "<p><a href='http://www.podtrac.com/pts/redirect.m4v/www.jpl.nasa.gov/videos/whatsup/20160401/JPL-20160401-WHATSUf-0001-720-CC.m4v'>\r\n<img src='http://www.jpl.nasa.gov/multimedia/thumbs/whatsup20140701-226.jpg' align='left' alt='' width='100' height='75' border='0' /></a><br />\r\n<br />\r\nJupiter, Mars, the Lyrid meteor shower and 2016�s best views of Mercury. </p><br clear='all'/><br />", "Video should have the correct description")
+          XCTAssertEqual(video.urlString, "http://www.podtrac.com/pts/redirect.m4v/www.jpl.nasa.gov/videos/whatsup/20160401/JPL-20160401-WHATSUf-0001-720-CC.m4v", "Video should have correct url")
+          XCTAssertEqual(video.duration, 13000000, "Video should have correct duration")
+          XCTAssertEqual(video.thumbnailLink, "https://spaceholder.cc/1920x1080", "Video should have correct image link")
+          XCTAssertNotNil(video.cacheTime, "Video should have a cacheTime value")
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
 
   
 }
