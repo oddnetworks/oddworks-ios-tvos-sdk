@@ -137,6 +137,7 @@ class OddSDKTests: XCTestCase {
           
           if let node = view.relationshipNodeWithName("promotion") as? OddRelationshipNode {
             XCTAssertEqual(node.numberOfRelationships, 1, "View should have the correct number of relationships")
+            XCTAssertEqual(node.allIds!.count, 1, "Views relationship nodes should return the correct number of ids")
             if let promo = node.relationship as? OddRelationship {
               XCTAssertNotNil(promo, "View should have a relationship for promotion")
               XCTAssertEqual(promo.id, "daily-show", "View should have promotion relationship with correct id")
@@ -147,6 +148,7 @@ class OddSDKTests: XCTestCase {
 
           if let node = view.relationshipNodeWithName("featuredMedia") as? OddRelationshipNode {
             XCTAssertEqual(node.numberOfRelationships, 1, "View should have the correct number of relationships")
+            XCTAssertEqual(node.allIds!.count, 1, "Views relationship nodes should return the correct number of ids")
             if let featuredMedia = node.relationship as? OddRelationship {
               XCTAssertNotNil(featuredMedia, "View should have a relationship for featuredMedia")
               XCTAssertEqual(featuredMedia.id, "0db5528d4c3c7ae4d5f24cce1c9fae51", "View should have featuredMedia relationship with correct id")
@@ -156,6 +158,7 @@ class OddSDKTests: XCTestCase {
 
           if let node = view.relationshipNodeWithName("featuredCollections") as? OddRelationshipNode {
             XCTAssertEqual(node.numberOfRelationships, 1, "View should have the correct number of relationships")
+            XCTAssertEqual(node.allIds!.count, 1, "Views relationship nodes should return the correct number of ids")
             XCTAssertNil(node.multiple, "View should only have singular relationships" )
             if let featuredCollections = node.relationship as? OddRelationship {
               XCTAssertNotNil(featuredCollections, "View should have a relationship for featuredCollections")
@@ -213,6 +216,7 @@ class OddSDKTests: XCTestCase {
           
           if let node = collection.relationshipNodeWithName("entities") as? OddRelationshipNode {
             XCTAssertEqual(node.numberOfRelationships, 6, "Collection should have the correct number of relationships")
+            XCTAssertEqual(node.allIds!.count, 6, "Collections relationship node should return the correct number of ids")
             if let videos = node.relationship as? Array<OddRelationship> {
               XCTAssertEqual(videos.count, 6, "Collection relationship should have an array of entities")
               XCTAssertEqual(videos.first?.id, "b99ab89d33c654277b739dadc53a2822", "Collection should have to correct related entities")
