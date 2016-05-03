@@ -16,7 +16,7 @@ public struct OddRelationship {
 public struct OddRelationshipNode {
   var single: OddRelationship?
   var multiple: Array<OddRelationship>?
-  var numberOfRelationships: Int {
+  public var numberOfRelationships: Int {
     get {
       if self.single != nil {
         return 1
@@ -25,6 +25,18 @@ public struct OddRelationshipNode {
       }
       
       return 0
+    }
+  }
+  
+  public var allIds: Array<String>? {
+    get {
+      if self.single != nil {
+        return [self.single!.id]
+      } else if self.multiple != nil {
+        return self.multiple!.map({$0.id})
+      }
+      
+      return nil
     }
   }
   
