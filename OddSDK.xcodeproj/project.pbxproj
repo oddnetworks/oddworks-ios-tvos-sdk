@@ -125,6 +125,7 @@
 		13A5BA4C1CD9265500DF4A7F /* OddRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A5BA4B1CD9265500DF4A7F /* OddRelationship.swift */; };
 		13A5BA4D1CD9265500DF4A7F /* OddRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A5BA4B1CD9265500DF4A7F /* OddRelationship.swift */; };
 		13A5BA4E1CD9265500DF4A7F /* OddRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A5BA4B1CD9265500DF4A7F /* OddRelationship.swift */; };
+		13A5BA501CD93BD500DF4A7F /* OddSDKPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A5BA4F1CD93BD500DF4A7F /* OddSDKPerformanceTests.swift */; };
 		13B9F4E51C3AD32B00AC04B1 /* OddSDKtvOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 13B9F4E41C3AD32B00AC04B1 /* OddSDKtvOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13B9F4EB1C3AD34B00AC04B1 /* OddContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68841C2460BA00A0A602 /* OddContentStore.swift */; };
 		13B9F4EC1C3AD34B00AC04B1 /* OddConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68871C2460BA00A0A602 /* OddConfig.swift */; };
@@ -200,6 +201,7 @@
 		135E68AC1C24611800A0A602 /* NSURL+query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+query.swift"; sourceTree = "<group>"; };
 		135E68AD1C24611800A0A602 /* Array+Bounds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Bounds.swift"; sourceTree = "<group>"; };
 		13A5BA4B1CD9265500DF4A7F /* OddRelationship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddRelationship.swift; sourceTree = "<group>"; };
+		13A5BA4F1CD93BD500DF4A7F /* OddSDKPerformanceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddSDKPerformanceTests.swift; sourceTree = "<group>"; };
 		13B4D73E1C8A1A040067590B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		13B9F4E21C3AD32B00AC04B1 /* OddSDKtvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OddSDKtvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B9F4E41C3AD32B00AC04B1 /* OddSDKtvOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OddSDKtvOS.h; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 		135E2E301CCA5C50002A3ADA /* OddSDKTests */ = {
 			isa = PBXGroup;
 			children = (
+				13A5BA4F1CD93BD500DF4A7F /* OddSDKPerformanceTests.swift */,
 				135E2E311CCA5C50002A3ADA /* OddSDKTests.swift */,
 				135E2E331CCA5C50002A3ADA /* Info.plist */,
 			);
@@ -644,6 +647,7 @@
 				135E2E4B1CCA7121002A3ADA /* UIApplication+TopVC.swift in Sources */,
 				135E2E481CCA70FE002A3ADA /* OddGateKeeper.swift in Sources */,
 				135E2E3D1CCA5EA8002A3ADA /* OddConfig.swift in Sources */,
+				13A5BA501CD93BD500DF4A7F /* OddSDKPerformanceTests.swift in Sources */,
 				135E2E4F1CCA7121002A3ADA /* NSObject+ClassName.swift in Sources */,
 				135E2E421CCA5EA8002A3ADA /* OddMediaObject.swift in Sources */,
 				13A5BA4E1CD9265500DF4A7F /* OddRelationship.swift in Sources */,

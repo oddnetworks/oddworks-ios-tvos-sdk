@@ -202,7 +202,6 @@ public class APIService: NSObject {
   /// See also: `APICallback`, `get()`, `post()`, `put()`, 'delete()'
   private func request(type: String, params: [ String : AnyObject ]?, url: String, callback: APICallback) {
     let request = NSMutableURLRequest(URL: NSURL(string: apiURL + url)!)
-OddLogger.info("URL: \(request.URL)")
     let session = NSURLSession.sharedSession()
     request.HTTPMethod = type
     

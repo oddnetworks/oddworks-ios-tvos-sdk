@@ -251,7 +251,6 @@ class OddSDKTests: XCTestCase {
             let entities = node.relationship as? Array<OddRelationship> else  { return }
           
           entities.forEach({ (mediaObject) in
-            OddLogger.info("Checking for \(mediaObject.id) in media cache")
             XCTAssertTrue(cache.containsObjectWithId(mediaObject.id), "Loading a view should build the view and included objects")
           })
           

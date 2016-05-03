@@ -512,7 +512,6 @@ enum OddFeatureType {
       break
     } // switch
     if let object = mediaObject {
-      print("Adding: \(object.title!) \(object.id!)")
       self.mediaObjects.insert(object)
       return object
     } else {
@@ -589,8 +588,6 @@ enum OddFeatureType {
           if let data = json["data"] as? Array<jsonObject> {
             var videoResults = Array<OddVideo>()
             var collectionResults = Array<OddMediaObjectCollection>()
-            OddLogger.info("DATA: \(data)")
-            OddLogger.info("\(data.count) results")
             for result: jsonObject in data {
               guard let typeStr = result["type"] as? String,
                let mediaObjectType = OddMediaObjectType.fromString( typeStr ) else { continue }
