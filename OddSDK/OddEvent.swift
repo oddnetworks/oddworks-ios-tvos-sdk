@@ -20,9 +20,9 @@ import WebKit
   var endDate: String?
   
   override var contentTypeString: String { return "event" }
-  
-  override var cellReuseIdentifier: String { return "eventCell" }
-  override var cellHeight: CGFloat { return 80 }
+//
+//  override var cellReuseIdentifier: String { return "eventCell" }
+//  override var cellHeight: CGFloat { return 80 }
   
   class func eventFromJson( json: jsonObject) -> OddEvent {
     let newArticle = OddEvent()

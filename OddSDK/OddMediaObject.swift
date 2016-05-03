@@ -8,49 +8,34 @@
 
 import UIKit
 
-public struct OddRelationship {
-  public var id: String
-  public var mediaObjectType: OddMediaObjectType
-}
-
-public struct OddRelationshipNode {
-  var single: OddRelationship?
-  var multiple: Array<OddRelationship>?
-  
-  public var relationship: Any? {
-    get {
-      return single != nil ? single : multiple
-    }
-  }
-}
 
 // have to use @objc here to get optional methods
 /// Protocol for media objects to implement that helps with
 /// displaying their data in a `UITableviewcell`
-@objc protocol DynamicMediaObject {
-  /// The height of the tableviewcell when displaying
-  /// the media objects information
-  var cellHeight: CGFloat { get }
-  
-  /// The reuseIdentifier for the cell in the storyboard
-  var cellReuseIdentifier: String { get }
-  
-  /// Method called by the `UITableViewController` to allow the media
-  /// item to configure the cell accordingly
-  ///
-  /// - parameter cell: The cell to be configured. Cell will be of the
-  /// type set in `cellReuseIdentifier`
-  func configureCell(cell: UITableViewCell)
-  
-  /// Optional method to allow the media item to initiate an action
-  /// upon being selected from a table view.
-  ///
-  /// - parameter vc: The view controller that is the root of the
-  /// `UITableViewController` that contains the cell. Typically this
-  /// is a UINavigationController. This is provided to allow the media
-  /// item to push a new view controller on the stack if desired
-  optional func performActionForSelection(vc: UIViewController)
-}
+//@objc protocol DynamicMediaObject {
+//  /// The height of the tableviewcell when displaying
+//  /// the media objects information
+//  var cellHeight: CGFloat { get }
+//  
+//  /// The reuseIdentifier for the cell in the storyboard
+//  var cellReuseIdentifier: String { get }
+//  
+//  /// Method called by the `UITableViewController` to allow the media
+//  /// item to configure the cell accordingly
+//  ///
+//  /// - parameter cell: The cell to be configured. Cell will be of the
+//  /// type set in `cellReuseIdentifier`
+//  func configureCell(cell: UITableViewCell)
+//  
+//  /// Optional method to allow the media item to initiate an action
+//  /// upon being selected from a table view.
+//  ///
+//  /// - parameter vc: The view controller that is the root of the
+//  /// `UITableViewController` that contains the cell. Typically this
+//  /// is a UINavigationController. This is provided to allow the media
+//  /// item to push a new view controller on the stack if desired
+//  optional func performActionForSelection(vc: UIViewController)
+//}
 
 /// The known types of `OddMediaObject`s
 ///
@@ -156,7 +141,7 @@ public struct OddRelationshipNode {
 /// The root object class for all media object types
 ///
 /// Provides instance variables for common fields
-@objc public class OddMediaObject: NSObject, NSCoding, DynamicMediaObject {
+@objc public class OddMediaObject: NSObject, NSCoding {
   
   /// The id of the media object in the database
   public var id: String?
@@ -224,18 +209,18 @@ public struct OddRelationshipNode {
   /// A string denoting the type of cell to use when displaying this objects information.
   ///
   /// Must be overwritten by subclasses
-  var cellReuseIdentifier: String { return "cell" }
+//  var cellReuseIdentifier: String { return "cell" }
   
   /// When displaying this media objects info in a `UITableViewCell` use this height
-  var cellHeight: CGFloat { return 30 }
+//  var cellHeight: CGFloat { return 30 }
   
   /// When displaying this media object in a `UITableView` use this text for the header
   /// if specified. Typically only used for `OddMediaObjectsCollection` types
-  var headerText: String? = nil
+//  var headerText: String? = nil
   
   /// When displaying this media object in a `UITableView` use this height for the header
   /// if specified. Typically only used for `OddMediaObjectsCollection` types
-  var headerHeight: CGFloat = 0
+//  var headerHeight: CGFloat = 0
   
   /// Customer specific information
   /// A customer may require data that only their application can make
@@ -261,7 +246,7 @@ public struct OddRelationshipNode {
     }
   }
   
-  var relationships: Dictionary<String, OddRelationshipNode> = [:]
+  var relationshipNodes: Dictionary<String, OddRelationshipNode> = [:]
   
   /// Given the json for the object type parses the data and sets the
   /// instance variables as appropriate
@@ -333,7 +318,7 @@ public struct OddRelationshipNode {
             kind = OddMediaObjectType.fromString( type ) {
           let newRelationship = OddRelationship(id: id, mediaObjectType: kind)
           let newNode = OddRelationshipNode(single: newRelationship, multiple: nil)
-          self.relationships[key] = newNode
+          self.relationshipNodes[key] = newNode
         } else if let data = value["data"] as? jsonArray {
           var relationships = Array<OddRelationship>()
           data.forEach({ (dict) in
@@ -343,7 +328,7 @@ public struct OddRelationshipNode {
             relationships.append(OddRelationship(id: id, mediaObjectType: kind))
           })
           let newNode = OddRelationshipNode(single: nil, multiple: relationships)
-          self.relationships[key] = newNode
+          self.relationshipNodes[key] = newNode
         }
       }
     }
@@ -470,12 +455,12 @@ public struct OddRelationshipNode {
   
   /// Convenience method to retun all keys in the
   /// mediaObjects meta dictionary
-  public func relationshipNames() -> Set<String>? {
-    if self.relationships.count == 0 { return nil }
+  public func relationshipNodeNames() -> Set<String>? {
+    if self.relationshipNodes.count == 0 { return nil }
     
     var result = Set<String>()
     
-    self.relationships.keys.forEach({ (key) -> () in
+    self.relationshipNodes.keys.forEach({ (key) -> () in
       result.insert(key)
     })
     return result
@@ -483,13 +468,19 @@ public struct OddRelationshipNode {
   
   /// Convenience method to return a given keys value
   /// or nil if it is not found
-  public func relationshipWithName(name: String) -> Any? {
-    if let names = relationshipNames() {
+  public func relationshipNodeWithName(name: String) -> Any? {
+    if let names = relationshipNodeNames() {
       if names.contains(name) {
-        return self.relationships[name]!
+        return self.relationshipNodes[name]!
       }
     }
     return nil
+  }
+  
+  public func numberOfItemsInRelationshipNodeWithName(name: String) -> Int {
+    guard let node = relationshipNodeWithName(name) as? OddRelationshipNode else { return 0 }
+    
+    return node.numberOfRelationships
   }
   
   //MARK: - Dynamic Media Object

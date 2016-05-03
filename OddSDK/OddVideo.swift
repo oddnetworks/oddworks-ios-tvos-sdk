@@ -15,10 +15,10 @@ import UIKit
   override public var contentTypeString: String { return "video" }
   
   /// `UITableViewCell` type to be used when displaying video assets
-  override var cellReuseIdentifier: String { return "VideoInfoCell" }
+//  override var cellReuseIdentifier: String { return "VideoInfoCell" }
   
   /// `UITableViewCell` height to be used when displaying video assets
-  override var cellHeight: CGFloat { return 80 }
+//  override var cellHeight: CGFloat { return 80 }
   
   /// The type of player service used to play the video asset
   ///

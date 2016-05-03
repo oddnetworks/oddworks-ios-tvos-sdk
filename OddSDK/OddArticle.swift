@@ -17,10 +17,10 @@ import WebKit
   var sourceURL: String?
   
   override var contentTypeString: String { return "article" }
-  
-  override var cellReuseIdentifier: String { return "mediaInfoCell" }
-  override var cellHeight: CGFloat { return 80 }
-  
+//
+//  override var cellReuseIdentifier: String { return "mediaInfoCell" }
+//  override var cellHeight: CGFloat { return 80 }
+//  
   class func articleFromJson( json: jsonObject) -> OddArticle {
     let newArticle = OddArticle()
     newArticle.configureWithJson(json)

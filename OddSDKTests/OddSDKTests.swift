@@ -125,7 +125,7 @@ class OddSDKTests: XCTestCase {
     })
   }
   
-  func testHomeViewHasCorrectRelationships() {
+  func testViewHasCorrectRelationships() {
     let okExpectation = expectationWithDescription("ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
@@ -135,15 +135,16 @@ class OddSDKTests: XCTestCase {
         OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: nil, callback: { (objects, errors) in
           guard let view = objects.first as? OddView else { return }
           
-          if let node = view.relationshipWithName("promotion") as? OddRelationshipNode {
+          if let node = view.relationshipNodeWithName("promotion") as? OddRelationshipNode {
             if let promo = node.relationship as? OddRelationship {
               XCTAssertNotNil(promo, "View should have a relationship for promotion")
               XCTAssertEqual(promo.id, "daily-show", "View should have promotion relationship with correct id")
               XCTAssertEqual(promo.mediaObjectType.toString(), "promotion", "View should have promotion relationship with correct type")
+//              XCTAssertEqual(node.numberOfRelationships, 1, "View should have a promotion relationship with the correct number of reltaionships")
             }
           }
 
-          if let node = view.relationshipWithName("featuredMedia") as? OddRelationshipNode {
+          if let node = view.relationshipNodeWithName("featuredMedia") as? OddRelationshipNode {
             if let featuredMedia = node.relationship as? OddRelationship {
               XCTAssertNotNil(featuredMedia, "View should have a relationship for featuredMedia")
               XCTAssertEqual(featuredMedia.id, "0db5528d4c3c7ae4d5f24cce1c9fae51", "View should have featuredMedia relationship with correct id")
@@ -151,7 +152,7 @@ class OddSDKTests: XCTestCase {
             }
           }
 
-          if let node = view.relationshipWithName("featuredCollections") as? OddRelationshipNode {
+          if let node = view.relationshipNodeWithName("featuredCollections") as? OddRelationshipNode {
             XCTAssertNil(node.multiple, "View should only have singular relationships" )
             if let featuredCollections = node.relationship as? OddRelationship {
               XCTAssertNotNil(featuredCollections, "View should have a relationship for featuredCollections")
@@ -207,7 +208,7 @@ class OddSDKTests: XCTestCase {
         OddContentStore.sharedStore.objectsOfType(.Collection, ids: [collectionId], include: "entities", callback: { (objects, errors) in
           guard let collection = objects.first as? OddMediaObjectCollection else { return }
           
-          if let node = collection.relationshipWithName("entities") as? OddRelationshipNode {
+          if let node = collection.relationshipNodeWithName("entities") as? OddRelationshipNode {
             if let videos = node.relationship as? Array<OddRelationship> {
               XCTAssertEqual(videos.count, 6, "Collection relationship should have an array of entities")
               XCTAssertEqual(videos.first?.id, "b99ab89d33c654277b739dadc53a2822", "Collection should have to correct related entities")
@@ -238,7 +239,7 @@ class OddSDKTests: XCTestCase {
           XCTAssertEqual(cache.count, 7, "Loading a collection should build included objects")
           
           XCTAssertTrue(cache.containsObjectWithId("ab2d92ee98b6309299e92024a487d4c0"), "Loading a view should build the view and included objects")
-          guard let node = collection.relationshipWithName("entities") as? OddRelationshipNode,
+          guard let node = collection.relationshipNodeWithName("entities") as? OddRelationshipNode,
             let entities = node.relationship as? Array<OddRelationship> else  { return }
           
           entities.forEach({ (mediaObject) in
@@ -411,5 +412,4 @@ class OddSDKTests: XCTestCase {
     })
   }
 
-  
 }
