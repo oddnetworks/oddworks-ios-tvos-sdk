@@ -530,12 +530,8 @@ enum OddFeatureType {
       var objectJson = someJson
       guard let typeString = objectJson["type"] as? String else { return }
       if let type = OddMediaObjectType.fromString(typeString) {
-        var newJson: jsonObject = [:]
-        newJson["attributes"] = objectJson
-        newJson["meta"] = objectJson["meta"] as? jsonObject
-        newJson["id"] = objectJson["id"] as? String
-        if let cacheTime = cacheTime { newJson["cacheTime"] = cacheTime }
-        buildObjectFromJson(newJson, ofType: type)
+        if let cacheTime = cacheTime { objectJson["cacheTime"] = cacheTime }
+        buildObjectFromJson(objectJson, ofType: type)
       }
     }
   }
