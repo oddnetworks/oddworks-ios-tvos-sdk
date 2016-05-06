@@ -495,6 +495,28 @@ class OddSDKTests: XCTestCase {
       XCTAssertNil(error, "Error")
     })
   }
-
+  
+  func testCanFetchObjectsInRelationship() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        OddContentStore.sharedStore.objectsOfType(.View, ids: ["menu"], include: "items", callback: { (objects, errors) in
+          guard let view = objects.first as? OddView,
+            let node = view.relationshipNodeWithName("items") else { return }
+          node.getAllObjects({ (objects, errors) in
+            XCTAssertEqual(objects.count, 2)
+            XCTAssertEqual(objects.filter({$0.id == "0db5528d4c3c7ae4d5f24cce1c9fae51"}).count, 1)
+            XCTAssertEqual(objects.filter({$0.id == "ab2d92ee98b6309299e92024a487d4c0"}).count, 1)
+            okExpectation.fulfill()
+          })
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
   
 }
