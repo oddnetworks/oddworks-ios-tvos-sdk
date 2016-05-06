@@ -336,13 +336,26 @@ enum OddFeatureType {
     } else {
       var objects: Array<OddMediaObject> = Array()
       var unMatchedIds: Array<String> = []
+      var localErrors: Array<NSError> = []
       
       for id: String in ids {
         var match = false
         // check store for existing media objects
+       
         for object in self.mediaObjects {
-          if let objectId = object.id {
-            if objectId == id && useCacheTTL && !object.cacheHasExpired {
+          
+          if let objectId = object.id  {
+            let correctType = object.objectIsOfType(type)
+            let idMatch = objectId == id
+            
+            if idMatch && !correctType {
+              // consider this one dealt with
+              localErrors.append( NSError(domain: "Odd", code: 110, userInfo: ["error" : "\(id) exists but is not of type \(type.toString())"]) )
+              match = true
+              break
+            }
+            
+            if idMatch  && correctType && useCacheTTL && !object.cacheHasExpired {
               objects.append(object)
               match = true
               break
@@ -360,7 +373,12 @@ enum OddFeatureType {
         fetchedObjects.forEach({ (obj) -> () in
           objects.append(obj)
         })
-        callback(objects, errors)
+        
+        if errors != nil {
+          localErrors.appendContentsOf(errors!)
+        }
+        
+        callback(objects, localErrors)
       })
     }
   }

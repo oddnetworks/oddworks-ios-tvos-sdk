@@ -522,5 +522,16 @@ import UIKit
     return nil
   }
   
+  public func objectIsOfType(type: OddMediaObjectType) -> Bool {
+    var result = false
+    switch type {
+    case .View: result = self is OddView
+    case .Video: result = self is OddVideo
+    case .Collection: result = self is OddMediaObjectCollection
+    case .Promotion: result = self is OddPromotion
+    default: break
+    }
+    return result
+  }
   
 }

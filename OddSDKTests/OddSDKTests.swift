@@ -418,5 +418,62 @@ class OddSDKTests: XCTestCase {
       XCTAssertNil(error, "Error")
     })
   }
+  
+  func testFetchReturnsOnlyRequestedObjectTypesNoInclude() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        guard let config = OddContentStore.sharedStore.config,
+          let menuViewId = config.idForViewName("menu") else { return }
+        OddContentStore.sharedStore.objectsOfType(.View, ids: [menuViewId], include: nil, callback: { (objects, errors) in
+          guard let view = objects.first as? OddView,
+            let node = view.relationshipNodeWithName("items"),
+            let ids = node.allIds else { return }
+          
+          OddContentStore.sharedStore.objectsOfType(.Collection, ids: ids, include: nil, callback: { (objects, errors) in
+            XCTAssertEqual(objects.count, 1, "Fetch objects of type should only return the correct types")
+            XCTAssertEqual(objects.first?.id, "ab2d92ee98b6309299e92024a487d4c0", "Fetch objects of type should only return the correct types")
+            okExpectation.fulfill()
+          })
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
 
+  }
+
+  
+  func testFetchReturnsOnlyRequestedObjectTypesWithInclude() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        guard let config = OddContentStore.sharedStore.config,
+          let menuViewId = config.idForViewName("menu") else { return }
+        OddContentStore.sharedStore.objectsOfType(.View, ids: [menuViewId], include: "items", callback: { (objects, errors) in
+          guard let view = objects.first as? OddView,
+            let node = view.relationshipNodeWithName("items"),
+            let ids = node.allIds else { return }
+          
+          OddContentStore.sharedStore.objectsOfType(.Collection, ids: ids, include: nil, callback: { (objects, errors) in
+            XCTAssertEqual(objects.count, 1, "Fetch objects of type should only return the correct types")
+            XCTAssertEqual(objects.first?.id, "ab2d92ee98b6309299e92024a487d4c0", "Fetch objects of type should only return the correct types")
+            XCTAssertEqual(errors!.first?.userInfo["error"]! as? String, "0db5528d4c3c7ae4d5f24cce1c9fae51 exists but is not of type collection", "Fetch objects of type should return an error for mismatched types")
+            okExpectation.fulfill()
+          })
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+    
+  }
+
+  
 }
