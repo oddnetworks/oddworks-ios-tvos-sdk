@@ -32,6 +32,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		130A4CED1CDBC4950047F553 /* OddStoreKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A4CEC1CDBC4950047F553 /* OddStoreKeeper.swift */; };
+		130A4CEE1CDBC4950047F553 /* OddStoreKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A4CEC1CDBC4950047F553 /* OddStoreKeeper.swift */; };
 		130AA71B1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
 		130AA71C1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
 		130AA71D1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
@@ -130,6 +132,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		130A4CEC1CDBC4950047F553 /* OddStoreKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddStoreKeeper.swift; sourceTree = "<group>"; };
 		130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddGateKeeper.swift; sourceTree = "<group>"; };
 		134386601C3D574C0042CCC8 /* OddLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddLogger.swift; sourceTree = "<group>"; };
 		134797791C51424800876D39 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
@@ -326,6 +329,7 @@
 			children = (
 				134797791C51424800876D39 /* Keychain.swift */,
 				130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */,
+				130A4CEC1CDBC4950047F553 /* OddStoreKeeper.swift */,
 				135E68A01C2460E900A0A602 /* OddMetricService.swift */,
 				135E687B1C24608200A0A602 /* APIService.swift */,
 			);
@@ -642,6 +646,7 @@
 				135E68961C2460BA00A0A602 /* OddPromotion.swift in Sources */,
 				135E68B71C24611800A0A602 /* NSURL+query.swift in Sources */,
 				135E68801C24608200A0A602 /* OddView.swift in Sources */,
+				130A4CED1CDBC4950047F553 /* OddStoreKeeper.swift in Sources */,
 				135E68B51C24611800A0A602 /* Double+Time.swift in Sources */,
 				135E68B61C24611800A0A602 /* UIApplication+TopVC.swift in Sources */,
 				135E68B31C24611800A0A602 /* UIImage+Gradient.swift in Sources */,
@@ -664,6 +669,7 @@
 				13B9F4FE1C3AD35500AC04B1 /* UIImage+Gradient.swift in Sources */,
 				13B9F4F91C3AD34B00AC04B1 /* APIService.swift in Sources */,
 				13B9F5001C3AD35500AC04B1 /* Double+Time.swift in Sources */,
+				130A4CEE1CDBC4950047F553 /* OddStoreKeeper.swift in Sources */,
 				13B9F5021C3AD35500AC04B1 /* NSURL+query.swift in Sources */,
 				13B9F4EB1C3AD34B00AC04B1 /* OddContentStore.swift in Sources */,
 				1347977B1C51424800876D39 /* Keychain.swift in Sources */,
