@@ -474,6 +474,27 @@ class OddSDKTests: XCTestCase {
     })
     
   }
+  
+  func testCanFetchNodeIdsOfType() {
+    let okExpectation = expectationWithDescription("ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        OddContentStore.sharedStore.objectsOfType(.View, ids: ["menu"], include: "items", callback: { (objects, errors) in
+          guard let view = objects.first as? OddView,
+            let node = view.relationshipNodeWithName("items"),
+            let ids = node.idsOfType(.Video) else { return }
+          XCTAssertEqual(ids.count, 1)
+          XCTAssertEqual(ids[0], "0db5528d4c3c7ae4d5f24cce1c9fae51")
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectationsWithTimeout(10, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
 
   
 }

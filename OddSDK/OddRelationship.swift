@@ -40,6 +40,19 @@ public struct OddRelationshipNode {
     }
   }
   
+  public func idsOfType(type: OddMediaObjectType) -> Array<String>? {
+    if let single = self.single {
+      if single.mediaObjectType == type {
+        return [single.id]
+      }
+    }
+    if let multiple = multiple {
+      let nodes = multiple.filter({$0.mediaObjectType == type})
+      return nodes.map({$0.id})
+    }
+    return nil
+  }
+  
   public var relationship: Any? {
     get {
       return single != nil ? single : multiple
