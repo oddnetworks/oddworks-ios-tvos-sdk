@@ -378,7 +378,7 @@ enum OddFeatureType {
           localErrors.appendContentsOf(errors!)
         }
         
-        callback(objects, localErrors)
+        callback(objects, localErrors.isEmpty ? nil : localErrors)
       })
     }
   }
