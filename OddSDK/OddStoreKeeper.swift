@@ -11,6 +11,10 @@
 import UIKit
 import StoreKit
 
+public protocol StoreKeeperDelegate {
+  func processStoreProducts(products: Array<SKProduct>, invalidProducts: Array<String>? )
+}
+
 public class OddStoreKeeper: NSObject, SKProductsRequestDelegate {
   
   var prefixId: String {
@@ -20,24 +24,26 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate {
     }
   }
   
-  private var productIdentifiers: Set<String> = Set()
+  static public var productIdentifiers: Set<String> = Set()
   private var products: Array<SKProduct> = Array()
   private var productsRequest: SKProductsRequest = SKProductsRequest()
   
+  public var delegate: StoreKeeperDelegate?
+  
+  
   public override init() {
     super.init()
-    fetchProductIdentifiers()
-    validateProductIdentifiers()
   }
   
   func fetchProductIdentifiers() {
     guard let url = NSBundle.mainBundle().URLForResource("iap_product_ids", withExtension: "plist"),
       let idArray = NSArray(contentsOfURL: url) as? Array<String> else { return }
-    self.productIdentifiers = Set(idArray.map { "\(prefixId)\($0)" } )
+    OddStoreKeeper.productIdentifiers = Set(idArray.map { "\(prefixId)\($0)" } )
   }
   
-  func validateProductIdentifiers() {
-    self.productsRequest = SKProductsRequest(productIdentifiers: self.productIdentifiers)
+  public func validateProductIdentifiers() {
+    self.fetchProductIdentifiers()
+    self.productsRequest = SKProductsRequest(productIdentifiers: OddStoreKeeper.productIdentifiers)
     
     self.productsRequest.delegate = self
     self.productsRequest.start()
@@ -51,7 +57,13 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate {
     }
     
     self.products.forEach { (product) in
-      OddLogger.info("\(product.localizedTitle) is valid")
+      OddLogger.info("\(product.localizedTitle) - \(product.price) is valid")
+    }
+    
+    if let invalids = response.invalidProductIdentifiers as? Array<String> {
+        self.delegate?.processStoreProducts(self.products, invalidProducts: invalids)
+    } else {
+      self.delegate?.processStoreProducts(self.products, invalidProducts: nil)
     }
   }
   
