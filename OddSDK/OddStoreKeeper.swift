@@ -11,6 +11,17 @@
 import UIKit
 import StoreKit
 
+
+// returns the products price in the correct currency format for the users locale
+public extension SKProduct {
+  func formattedPrice() -> String? {
+    let formatter = NSNumberFormatter()
+    formatter.numberStyle = .CurrencyStyle
+    formatter.locale = self.priceLocale
+    return formatter.stringFromNumber(self.price)
+  }
+}
+
 public protocol StoreKeeperDelegate {
   func processStoreProducts(products: Array<SKProduct>, invalidProducts: Array<String>? )
 }
