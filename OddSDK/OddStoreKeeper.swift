@@ -50,7 +50,6 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   
   public override init() {
     super.init()
-    SKPaymentQueue.defaultQueue().addTransactionObserver(self)
   }
   
   // MARK: - Products
@@ -101,41 +100,12 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   // MARK: - Payments
   
   public func makePaymentForProduct(product: SKProduct) {
+    SKPaymentQueue.defaultQueue().addTransactionObserver(self)
     let payment = SKMutablePayment(product: product)
     SKPaymentQueue.defaultQueue().addPayment(payment)
   }
   
-
   // MARK: - SKPaymentTransactionObserver
-  
-//  - (void)paymentQueue:(SKPaymentQueue *)queue
-//  updatedTransactions:(NSArray *)transactions
-//  {
-//  for (SKPaymentTransaction *transaction in transactions) {
-//  switch (transaction.transactionState) {
-//  // Call the appropriate custom method for the transaction state.
-//  case SKPaymentTransactionStatePurchasing:
-//  [self showTransactionAsInProgress:transaction deferred:NO];
-//  break;
-//  case SKPaymentTransactionStateDeferred:
-//  [self showTransactionAsInProgress:transaction deferred:YES];
-//  break;
-//  case SKPaymentTransactionStateFailed:
-//  [self failedTransaction:transaction];
-//  break;
-//  case SKPaymentTransactionStatePurchased:
-//  [self completeTransaction:transaction];
-//  break;
-//  case SKPaymentTransactionStateRestored:
-//  [self restoreTransaction:transaction];
-//  break;
-//  default:
-//  // For debugging
-//  NSLog(@"Unexpected transaction state %@", @(transaction.transactionState));
-//  break;
-//  }
-//  }
-//  }
   
   public func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
     transactions.forEach { (transaction) in
