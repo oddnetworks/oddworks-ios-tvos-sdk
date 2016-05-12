@@ -456,4 +456,28 @@ public class OddGateKeeper: NSObject {
     defaults.synchronize()
   }
   
+  
+  public func createSubscription(url: String, type: String, firstName: String, lastName: String, email: String, password: String, callback: (Bool, jsonObject?, NSError?) -> Void ) {
+    let params = [
+      "type" : type,
+      "firstName" : firstName,
+      "lastName" : lastName,
+      "email" : email,
+      "password" : password
+    ]
+    
+    self.post(params, url: url) { (response, error) in
+      if error != nil {
+        callback(false, nil, error)
+      } else {
+        guard let json = response,
+          let success = json["success"] as? Bool else { callback (false, nil, nil); return }
+        
+        callback(success, json["meta"] as? jsonObject, nil)
+        OddLogger.info("Create Subscription result: \(success)")
+      }
+    }
+  }
+  
+  
 }
