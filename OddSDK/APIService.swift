@@ -117,6 +117,8 @@ public class APIService: NSObject {
   /// API version
   var apiURL: String { return "\(baseURL)/" }
   
+  var metricsURL: String { return "http://127.0.0.1:8080/" }
+  
   /// A `String` built from various device infomation fields to be sent to the API server 
   /// with each request
   var agentHeader = UserAgentHeader()
@@ -201,7 +203,15 @@ public class APIService: NSObject {
   ///
   /// See also: `APICallback`, `get()`, `post()`, `put()`, 'delete()'
   private func request(type: String, params: [ String : AnyObject ]?, url: String, callback: APICallback) {
-    let request = NSMutableURLRequest(URL: NSURL(string: apiURL + url)!)
+    
+    // this is hacky. clean up laterz
+    
+    var domain = apiURL
+    if url == "events" {
+      domain = metricsURL
+    }
+    
+    let request = NSMutableURLRequest(URL: NSURL(string: domain + url)!)
     let session = NSURLSession.sharedSession()
     request.HTTPMethod = type
     
@@ -241,7 +251,12 @@ public class APIService: NSObject {
       } else {
         request.addValue("iPhone", forHTTPHeaderField: "User-Agent")
       }
-    #endif  
+    #endif
+    
+    print("HEADERS:")
+    request.allHTTPHeaderFields?.forEach({ (header) in
+      print("\(header)")
+    })
     
     let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
       

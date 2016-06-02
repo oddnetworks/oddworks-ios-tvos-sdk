@@ -19,6 +19,9 @@ enum OddMetricAction: String {
   case VideoError
   case VideoPlaying
   case VideoStop
+  
+  // case AdRequest
+  // case AdPlay
 }
 
 //enum PlayerType: String {
@@ -103,11 +106,15 @@ public struct OddMetricService {
       //parsing content
       var contentId: String?
       var contentType: String?
+      var contentTitle: String?
+      var contentThumbnailURL: String?
 //      let organizationID = OddContentStore.sharedStore.organizationId
       
       if let content = content {
         contentId = content.id
         contentType = content.contentTypeString
+        contentTitle = content.title
+        contentThumbnailURL = content.thumbnailLink
       } else {
         contentId = "null"
         contentType = "null"
@@ -125,6 +132,8 @@ public struct OddMetricService {
         if var attributes = params["attributes"] as? jsonObject {
           attributes["contentType"] = "\(contentType!)"
           attributes["contentId"] = "\(contentId!)"
+          attributes["contentTitle"] = "\(contentTitle!)"
+          attributes["contentThumbnailURL"] = "\(contentThumbnailURL!)"
           params["attributes"] = attributes
         }
         
