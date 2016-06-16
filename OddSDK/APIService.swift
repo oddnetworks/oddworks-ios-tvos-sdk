@@ -202,7 +202,11 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`, `get()`, `post()`, `put()`, 'delete()'
-  private func request(type: String, params: [ String : AnyObject ]?, url: String, callback: APICallback) {
+  private func request(type: String,
+                       params: [ String : AnyObject ]?,
+                       url: String,
+                       altDomain: String? = nil,
+                       callback: APICallback) {
     
     // this is hacky. clean up laterz
     

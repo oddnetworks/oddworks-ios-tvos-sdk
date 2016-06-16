@@ -19,6 +19,7 @@ enum OddMetricAction: String {
   case VideoError
   case VideoPlaying
   case VideoStop
+  case UserNew
   
   // case AdRequest
   // case AdPlay
@@ -30,8 +31,6 @@ enum OddMetricAction: String {
 //  case Airplay    = "airplay"
 //}
 
-// this will go away once metrics no longer require stuff they 
-// already have on the server like playerType and duration
 public struct OddMediaPlayerInfo {
   var playerType: String?
   var elapsed: Int?
@@ -95,7 +94,7 @@ public struct OddMetricService {
   public static func postMediaPlayerStopedPlayingMediaObject(mediaObject: OddMediaObject, playerInfo: OddMediaPlayerInfo) {
     OddMetricService.postMetricForAction(.VideoStop, playerInfo: playerInfo, content: mediaObject)
   }
-  /// Posts a metic when a media player encounters an error. Client applicaitons will need to monitor
+  /// Posts a metric when a media player encounters an error. Client applications will need to monitor
   /// their media players for notifications when errors occcur and post accordingly
   public static func postMediaPlayerDidEncounterErrorWithMediaObject(mediaObject: OddMediaObject, playerInfo: OddMediaPlayerInfo) {
     OddMetricService.postMetricForAction(.VideoError, playerInfo: playerInfo, content: mediaObject)

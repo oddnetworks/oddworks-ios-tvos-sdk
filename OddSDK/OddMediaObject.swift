@@ -178,7 +178,15 @@ import UIKit
   public var link: String?
   
   /// A URL string to a thumbnail image to be used in conjunction with the media object
-  public var thumbnailLink: String?
+//  public var thumbnailLink: String?
+  
+  /// FOR LEGACY APPS ONLY. Returns the first image in the image collection
+  public var thumbnailLink: String? {
+    return self.images?.first?.url
+  }
+  
+  /// For Oddworks 2.0+ mediaObjects have an array of images
+  public var images: Array<OddImage>?
   
   /// A customizable URL string that enables formatting on the thumbnailLink
   public var formattedThumbnailLink: String?
@@ -261,7 +269,7 @@ import UIKit
     coder.encodeObject(self.title, forKey: "title")
     coder.encodeObject(self.notes, forKey: "notes")
     coder.encodeObject(self.assetId, forKey: "assetId")
-    coder.encodeObject(self.thumbnailLink, forKey: "thumbnailLink")
+//    coder.encodeObject(self.thumbnailLink, forKey: "thumbnailLink")
     coder.encodeObject(self.urlString, forKey: "urlString")
     coder.encodeObject(self.duration, forKey: "duration")
     coder.encodeObject(self.subtitle, forKey: "subtitle")
@@ -275,14 +283,12 @@ import UIKit
     self.title = decoder.decodeObjectForKey("title") as? String
     self.notes = decoder.decodeObjectForKey("notes") as? String
     self.assetId = decoder.decodeObjectForKey("assetId") as? String
-    self.thumbnailLink = decoder.decodeObjectForKey("thumbnailLink") as? String
+//    self.thumbnailLink = decoder.decodeObjectForKey("thumbnailLink") as? String
     self.urlString = decoder.decodeObjectForKey("urlString") as? String
     self.duration = decoder.decodeObjectForKey("duration") as? Int
     self.subtitle = decoder.decodeObjectForKey("subtitle") as? String
     self.downloadDate = decoder.decodeObjectForKey("downloadDate") as? NSDate
   }
-  
-  
   
   func configureWithJson(json: jsonObject) {
     self.id = json["id"] as? String
@@ -299,8 +305,16 @@ import UIKit
       self.urlString = attribs["url"] as? String
       self.duration = attribs["duration"] as? Int
       self.releaseDate = attribs["releaseDate"] as? String
-      if let images = attribs["images"] as? jsonObject {
-        self.thumbnailLink = images["aspect16x9"] as? String
+//      if let images = attribs["images"] as? jsonObject {
+//        self.thumbnailLink = images["aspect16x9"] as? String
+//      }
+      if let images = attribs["images"] as? jsonArray {
+        self.images = []
+        images.forEach({ (image) in
+          if let newImage = OddImage.imageFromJson(image) {
+            self.images?.append(newImage)
+          }
+        })
       }
       if let ads = attribs["ads"] as? jsonObject, id = ads["assetId"] as? String {
         self.assetId = id
