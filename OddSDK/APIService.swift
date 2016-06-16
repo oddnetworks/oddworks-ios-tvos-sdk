@@ -8,6 +8,17 @@
 
 import UIKit
 
+/// Allows dependency injection for HTTPRequest handlers
+protocol OddHTTPRequestService {
+  func post(params: [ String : AnyObject ]?, url: String, altDomain: String?, callback: APICallback)
+}
+
+//extension OddHTTPRequestService {
+//  func makePost(params: [ String : AnyObject ]?, url: String, callback: APICallback) {
+//    post(params, url: url, altDomain: nil, callback: callback)
+//  }
+//}
+
 /// A helper object to provide either an object
 /// or the error returned from the server
 public typealias APICallback = ((AnyObject?, NSError?) -> Void)
@@ -55,7 +66,7 @@ struct UserAgentHeader {
 /// Handles http requests for the API server.
 /// Parses reponses or errors returning the appropriate
 /// `JSON` or server error information
-public class APIService: NSObject {
+public class APIService: NSObject, OddHTTPRequestService {
 
   /// Only one instance of this class is required for any app.
   /// Access should be made through this singleton
@@ -117,8 +128,6 @@ public class APIService: NSObject {
   /// API version
   var apiURL: String { return "\(baseURL)/" }
   
-  var metricsURL: String { return "http://127.0.0.1:8080/" }
-  
   /// A `String` built from various device infomation fields to be sent to the API server 
   /// with each request
   var agentHeader = UserAgentHeader()
@@ -155,8 +164,8 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func post(params: [ String : AnyObject ]?, url: String, callback: APICallback) {
-    request("POST", params: params, url: url, callback: callback)
+  public func post(params: [ String : AnyObject ]?, url: String, altDomain: String? = nil, callback: APICallback) {
+    request("POST", params: params, url: url, altDomain: altDomain, callback: callback)
   }
   
   /// Performs a `PUT` request on the API Server
@@ -211,8 +220,8 @@ public class APIService: NSObject {
     // this is hacky. clean up laterz
     
     var domain = apiURL
-    if url == "events" {
-      domain = metricsURL
+    if altDomain != nil {
+      domain = altDomain!
     }
     
     let request = NSMutableURLRequest(URL: NSURL(string: domain + url)!)
@@ -257,10 +266,10 @@ public class APIService: NSObject {
       }
     #endif
     
-    print("HEADERS:")
-    request.allHTTPHeaderFields?.forEach({ (header) in
-      print("\(header)")
-    })
+//    print("HEADERS:")
+//    request.allHTTPHeaderFields?.forEach({ (header) in
+//      print("\(header)")
+//    })
     
     let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
       

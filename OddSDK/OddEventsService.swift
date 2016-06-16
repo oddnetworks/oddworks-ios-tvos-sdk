@@ -11,7 +11,13 @@ import UIKit
 @objc public class OddEventsService: NSObject {
 
   static public let defaultService = OddEventsService()
+  
+  var deliveryService: OddHTTPRequestService = APIService.sharedService
+  var eventsURL: String { return "http://127.0.0.1:8888/" }
+  
   private var _sessionId: String = ""
+  
+  
   
   override init() {
     super.init()
@@ -119,7 +125,7 @@ import UIKit
       
       OddLogger.info("PARAMS SENT IN METRIC POST: \(params)")
       
-      APIService.sharedService.post(params, url: "events") { (response, error) -> () in
+      self.deliveryService.post(params, url: "events", altDomain: eventsURL) { (response, error) -> () in
         if let e = error {
           OddLogger.error("<<Metric post with type '\(stat.actionString)' failed with error: \(e.localizedDescription)>>")
         } else {

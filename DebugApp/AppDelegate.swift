@@ -46,19 +46,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   
-  func registerForNotifications() {
-    OddLogger.info("Registering For Notifications")
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.configureOnContentLoaded), name: OddConstants.OddContentStoreCompletedInitialLoadNotification, object: nil)
-  }
-  
 
   func configureOnContentLoaded() {
     print("Store Info: \( OddContentStore.sharedStore.mediaObjectInfo() )")
   }
 
   func initializeSDK() {
-    registerForNotifications()
-    
     OddContentStore.sharedStore.API.serverMode = .Staging
     
 //    Uncomment to see additional log messages from the SDK.
@@ -67,7 +60,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //    Enter your authToken here
 //    OddContentStore.sharedStore.API.authToken = "YOUR AUTHTOKEN"
     
-    OddContentStore.sharedStore.initialize()
+    OddContentStore.sharedStore.initialize { (success, err) in
+      if success {
+        self.configureOnContentLoaded()
+      }
+      
+      if let error = err {
+        OddLogger.error("Error Initializing: \(error.localizedDescription)")
+      }
+    }
   }
   
 }

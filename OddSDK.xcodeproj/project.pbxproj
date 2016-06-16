@@ -39,6 +39,8 @@
 		131D5B6D1D12FAC600886DF2 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131D5B6B1D12FAC600886DF2 /* OddImage.swift */; };
 		131D5B6E1D12FAC600886DF2 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131D5B6B1D12FAC600886DF2 /* OddImage.swift */; };
 		131D5B6F1D1301F700886DF2 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131D5B6B1D12FAC600886DF2 /* OddImage.swift */; };
+		131D5B701D13237600886DF2 /* OddRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A5BA4B1CD9265500DF4A7F /* OddRelationship.swift */; };
+		131D5B711D1323FF00886DF2 /* OddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68791C24608200A0A602 /* OddView.swift */; };
 		134386611C3D574C0042CCC8 /* OddLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134386601C3D574C0042CCC8 /* OddLogger.swift */; };
 		134386621C3D574C0042CCC8 /* OddLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134386601C3D574C0042CCC8 /* OddLogger.swift */; };
 		1347977A1C51424800876D39 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134797791C51424800876D39 /* Keychain.swift */; };
@@ -620,6 +622,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				131D5B701D13237600886DF2 /* OddRelationship.swift in Sources */,
 				1353FA921C46F10400B57A83 /* CMTimeExtension.swift in Sources */,
 				1353FA931C46F10400B57A83 /* String+NSDate.swift in Sources */,
 				1353FA941C46F10400B57A83 /* NSDate+String.swift in Sources */,
@@ -645,6 +648,7 @@
 				1353FAA91C46F10400B57A83 /* OddMediaObjectCollection.swift in Sources */,
 				1353FAAA1C46F10400B57A83 /* OddMediaObject.swift in Sources */,
 				1353FAAB1C46F10400B57A83 /* OddMenuItems.swift in Sources */,
+				131D5B711D1323FF00886DF2 /* OddView.swift in Sources */,
 				1353FAAD1C46F10400B57A83 /* OddConstants.swift in Sources */,
 				1353FAAE1C46F10400B57A83 /* OddLogger.swift in Sources */,
 				1353FAB21C46F10400B57A83 /* APIService.swift in Sources */,
