@@ -8,6 +8,28 @@
 
 import UIKit
 
+public struct OddMediaPlayerInfo {
+  var playerType: String?
+  var elapsed: Int?
+  var duration: Int?
+  var videoSessionId: String?
+  var errorMessage: String?
+}
+
+enum OddMetricAction: String {
+  case AppInit      = "appInit"
+  case ViewLoad     = "viewLoad"
+  case VideoLoad    = "videoLoad"
+  case VideoPlay    = "videoPlay"
+  case VideoError   = "videoError"
+  case VideoPlaying = "videoPlaying"
+  case VideoStop    = "videoStop"
+  case UserNew      = "userNew"
+  
+  // case AdRequest
+  // case AdPlay  
+}
+
 @objc public class OddEventsService: NSObject {
 
   static public let defaultService = OddEventsService()
@@ -16,8 +38,7 @@ import UIKit
   var eventsURL: String { return "http://127.0.0.1:8888/" }
   
   private var _sessionId: String = ""
-  
-  
+  public var videoSessionId: String = ""
   
   override init() {
     super.init()
@@ -55,12 +76,21 @@ import UIKit
   ///
   /// -returns: A UUID in string format
   func sessionId() -> String {
-    var token: dispatch_once_t = 0
-    dispatch_once(&token) { () -> Void in
+    if self._sessionId.isEmpty {
       self._sessionId = NSUUID().UUIDString
     }
-    print("RETURNING: \(_sessionId)")
     return _sessionId
+  }
+  
+  /// Generates a new UUID to be associated with a video session.
+  ///
+  /// The VideoSessionID is provided with every video event posting. It is used to group events by an
+  /// instance of the media player working with a specific video asset.
+  ///
+  /// A new UUID should be generated upon Video:Load
+  ///
+  func resetVideoSessionId() {
+    self.videoSessionId = NSUUID().UUIDString
   }
   
   public func postAppInitMetric(callback: APICallback? = nil) {
@@ -90,7 +120,9 @@ import UIKit
         "type" : "event",
         "attributes" : [
           //   "organizationId" : "\(organizationID)",
-          "action" : "\(stat.actionString)"
+          "action" : "\(stat.actionString)",
+          "userId" : self.userId(),
+          "sessionId" : self.sessionId()
         ]
       ]
       
@@ -105,11 +137,13 @@ import UIKit
         
         if let beacon = playerInfo,
           player = beacon.playerType,
-          elapsed = beacon.elapsed {
+          elapsed = beacon.elapsed,
+          videoSessionId = beacon.videoSessionId {
           if var attributes = params["attributes"] as? jsonObject {
             attributes["elapsed"] = elapsed
             attributes["duration"] = "null"
             attributes["player"] = player
+            attributes["videoSessionId"] = videoSessionId
             params["attributes"] = attributes
           }
           
@@ -117,6 +151,14 @@ import UIKit
           if let duration = beacon.duration {
             if var attributes = params["attributes"] as? jsonObject {
               attributes["duration"] = duration
+              params["attributes"] = attributes
+            }
+          }
+          
+          // error message is optional and only added to video:error events
+          if let errorMessage = beacon.errorMessage {
+            if var attributes = params["attributes"] as? jsonObject {
+              attributes["errorMessage"] = errorMessage
               params["attributes"] = attributes
             }
           }
@@ -131,7 +173,7 @@ import UIKit
           callback?(nil, error)
         } else {
           OddLogger.info("<<Metric Post Successful: '\(stat.actionString)'>>")
-          callback?("success: \(stat.actionString)", nil)
+          callback?(params, nil)
         }
       }
     }

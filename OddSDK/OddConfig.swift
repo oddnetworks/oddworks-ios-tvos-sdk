@@ -51,51 +51,87 @@ struct EventsConfiguration {
   var enabledStats: Array<EventSettings> = [
       EventSettings(action: .AppInit, actionString: "app:init", enabled: true, interval: nil),
       EventSettings(action: .ViewLoad, actionString: "view:load", enabled: true, interval: nil),
+      EventSettings(action: .VideoLoad, actionString: "video:load", enabled: true, interval: nil),
       EventSettings(action: .VideoPlay, actionString: "video:play", enabled: true, interval: nil),
       EventSettings(action: .VideoPlaying, actionString: "video:playing", enabled: true, interval: 3),
       EventSettings(action: .VideoStop, actionString: "video:stop", enabled: true, interval: nil),
-      EventSettings(action: .VideoError, actionString: "video:error", enabled: true, interval: nil)
+      EventSettings(action: .VideoError, actionString: "video:error", enabled: true, interval: nil),
+      EventSettings(action: .UserNew, actionString: "user:new", enabled: true, interval: nil)
   ]
   
   mutating func configureWithJSON(metrics: jsonObject) {
+    
+    func appendIfEnabled(actionName: String) {
+      if let metric = metrics[actionName] as? Dictionary<String, AnyObject>, actionString = metric["action"] as? String, enabled = metric["enabled"] as? Bool,
+        action = OddMetricAction(rawValue: actionName) {
+        var adjustedInterval: Double? = nil
+        if let interval = metric["interval"] as? Double {
+          adjustedInterval = interval / 1000
+        }
+        let metricStat = EventSettings(action: action, actionString: actionString, enabled: enabled, interval: adjustedInterval )
+        enabledStats.append(metricStat)
+      }
+    }
+    
     enabledStats.removeAll()
     //appInit
-    if let videoPlay = metrics["appInit"] as? Dictionary<String, AnyObject>, actionString = videoPlay["action"] as? String, enabled = videoPlay["enabled"] as? Bool {
-      let appInitStat = EventSettings(action: .AppInit, actionString: actionString, enabled: enabled, interval: nil)
-      enabledStats.append(appInitStat)
-    }
+    appendIfEnabled("appInit")
+    appendIfEnabled("viewLoad")
+    appendIfEnabled("videoLoad")
+    appendIfEnabled("videoPlay")
+    appendIfEnabled("videoPlaying")
+    appendIfEnabled("videoStop")
+    appendIfEnabled("videoError")
+    appendIfEnabled("userNew")
+    
+//    if let videoPlay = metrics["appInit"] as? Dictionary<String, AnyObject>, actionString = videoPlay["action"] as? String, enabled = videoPlay["enabled"] as? Bool {
+//      let appInitStat = EventSettings(action: .AppInit, actionString: actionString, enabled: enabled, interval: nil)
+//      enabledStats.append(appInitStat)
+//    }
     
     //viewLoad
-    if let viewLoad = metrics["viewLoad"] as? Dictionary<String, AnyObject>, actionString = viewLoad["action"] as? String, enabled = viewLoad["enabled"] as? Bool {
-      let viewLoadStat = EventSettings(action: .ViewLoad, actionString: actionString, enabled: enabled, interval: nil)
-      enabledStats.append(viewLoadStat)
-    }
+//    if let viewLoad = metrics["viewLoad"] as? Dictionary<String, AnyObject>, actionString = viewLoad["action"] as? String, enabled = viewLoad["enabled"] as? Bool {
+//      let viewLoadStat = EventSettings(action: .ViewLoad, actionString: actionString, enabled: enabled, interval: nil)
+//      enabledStats.append(viewLoadStat)
+//    }
+    
+    //videoLoad
+//    if let videoPlay = metrics["videoLoad"] as? Dictionary<String, AnyObject>, actionString = videoPlay["action"] as? String, enabled = videoPlay["enabled"] as? Bool {
+//      let videoPlayStat = EventSettings(action: .VideoPlay, actionString: actionString, enabled: enabled, interval: nil)
+//      enabledStats.append(videoPlayStat)
+//    }
     
     //videoPlay
-    if let videoPlay = metrics["videoPlay"] as? Dictionary<String, AnyObject>, actionString = videoPlay["action"] as? String, enabled = videoPlay["enabled"] as? Bool {
-      let videoPlayStat = EventSettings(action: .VideoPlay, actionString: actionString, enabled: enabled, interval: nil)
-      enabledStats.append(videoPlayStat)
-    }
+//    if let videoPlay = metrics["videoPlay"] as? Dictionary<String, AnyObject>, actionString = videoPlay["action"] as? String, enabled = videoPlay["enabled"] as? Bool {
+//      let videoPlayStat = EventSettings(action: .VideoPlay, actionString: actionString, enabled: enabled, interval: nil)
+//      enabledStats.append(videoPlayStat)
+//    }
     
     //videoPlaying
-    if let videoPlaying = metrics["videoPlaying"] as? Dictionary<String, AnyObject>, actionString = videoPlaying["action"] as? String, enabled = videoPlaying["enabled"] as? Bool, interval = videoPlaying["interval"] as? Double  {
-      //given in milliseconds, timer takes seconds
-      let convertedInterval = interval / 1000
-      let videoPlayingStat = EventSettings(action: .VideoPlaying, actionString: actionString, enabled: enabled, interval: convertedInterval)
-      enabledStats.append(videoPlayingStat)
-    }
+//    if let videoPlaying = metrics["videoPlaying"] as? Dictionary<String, AnyObject>, actionString = videoPlaying["action"] as? String, enabled = videoPlaying["enabled"] as? Bool, interval = videoPlaying["interval"] as? Double  {
+//      //given in milliseconds, timer takes seconds
+//      let convertedInterval = interval / 1000
+//      let videoPlayingStat = EventSettings(action: .VideoPlaying, actionString: actionString, enabled: enabled, interval: convertedInterval)
+//      enabledStats.append(videoPlayingStat)
+//    }
     
     //videoStop
-    if let videoStop = metrics["videoStop"] as? Dictionary<String, AnyObject>, actionString = videoStop["action"] as? String, enabled = videoStop["enabled"] as? Bool {
-      let videoStopStat = EventSettings(action: .VideoStop, actionString: actionString, enabled: enabled, interval: nil)
-      enabledStats.append(videoStopStat)
-    }
+//    if let videoStop = metrics["videoStop"] as? Dictionary<String, AnyObject>, actionString = videoStop["action"] as? String, enabled = videoStop["enabled"] as? Bool {
+//      let videoStopStat = EventSettings(action: .VideoStop, actionString: actionString, enabled: enabled, interval: nil)
+//      enabledStats.append(videoStopStat)
+//    }
     
     //videoError
-    if let videoError = metrics["videoError"] as? Dictionary<String, AnyObject>, actionString = videoError["action"] as? String, enabled = videoError["enabled"] as? Bool {
-      let videoErrorStat = EventSettings(action: .VideoError, actionString: actionString, enabled: enabled, interval: nil)
-      enabledStats.append(videoErrorStat)
-    }
+//    if let videoError = metrics["videoError"] as? Dictionary<String, AnyObject>, actionString = videoError["action"] as? String, enabled = videoError["enabled"] as? Bool {
+//      let videoErrorStat = EventSettings(action: .VideoError, actionString: actionString, enabled: enabled, interval: nil)
+//      enabledStats.append(videoErrorStat)
+//    }
+    
+    //userNew
+//    if let userNew = metrics["userNew"] as? Dictionary<String, AnyObject>, actionString = userNew["action"] as? String, enabled = userNew["enabled"] as? Bool {
+//      let userNewStat = EventSettings(action: .UserNew, actionString: actionString, enabled: enabled, interval: nil)
+//      enabledStats.append(userNewStat)
+//    }
   }
   
   func findEnabled(action: OddMetricAction) -> EventSettings? {
