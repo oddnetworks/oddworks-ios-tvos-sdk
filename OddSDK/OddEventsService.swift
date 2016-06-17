@@ -63,11 +63,11 @@ import UIKit
     return _sessionId
   }
   
-  public func postAppInitMetric() {
-    postMetricForAction(.AppInit, playerInfo: nil, content: nil)
+  public func postAppInitMetric(callback: APICallback? = nil) {
+    postMetricForAction(.AppInit, playerInfo: nil, content: nil, callback: callback)
   }
   
-  func postMetricForAction(action: OddMetricAction, playerInfo: OddMediaPlayerInfo?, content: OddMediaObject?) {
+  func postMetricForAction(action: OddMetricAction, playerInfo: OddMediaPlayerInfo?, content: OddMediaObject?, callback: APICallback?) {
     if let stat = OddContentStore.sharedStore.config?.analyticsManager.findEnabled(action) {
       //parsing content
       var contentId: String?
@@ -128,8 +128,10 @@ import UIKit
       self.deliveryService.post(params, url: "events", altDomain: eventsURL) { (response, error) -> () in
         if let e = error {
           OddLogger.error("<<Metric post with type '\(stat.actionString)' failed with error: \(e.localizedDescription)>>")
+          callback?(nil, error)
         } else {
           OddLogger.info("<<Metric Post Successful: '\(stat.actionString)'>>")
+          callback?("success: \(stat.actionString)", nil)
         }
       }
     }

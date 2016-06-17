@@ -240,16 +240,20 @@ public class APIService: NSObject, OddHTTPRequestService {
       }
     }
     
-    //User Specific Headers:
+    // If the app supports authorization the token is taken from the authenticationCredentials
+    // if not the default authToken is used
     if OddGateKeeper.sharedKeeper.authenticationCredentials.state == .Authorized {
       if let token = OddGateKeeper.sharedKeeper.authenticationCredentials.accessToken {
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
       }
+    } else {
+      let token = OddContentStore.sharedStore.API.authToken
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
     }
     
     //Build & App Specific Headers:
     request.addValue(agentHeader.constructHeader(), forHTTPHeaderField: "x-odd-user-agent")
-    request.addValue(authToken, forHTTPHeaderField: "x-access-token")
+//    request.addValue(authToken, forHTTPHeaderField: "x-access-token")
     
     //Utility Headers:
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -266,10 +270,10 @@ public class APIService: NSObject, OddHTTPRequestService {
       }
     #endif
     
-//    print("HEADERS:")
-//    request.allHTTPHeaderFields?.forEach({ (header) in
-//      print("\(header)")
-//    })
+    print("HEADERS:")
+    request.allHTTPHeaderFields?.forEach({ (header) in
+      print("\(header)")
+    })
     
     let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
       
