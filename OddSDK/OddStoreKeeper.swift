@@ -90,10 +90,11 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
       OddLogger.info("\(product.localizedTitle) - \(product.price) is valid")
     }
     
-    if let invalids = response.invalidProductIdentifiers as? Array<String> {
-        self.delegate?.processStoreProducts(self.products, invalidProducts: invalids)
-    } else {
+    if response.invalidProductIdentifiers.isEmpty {
       self.delegate?.processStoreProducts(self.products, invalidProducts: nil)
+    }
+    else {
+      self.delegate?.processStoreProducts(self.products, invalidProducts: response.invalidProductIdentifiers)
     }
   }
   
@@ -105,7 +106,7 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   }
   
   public func requestDidFinish(request: SKRequest) {
-    guard let receiptRequest = request as? SKReceiptRefreshRequest else { return }
+    guard request is SKReceiptRefreshRequest else { return }
     
     OddLogger.info("Store Request did finish")
   }
@@ -148,8 +149,6 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
         self.completeTransaction(transaction)
       case .Restored:
         self.restoreTransaction(transaction)
-      default:
-        OddLogger.warn("Unexpected transaction state \(transaction.transactionState)")
       }
     }
   }
@@ -167,7 +166,7 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   }
   
   func failedTransaction(transaction: SKPaymentTransaction) {
-    OddLogger.error("StoreKeeper transaction failed: \(transaction.error!)")
+    OddLogger.error("StoreKeeper transaction \(transaction.transactionIdentifier!) failed: \(transaction.error!)")
     self.transactionDelegate?.showPurchaseFailed?(transaction)
     self.productsRequest = nil
   }
