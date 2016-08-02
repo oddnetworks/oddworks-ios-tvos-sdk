@@ -190,6 +190,7 @@ public class OddGateKeeper: NSObject {
     }
   }
   
+  // fetches the user authorization info from oddworks.
   public func fetchAuthenticationConfig( callback: (url: String?, userCode: String?, deviceToken: String?, error: NSError?) -> Void ) {
     OddContentStore.sharedStore.API.post(nil, url: "auth/device/code") { (res, err) -> () in
       if let e = err {
@@ -228,6 +229,7 @@ public class OddGateKeeper: NSObject {
     )
   }
   
+  // checks that a user has completed the authorization process
   public func fetchAuthenticationToken() {
     print("checking for Authentication")
     
@@ -426,7 +428,12 @@ public class OddGateKeeper: NSObject {
   
   // the server should return 200 with a payload of any credentials required for metrics, etc
   public func loginWithURL(url: String, email: String, password: String, callback: (Bool, NSError?) -> Void) {
-    let params = [ "email" : email, "password" : password ]
+    let params = [
+      "email" : email,
+      "password" : password,
+      "deviceId" : deviceToken,
+      "applicationId" : foo
+    ]
     
     self.post(params, url: url) { (response, error) in
       if error != nil {
