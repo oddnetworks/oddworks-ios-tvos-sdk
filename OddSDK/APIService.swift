@@ -101,7 +101,7 @@ public class APIService: NSObject {
       switch serverMode {
       case .Staging: return "https://device-staging.oddworks.io"
       case .Beta: return "https://beta.oddworks.io"
-      case .Local: return "http://127.0.0.1:3000"
+      case .Local: return "http://127.0.0.1:8000"
       default: return "https://device.oddworks.io"
       }
     }
@@ -110,7 +110,17 @@ public class APIService: NSObject {
   /// The device/organization specific authorization token as provided by Odd
   /// must be set before the API can be accessed successfully.
   public var authToken: String = ""
-  
+
+  private var userAuthToken: String {
+    get {
+      let defaults = NSUserDefaults.standardUserDefaults()
+      guard let token = defaults.stringForKey("OddUserAuthToken") else {
+        return authToken
+      }
+      return token
+    }
+  }
+
   /// The url sting used by the APIService to contact the API server
   /// 
   /// This string is a combination of the `baseURL` and the currently supported 
@@ -217,17 +227,10 @@ public class APIService: NSObject {
       }
     }
     
-    //User Specific Headers:
-    if OddGateKeeper.sharedKeeper.authenticationCredentials.state == .Authorized {
-      if let token = OddGateKeeper.sharedKeeper.authenticationCredentials.accessToken {
-        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-      }
-    }
     
     //Build & App Specific Headers:
     request.addValue(agentHeader.constructHeader(), forHTTPHeaderField: "x-odd-user-agent")
-    request.addValue(authToken, forHTTPHeaderField: "x-access-token")
-    
+    request.addValue("Bearer \(userAuthToken)", forHTTPHeaderField: "Authorization")
     //Utility Headers:
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
     request.addValue("application/json", forHTTPHeaderField: "Accept")

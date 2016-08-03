@@ -281,6 +281,17 @@ enum OddFeatureType {
     callback(nil, error)
   }
   
+  /// Parses the config response for the JWT containing a user
+  /// if found the jwt is written to the user defaults and used as
+  /// the authToken for future requests
+  func parseUserJWT(json: jsonObject) {
+    guard let data = json["data"] as? jsonObject,
+      attribs = data["attributes"] as? jsonObject,
+      jwt = attribs["jwt"] as? String else { return }
+    NSUserDefaults.standardUserDefaults().setObject(jwt, forKey: "OddUserAuthToken")
+    NSUserDefaults.standardUserDefaults().synchronize()
+  }
+  
   /// Loads the OddConfig instance for the OddContentStore
   ///
   /// Not intended to be called by the user. This method is called from
@@ -308,6 +319,7 @@ enum OddFeatureType {
             return
         }
         self.config = newConfig
+        self.parseUserJWT(json)
         OddLogger.info("Successfully loaded config")
         NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddFetchedConfigNotification, object: self, userInfo: ["config" : newConfig])
         success(true, nil)
