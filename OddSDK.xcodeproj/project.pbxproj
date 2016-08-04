@@ -149,6 +149,7 @@
 		13B9F5061C3AD35A00AC04B1 /* OddMetricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A01C2460E900A0A602 /* OddMetricService.swift */; };
 		13BA17E31D525AC7001733C1 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BA17E21D525AC7001733C1 /* OddImage.swift */; };
 		13BA17E41D525AC7001733C1 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BA17E21D525AC7001733C1 /* OddImage.swift */; };
+		13BA17E51D539403001733C1 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BA17E21D525AC7001733C1 /* OddImage.swift */; };
 		13C1DFA31C2876000091BCBA /* OddConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C1DFA21C2876000091BCBA /* OddConstants.swift */; };
 /* End PBXBuildFile section */
 
@@ -658,6 +659,7 @@
 				135E2E3E1CCA5EA8002A3ADA /* OddExternal.swift in Sources */,
 				135E2E521CCA7121002A3ADA /* UIViewController+TitleImage.swift in Sources */,
 				135E2E4E1CCA7121002A3ADA /* Double+Time.swift in Sources */,
+				13BA17E51D539403001733C1 /* OddImage.swift in Sources */,
 				135E2E511CCA7121002A3ADA /* NSURL+query.swift in Sources */,
 				135E2E451CCA5EA8002A3ADA /* OddLogger.swift in Sources */,
 				135E2E441CCA5EA8002A3ADA /* OddConstants.swift in Sources */,

@@ -264,7 +264,10 @@ public class APIService: NSObject {
       if let res = response as! NSHTTPURLResponse! {
 
         // headers are defined as [String : String] so...
-        if let cache = res.allHeaderFields["Access-Control-Max-Age"] as? String {
+        if let cacheStr = res.allHeaderFields["Cache-Control"] as? String {
+          let cacheArray = cacheStr.componentsSeparatedByString(", ")
+          let maxAge = cacheArray[1]
+          let cache = maxAge.stringByReplacingOccurrencesOfString("max-age=", withString: "")
           cacheTime = Int(cache)
         }
 

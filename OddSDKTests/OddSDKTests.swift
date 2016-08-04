@@ -47,12 +47,15 @@ extension OddMediaObject : Idable {}
 
 class OddSDKTests: XCTestCase {
   
+  let EXPECTATION_WAIT : NSTimeInterval = 10
+  
   func configureSDK() {
     OddContentStore.sharedStore.API.serverMode = .Local
     
     OddLogger.logLevel = .Info
     
-    OddContentStore.sharedStore.API.authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtaW9zIiwic2NvcGUiOlsicGxhdGZvcm0iXSwiaWF0IjoxNDYxMzMxNTI5fQ.lsVlk7ftYKxxrYTdl8rP-dCUfk9odhCxvwm9jsUE1dU"
+//    OddContentStore.sharedStore.API.authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtaW9zIiwic2NvcGUiOlsicGxhdGZvcm0iXSwiaWF0IjoxNDYxMzMxNTI5fQ.lsVlk7ftYKxxrYTdl8rP-dCUfk9odhCxvwm9jsUE1dU"
+    OddContentStore.sharedStore.API.authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtdHYiLCJhdWQiOlsicGxhdGZvcm0iXSwiaXNzIjoidXJuOm9kZHdvcmtzIn0.blalHejiWeAaFyi8QJ5Te8b9EBXj-w2AJBNoOutD8NQ"
   }
   
   override func setUp() {
@@ -79,7 +82,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(5, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -98,7 +101,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(5, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -120,7 +123,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -172,7 +175,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -199,7 +202,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -229,7 +232,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
     XCTAssertNil(error, "Error")
     })
   }
@@ -259,7 +262,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -275,7 +278,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -300,7 +303,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -320,7 +323,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -339,7 +342,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -360,7 +363,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -388,7 +391,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -407,14 +410,14 @@ class OddSDKTests: XCTestCase {
           XCTAssertEqual(video.notes, "<p><a href='http://www.podtrac.com/pts/redirect.m4v/www.jpl.nasa.gov/videos/whatsup/20160401/JPL-20160401-WHATSUf-0001-720-CC.m4v'>\r\n<img src='http://www.jpl.nasa.gov/multimedia/thumbs/whatsup20140701-226.jpg' align='left' alt='' width='100' height='75' border='0' /></a><br />\r\n<br />\r\nJupiter, Mars, the Lyrid meteor shower and 2016�s best views of Mercury. </p><br clear='all'/><br />", "Video should have the correct description")
           XCTAssertEqual(video.urlString, "http://www.podtrac.com/pts/redirect.m4v/www.jpl.nasa.gov/videos/whatsup/20160401/JPL-20160401-WHATSUf-0001-720-CC.m4v", "Video should have correct url")
           XCTAssertEqual(video.duration, 13000000, "Video should have correct duration")
-          XCTAssertEqual(video.thumbnailLink, "https://spaceholder.cc/1920x1080", "Video should have correct image link")
+          XCTAssertEqual(video.thumbnailLink, "http://image.oddworks.io/NASA/space4.jpeg", "Video should have correct image link")
           XCTAssertNotNil(video.cacheTime, "Video should have a cacheTime value")
           okExpectation.fulfill()
         })
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -440,7 +443,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
 
@@ -469,7 +472,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
     
@@ -491,7 +494,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -514,7 +517,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(10, handler: { error in
+    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
