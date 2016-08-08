@@ -609,7 +609,7 @@ enum OddFeatureType {
       NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddStartedSearchNotification, object: nil))
     })
     
-    API.get( nil, url: "search?term=\(term)") { ( response, error ) -> () in
+    API.get( nil, url: "search?q=\(term)") { ( response, error ) -> () in
       if let _ = error {
         print("Error fetching search results")
         onResults (videos: nil, collections: nil)

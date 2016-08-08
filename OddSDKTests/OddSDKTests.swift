@@ -313,10 +313,10 @@ class OddSDKTests: XCTestCase {
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
-        OddContentStore.sharedStore.searchForTerm("space", onResults: { (videos, collections) in
+        OddContentStore.sharedStore.searchForTerm("earth", onResults: { (videos, collections) in
           
-          XCTAssertEqual(videos?.count, 11, "Search should return the correct number of video results")
-          XCTAssertEqual(collections?.count, 8, "Search should return the correct number of video results")
+          XCTAssertEqual(videos?.count, 4, "Search should return the correct number of video results")
+          XCTAssertEqual(collections?.count, 1, "Search should return the correct number of collections results")
           
           okExpectation.fulfill()
         })
@@ -335,7 +335,7 @@ class OddSDKTests: XCTestCase {
       if success {
         OddContentStore.sharedStore.searchForTerm("space", onResults: { (videos, collections) in
           
-          XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 19, "Search should return the correct number of video results")
+          XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 10, "Search should return the correct number of video results")
           
           okExpectation.fulfill()
         })
