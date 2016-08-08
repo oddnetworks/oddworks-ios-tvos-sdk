@@ -23,9 +23,9 @@ public struct OddImage {
   /// An optional label for the image
   var label: String?
   
-  public static func imageFromJson(json: jsonObject) -> OddImage? {
+  public static func imageFromJson(_ json: jsonObject) -> OddImage? {
     guard let url       = json["url"] as? String,
-      mimeType  = json["mimeType"] as? String else {
+      let mimeType  = json["mimeType"] as? String else {
         return nil
     }
     

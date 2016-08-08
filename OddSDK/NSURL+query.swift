@@ -10,15 +10,15 @@ import UIKit
 
 // hat tip to http://blog.matthewcheok.com/parsing-query-parameters/
 
-extension NSURL {
+extension URL {
   var queryDictionary: [String:String]? {
     if let query = self.query {
       var dict = [String:String]()
-      for parameter in query.componentsSeparatedByString("&") {
-        let components = parameter.componentsSeparatedByString("=")
+      for parameter in query.components(separatedBy: "&") {
+        let components = parameter.components(separatedBy: "=")
         if components.count == 2 {
-          let key = components[0].stringByRemovingPercentEncoding!
-          let value = components[1].stringByRemovingPercentEncoding!
+          let key = components[0].removingPercentEncoding!
+          let value = components[1].removingPercentEncoding!
           dict[key] = value
         }
       }

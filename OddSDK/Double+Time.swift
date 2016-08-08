@@ -30,7 +30,7 @@ extension Double {
   }
   
   func roundTimeForMetrics() -> Int {
-    return Int(round(self / 100) * 100)
+    return Int(self/100) * 100
   }
   
 }

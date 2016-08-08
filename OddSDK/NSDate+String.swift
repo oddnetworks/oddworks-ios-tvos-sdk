@@ -8,63 +8,63 @@
 
 import Foundation
 
-extension NSDate {
+extension Date {
   func shortFormatString() -> String {
-    let dateFormatter = NSDateFormatter()
-    dateFormatter.dateStyle = .ShortStyle
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .short
 
-    return dateFormatter.stringFromDate(self)
+    return dateFormatter.string(from: self)
   }
   
   func shortFormatStringWithTime() -> String {
-    let dateFormatter = NSDateFormatter()
-    dateFormatter.dateStyle = .ShortStyle
-    dateFormatter.timeStyle = .ShortStyle
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .short
+    dateFormatter.timeStyle = .short
     
-    return dateFormatter.stringFromDate(self)
+    return dateFormatter.string(from: self)
   }
 
   func mediumFormatString() -> String {
-    let dateFormatter = NSDateFormatter()
-    dateFormatter.dateStyle = .MediumStyle
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .medium
     
-    return dateFormatter.stringFromDate(self)
+    return dateFormatter.string(from: self)
   }
   
   func mediumFormatStringWithTime() -> String {
-    let dateFormatter = NSDateFormatter()
-    dateFormatter.dateStyle = .MediumStyle
-    dateFormatter.timeStyle = .MediumStyle
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .medium
+    dateFormatter.timeStyle = .medium
     
-    return dateFormatter.stringFromDate(self)
+    return dateFormatter.string(from: self)
   }
 
   func longFormatString() -> String {
-    let dateFormatter = NSDateFormatter()
-    dateFormatter.dateStyle = .LongStyle
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .long
     
-    return dateFormatter.stringFromDate(self)
+    return dateFormatter.string(from: self)
   }
   
   func longFormatStringWithTime() -> String {
-    let dateFormatter = NSDateFormatter()
-    dateFormatter.dateStyle = .LongStyle
-    dateFormatter.timeStyle = .LongStyle
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .long
+    dateFormatter.timeStyle = .long
     
-    return dateFormatter.stringFromDate(self)
+    return dateFormatter.string(from: self)
   }
   
   func yyyyMMddFormatString() -> String {
-    let dateFormatter = NSDateFormatter()
+    let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
-    return dateFormatter.stringFromDate(self)
+    return dateFormatter.string(from: self)
   }
   
   func timeOnly() -> String {
-    let formatter = NSDateFormatter()
+    let formatter = DateFormatter()
     formatter.dateFormat = "h:mm a"
     
-    return formatter.stringFromDate(self)
+    return formatter.string(from: self)
   }
   
 }

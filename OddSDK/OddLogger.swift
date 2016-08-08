@@ -11,32 +11,32 @@ import UIKit
 /// The level of logging to be displayed on the console.
 /// Levels in order are 
 @objc public enum OddLogLevel: Int {
-  case Info
-  case Warn
-  case Error
+  case info
+  case warn
+  case error
   
-  func atLeast(level: OddLogLevel) -> Bool {
+  func atLeast(_ level: OddLogLevel) -> Bool {
     return level.rawValue >= self.rawValue
   }
 }
 
 public class OddLogger: NSObject {
 
-  public static var logLevel: OddLogLevel = .Error
+  public static var logLevel: OddLogLevel = .error
   
-  public static func info(message: String) {
-    if OddLogger.logLevel.atLeast(.Info)   {
+  public static func info(_ message: String) {
+    if OddLogger.logLevel.atLeast(.info)   {
       print("✅ \(message)")
     }
   }
   
-  public static func warn(message: String) {
-    if OddLogger.logLevel.atLeast(.Warn)  {
+  public static func warn(_ message: String) {
+    if OddLogger.logLevel.atLeast(.warn)  {
       print("⚠️ \(message)")
     }
   }
   
-  public static func error(message: String) {
+  public static func error(_ message: String) {
     print("❌ \(message)")
   }
 }

@@ -56,7 +56,7 @@ import UIKit
   /// - parameter json: A `jsonObject` containing information pertaining to the video asset
   ///
   /// - returns: A configured `OddVideo`
-  class func videoFromJson(json: jsonObject) -> OddVideo {
+  class func videoFromJson(_ json: jsonObject) -> OddVideo {
     let newVideo = OddVideo()
     newVideo.configureWithJson(json)
 
@@ -72,7 +72,7 @@ import UIKit
   ///
   /// Note: Should not be called directly. Doing so may result in an object not
   /// fully configured
-  override func configureWithJson(json: jsonObject) {
+  override func configureWithJson(_ json: jsonObject) {
     super.configureWithJson(json)
     addAdditionalMetaData(json)
   }
@@ -84,9 +84,9 @@ import UIKit
   ///
   /// Note: Should not be called directly. Doing so may result in an object not
   /// fully configured
-  func addAdditionalMetaData(json: jsonObject) {
+  func addAdditionalMetaData(_ json: jsonObject) {
     if let attributes = json["attributes"] as? jsonObject,
-      player = attributes["player"] as? jsonObject {
+      let player = attributes["player"] as? jsonObject {
         self._playerType = player["type"] as? String
         self.pCode = player["pCode"] as? String
         self.embedCode = player["embedCode"] as? String

@@ -12,7 +12,7 @@ import UIKit
   
   var sourceURL: String?
   
-  class func externalFromJson( json: jsonObject ) -> OddExternal {
+  class func externalFromJson( _ json: jsonObject ) -> OddExternal {
     let newExternal = OddExternal()
     newExternal.configureWithJson(json)
     
@@ -22,12 +22,12 @@ import UIKit
     return newExternal
   }
   
-  override func configureWithJson(json: jsonObject) {
+  override func configureWithJson(_ json: jsonObject) {
     super.configureWithJson(json)
     addAdditionalMetaData(json)
   }
   
-  func addAdditionalMetaData(json: jsonObject) {
+  func addAdditionalMetaData(_ json: jsonObject) {
     if let attributes = json["attributes"] as? jsonObject {
       self.sourceURL = attributes["url"] as? String
     }

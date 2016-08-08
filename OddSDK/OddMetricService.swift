@@ -65,7 +65,7 @@ public struct OddMetricService {
   /// Client apps may call this method in any way desired to mark the loading of views and objects
   ///
   /// Client apps should post this metric at times that make sense to the applications design
-  public static func postViewLoadedWithMediaObject(mediaObject: OddMediaObject) {
+  public static func postViewLoadedWithMediaObject(_ mediaObject: OddMediaObject) {
     OddMetricService.postMetricForAction(.ViewLoad, playerInfo: nil, content: mediaObject)
   }
   
@@ -73,7 +73,7 @@ public struct OddMetricService {
   /// typically post this metric when a video begins playing.
   ///
   /// Client apps should post this metric at times that make sense to the applications design
-  public static func postMediaPlayerStartedWithMediaObject(mediaObject: OddMediaObject) {
+  public static func postMediaPlayerStartedWithMediaObject(_ mediaObject: OddMediaObject) {
     OddMetricService.postMetricForAction(.VideoPlay, playerInfo: nil, content: mediaObject)
   }
   
@@ -81,7 +81,7 @@ public struct OddMetricService {
   /// at intervals to track the playing of media objects.
   ///
   /// Client apps should post this metric at times that make sense to the applications design
-  public static func postMediaPlayerIsPlayingWithMediaObject(mediaObject: OddMediaObject, playerInfo: OddMediaPlayerInfo) {
+  public static func postMediaPlayerIsPlayingWithMediaObject(_ mediaObject: OddMediaObject, playerInfo: OddMediaPlayerInfo) {
     OddMetricService.postMetricForAction(.VideoPlaying, playerInfo: playerInfo, content: mediaObject)
   }
   
@@ -89,16 +89,16 @@ public struct OddMetricService {
   /// when a video ends or a user navigates away from a player view.
   ///
   /// Client apps should post this metric at times that make sense to the applications design
-  public static func postMediaPlayerStopedPlayingMediaObject(mediaObject: OddMediaObject, playerInfo: OddMediaPlayerInfo) {
+  public static func postMediaPlayerStopedPlayingMediaObject(_ mediaObject: OddMediaObject, playerInfo: OddMediaPlayerInfo) {
     OddMetricService.postMetricForAction(.VideoStop, playerInfo: playerInfo, content: mediaObject)
   }
   /// Posts a metic when a media player encounters an error. Client applicaitons will need to monitor
   /// their media players for notifications when errors occcur and post accordingly
-  public static func postMediaPlayerDidEncounterErrorWithMediaObject(mediaObject: OddMediaObject, playerInfo: OddMediaPlayerInfo) {
+  public static func postMediaPlayerDidEncounterErrorWithMediaObject(_ mediaObject: OddMediaObject, playerInfo: OddMediaPlayerInfo) {
     OddMetricService.postMetricForAction(.VideoError, playerInfo: playerInfo, content: mediaObject)
   }
   
-  static func postMetricForAction(action: OddMetricAction, playerInfo: OddMediaPlayerInfo?, content: OddMediaObject?) {
+  static func postMetricForAction(_ action: OddMetricAction, playerInfo: OddMediaPlayerInfo?, content: OddMediaObject?) {
     if let stat = OddContentStore.sharedStore.config?.analyticsManager.findEnabled(action) {
       //parsing content
       var contentId: String?
@@ -129,8 +129,8 @@ public struct OddMetricService {
         }
         
         if let beacon = playerInfo,
-          player = beacon.playerType,
-          elapsed = beacon.elapsed {
+          let player = beacon.playerType,
+          let elapsed = beacon.elapsed {
           if var attributes = params["attributes"] as? jsonObject {
             attributes["elapsed"] = elapsed
             attributes["duration"] = "null"

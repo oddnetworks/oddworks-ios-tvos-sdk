@@ -16,11 +16,11 @@ struct Keychain {
   
   static func serviceName() -> String {
     // we return a default in case the SDK is run in a unit test with no bundle. derp.
-    guard let bundleName = NSBundle.mainBundle().infoDictionary!["CFBundleName"] as? String else { return "OddKeychainService_test" }
+    guard let bundleName = Bundle.main.infoDictionary!["CFBundleName"] as? String else { return "OddKeychainService_test" }
     return "OddKeychainService_\(bundleName)"
   }
   
-  static func deleteAccount(account: String) {
+  static func deleteAccount(_ account: String) {
     do {
       try SecItemWrapper.delete([
         kSecClass as String: kSecClassGenericPassword,
@@ -28,14 +28,14 @@ struct Keychain {
         kSecAttrAccount as String: account,
         kSecAttrSynchronizable as String: kSecAttrSynchronizableAny,
         ])
-    } catch KeychainError.ItemNotFound {
+    } catch KeychainError.itemNotFound {
       // Ignore this error.
     } catch let error {
       NSLog("deleteAccount error: \(error)")
     }
   }
   
-  static func dataForAccount(account: String) -> NSData? {
+  static func dataForAccount(_ account: String) -> Data? {
     do {
       let query = [
         kSecClass as String: kSecClassGenericPassword,
@@ -45,8 +45,8 @@ struct Keychain {
         kSecReturnData as String: kCFBooleanTrue as CFTypeRef,
       ]
       let result = try SecItemWrapper.matching(query)
-      return result as? NSData
-    } catch KeychainError.ItemNotFound {
+      return result as? Data
+    } catch KeychainError.itemNotFound {
       // Ignore this error, simply return nil.
       return nil
     } catch let error {
@@ -55,16 +55,16 @@ struct Keychain {
     }
   }
   
-  static func stringForAccount(account: String) -> String? {
+  static func stringForAccount(_ account: String) -> String? {
     if let data = dataForAccount(account) {
       return NSString(data: data,
-        encoding: NSUTF8StringEncoding) as? String
+        encoding: String.Encoding.utf8.rawValue) as? String
     } else {
       return nil
     }
   }
   
-  static func setData(data: NSData,
+  static func setData(_ data: Data,
     forAccount account: String,
     synchronizable: Bool,
     background: Bool) {
@@ -75,7 +75,7 @@ struct Keychain {
         deleteAccount(account)
         
         // Add it.
-        try SecItemWrapper.add([
+        try _ = SecItemWrapper.add([
           kSecClass as String: kSecClassGenericPassword,
           kSecAttrService as String: serviceName(),
           kSecAttrAccount as String: account,
@@ -91,11 +91,11 @@ struct Keychain {
       }
   }
   
-  static func setString(string: String,
+  static func setString(_ string: String,
     forAccount account: String,
     synchronizable: Bool,
     background: Bool) {
-      let data = string.dataUsingEncoding(NSUTF8StringEncoding)!
+      let data = string.data(using: String.Encoding.utf8)!
       setData(data,
         forAccount: account,
         synchronizable: synchronizable,
@@ -103,7 +103,7 @@ struct Keychain {
   }
     
   struct SecItemWrapper {
-    static func matching(query: [String: AnyObject]) throws -> AnyObject? {
+    static func matching(_ query: [String: AnyObject]) throws -> AnyObject? {
       var result: AnyObject?
       let rawStatus = SecItemCopyMatching(query, &result)
       
@@ -113,7 +113,7 @@ struct Keychain {
       return result
     }
     
-    static func add(attributes: [String: AnyObject]) throws -> AnyObject? {
+    static func add(_ attributes: [String: AnyObject]) throws -> AnyObject? {
       var result: AnyObject?
       let rawStatus = SecItemAdd(attributes, &result)
       
@@ -123,7 +123,7 @@ struct Keychain {
       return result
     }
     
-    static func update(query: [String: AnyObject],
+    static func update(_ query: [String: AnyObject],
       attributesToUpdate: [String: AnyObject]) throws {
         let rawStatus = SecItemUpdate(query, attributesToUpdate)
         if let error = KeychainError.errorFromOSStatus(rawStatus) {
@@ -131,7 +131,7 @@ struct Keychain {
         }
     }
     
-    static func delete(query: [String: AnyObject]) throws {
+    static func delete(_ query: [String: AnyObject]) throws {
       let rawStatus = SecItemDelete(query)
       if let error = KeychainError.errorFromOSStatus(rawStatus) {
         throw error
@@ -139,39 +139,39 @@ struct Keychain {
     }
   }
   
-  enum KeychainError: ErrorType {
-    case Unimplemented
-    case Param
-    case Allocate
-    case NotAvailable
-    case AuthFailed
-    case DuplicateItem
-    case ItemNotFound
-    case InteractionNotAllowed
-    case Decode
-    case Unknown
+  enum KeychainError: Error {
+    case unimplemented
+    case param
+    case allocate
+    case notAvailable
+    case authFailed
+    case duplicateItem
+    case itemNotFound
+    case interactionNotAllowed
+    case decode
+    case unknown
     
     /// Returns the appropriate error for the status, or nil if it
     /// was successful, or Unknown for a code that doesn't match.
-    static func errorFromOSStatus(rawStatus: OSStatus) -> KeychainError? {
+    static func errorFromOSStatus(_ rawStatus: OSStatus) -> KeychainError? {
       if rawStatus == errSecSuccess {
         return nil
       } else {
         // If the mapping doesn't find a match, return unknown.
-        return mapping[rawStatus] ?? .Unknown
+        return mapping[rawStatus] ?? .unknown
       }
     }
     
     static let mapping: [Int32: KeychainError] = [
-      errSecUnimplemented: .Unimplemented,
-      errSecParam: .Param,
-      errSecAllocate: .Allocate,
-      errSecNotAvailable: .NotAvailable,
-      errSecAuthFailed: .AuthFailed,
-      errSecDuplicateItem: .DuplicateItem,
-      errSecItemNotFound: .ItemNotFound,
-      errSecInteractionNotAllowed: .InteractionNotAllowed,
-      errSecDecode: .Decode
+      errSecUnimplemented: .unimplemented,
+      errSecParam: .param,
+      errSecAllocate: .allocate,
+      errSecNotAvailable: .notAvailable,
+      errSecAuthFailed: .authFailed,
+      errSecDuplicateItem: .duplicateItem,
+      errSecItemNotFound: .itemNotFound,
+      errSecInteractionNotAllowed: .interactionNotAllowed,
+      errSecDecode: .decode
     ]
   }
 }

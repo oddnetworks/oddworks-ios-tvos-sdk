@@ -11,9 +11,9 @@ import XCTest
 class OddSDKPerformanceTests: XCTestCase {
   
   func configureSDK() {
-    OddContentStore.sharedStore.API.serverMode = .Local
+    OddContentStore.sharedStore.API.serverMode = .local
     
-    OddLogger.logLevel = .Info
+    OddLogger.logLevel = .info
     
     OddContentStore.sharedStore.API.authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtaW9zIiwic2NvcGUiOlsicGxhdGZvcm0iXSwiaWF0IjoxNDYxMzMxNTI5fQ.lsVlk7ftYKxxrYTdl8rP-dCUfk9odhCxvwm9jsUE1dU"
   }
@@ -32,7 +32,7 @@ class OddSDKPerformanceTests: XCTestCase {
   
   func testInitialize() {
     // This is an example of a performance test case.
-    self.measureBlock {
+    self.measure {
       OddContentStore.sharedStore.initialize { (success, error) in
         if success {
           print("initialize success")
@@ -46,8 +46,8 @@ class OddSDKPerformanceTests: XCTestCase {
       if success {
         guard let config = OddContentStore.sharedStore.config,
           let homeViewId = config.idForViewName("homepage") else { return }
-        self.measureBlock {
-          OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: nil, callback: { (objects, errors) in
+        self.measure {
+          OddContentStore.sharedStore.objectsOfType(.view, ids: [homeViewId], include: nil, callback: { (objects, errors) in
             print("loaded view")
           })
         }
@@ -60,8 +60,8 @@ class OddSDKPerformanceTests: XCTestCase {
       if success {
         guard let config = OddContentStore.sharedStore.config,
           let homeViewId = config.idForViewName("homepage") else { return }
-        self.measureBlock {
-          OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: "featuredMedia,featuredCollections,promotion", callback: { (objects, errors) in
+        self.measure {
+          OddContentStore.sharedStore.objectsOfType(.view, ids: [homeViewId], include: "featuredMedia,featuredCollections,promotion", callback: { (objects, errors) in
             print("loaded view")
           })
         }
@@ -74,8 +74,8 @@ class OddSDKPerformanceTests: XCTestCase {
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         let collectionId = "ab2d92ee98b6309299e92024a487d4c0"
-        self.measureBlock {
-          OddContentStore.sharedStore.objectsOfType(.Collection, ids: [collectionId], include: "nil", callback: { (objects, errors) in
+        self.measure {
+          OddContentStore.sharedStore.objectsOfType(.collection, ids: [collectionId], include: "nil", callback: { (objects, errors) in
             print("loaded collection")
           })
         }
@@ -87,8 +87,8 @@ class OddSDKPerformanceTests: XCTestCase {
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         let collectionId = "ab2d92ee98b6309299e92024a487d4c0"
-        self.measureBlock {
-          OddContentStore.sharedStore.objectsOfType(.Collection, ids: [collectionId], include: "entities", callback: { (objects, errors) in
+        self.measure {
+          OddContentStore.sharedStore.objectsOfType(.collection, ids: [collectionId], include: "entities", callback: { (objects, errors) in
             print("loaded collection")
           })
         }

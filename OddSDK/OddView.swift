@@ -10,7 +10,7 @@ import UIKit
 
 @objc public class OddView: OddMediaObject {
 
-  class func viewFromJson(json : jsonObject) -> OddView {
+  class func viewFromJson(_ json : jsonObject) -> OddView {
     let newView = OddView()
     newView.configureWithJson(json)
     

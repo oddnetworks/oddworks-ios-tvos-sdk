@@ -13,7 +13,7 @@ import Foundation
 // http://ericasadun.com/2015/06/09/swift-why-try-and-catch-dont-work-the-way-you-expect/
 
 extension Array {
-  func lookup(index : UInt) throws -> Element {
+  func lookup(_ index : UInt) throws -> Element {
     if Int(index) >= count {throw
       NSError(domain: "com.sadun", code: 0,
         userInfo: [NSLocalizedFailureReasonErrorKey:

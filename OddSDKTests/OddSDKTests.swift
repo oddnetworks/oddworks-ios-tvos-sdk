@@ -29,7 +29,7 @@ protocol Idable {
 }
 
 extension Set where Element : Idable {
-  func containsObjectWithId(id: String) -> Bool {
+  func containsObjectWithId(_ id: String) -> Bool {
     var result = false
     for (entity) in self {
       if let entityId = entity.id {
@@ -47,15 +47,23 @@ extension OddMediaObject : Idable {}
 
 class OddSDKTests: XCTestCase {
   
-  let EXPECTATION_WAIT : NSTimeInterval = 10
+  let EXPECTATION_WAIT : TimeInterval = 10
   
   func configureSDK() {
-    OddContentStore.sharedStore.API.serverMode = .Local
+    OddContentStore.sharedStore.API.serverMode = .local
     
-    OddLogger.logLevel = .Info
+    OddLogger.logLevel = .info
     
-//    OddContentStore.sharedStore.API.authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtaW9zIiwic2NvcGUiOlsicGxhdGZvcm0iXSwiaWF0IjoxNDYxMzMxNTI5fQ.lsVlk7ftYKxxrYTdl8rP-dCUfk9odhCxvwm9jsUE1dU"
-    OddContentStore.sharedStore.API.authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtdHYiLCJhdWQiOlsicGxhdGZvcm0iXSwiaXNzIjoidXJuOm9kZHdvcmtzIn0.blalHejiWeAaFyi8QJ5Te8b9EBXj-w2AJBNoOutD8NQ"
+    /*
+     If you are running your own Oddworks server the server will provide tokens for each channel
+     and device you have configured when it launches. Paste the apple-tv token below.
+     
+     If you are using an Oddworks hosted server the token will be provided for you.
+     
+     This line is required to allow access to the API. Once you have entered your authToken uncomment
+     to continue
+     */
+    OddContentStore.sharedStore.API.authToken = "<your auth token>"
   }
   
   override func setUp() {
@@ -71,7 +79,7 @@ class OddSDKTests: XCTestCase {
   
   
   func testCanFetchConfig() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
@@ -82,13 +90,13 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testConfigHasCorrectViews() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
@@ -101,19 +109,19 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testCanLoadHomeView() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         guard let config = OddContentStore.sharedStore.config,
           let homeViewId = config.idForViewName("homepage") else { return }
-        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: nil, callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.view, ids: [homeViewId], include: nil, callback: { (objects, errors) in
           guard let view = objects.first as? OddView else { return }
           XCTAssertNotNil(view, "SDK should load a view")
           XCTAssertEqual(view.id, "homepage", "Config should have correct home view id")
@@ -123,19 +131,19 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testViewHasCorrectRelationships() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         guard let config = OddContentStore.sharedStore.config,
           let homeViewId = config.idForViewName("homepage") else { return }
-        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: nil, callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.view, ids: [homeViewId], include: nil, callback: { (objects, errors) in
           guard let view = objects.first as? OddView else { return }
           
           if let node = view.relationshipNodeWithName("promotion") {
@@ -175,7 +183,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
@@ -183,13 +191,13 @@ class OddSDKTests: XCTestCase {
   
   
   func testViewFetchesIncludedObjects() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         guard let config = OddContentStore.sharedStore.config,
           let homeViewId = config.idForViewName("homepage") else { return }
-        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: "featuredMedia,featuredCollections", callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.view, ids: [homeViewId], include: "featuredMedia,featuredCollections", callback: { (objects, errors) in
           
           let cache = OddContentStore.sharedStore.mediaObjects
           XCTAssertEqual(cache.count, 3, "Loading a view should build included objects")
@@ -202,19 +210,19 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
 
   
   func testCollectionsHaveCorrectRelationships() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         let collectionId = "ab2d92ee98b6309299e92024a487d4c0"
-        OddContentStore.sharedStore.objectsOfType(.Collection, ids: [collectionId], include: "entities", callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.collection, ids: [collectionId], include: "entities", callback: { (objects, errors) in
           guard let collection = objects.first as? OddMediaObjectCollection else { return }
           
           if let node = collection.relationshipNodeWithName("entities") {
@@ -232,18 +240,18 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
     XCTAssertNil(error, "Error")
     })
   }
   
   func testCollectionsFetchIncludedObjects() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         let collectionId = "ab2d92ee98b6309299e92024a487d4c0"
-        OddContentStore.sharedStore.objectsOfType(.Collection, ids: [collectionId], include: "entities", callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.collection, ids: [collectionId], include: "entities", callback: { (objects, errors) in
           guard let collection = objects.first as? OddMediaObjectCollection else { return }
           
           let cache = OddContentStore.sharedStore.mediaObjects
@@ -262,13 +270,13 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testContentStoreLaunchesWithEmptyCache() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
@@ -278,21 +286,21 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   
   func testFetchedObjectIsAddedToCache() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 0, "Upon launch content store should have an empty media object cache")
         guard let config = OddContentStore.sharedStore.config,
           let homeViewId = config.idForViewName("homepage") else { return }
-        OddContentStore.sharedStore.objectsOfType(.View, ids: [homeViewId], include: nil, callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.view, ids: [homeViewId], include: nil, callback: { (objects, errors) in
           guard let view = objects.first as? OddView,
             let cachedView = OddContentStore.sharedStore.mediaObjects.first as? OddView else { return }
           
@@ -303,13 +311,13 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testSearchReturnsResults() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
@@ -323,13 +331,13 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testSearchResultsAreAddedToStoreCache() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
@@ -342,18 +350,18 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testLocatesVideoWhenNotCached() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         let videoId = "42baaa6e1e9ce2bb6d96d53007656f02"
-        OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], include: nil, callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.video, ids: [videoId], include: nil, callback: { (objects, errors) in
           guard let video = objects.first as? OddVideo else { return }
           XCTAssertNotNil(video, "SDK should load a video")
           XCTAssertEqual(video.id, "42baaa6e1e9ce2bb6d96d53007656f02", "Loaded video should have correct id")
@@ -363,25 +371,25 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testLocatesVideoWhenCached() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         let videoId = "42baaa6e1e9ce2bb6d96d53007656f02"
-        OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], include: nil, callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.video, ids: [videoId], include: nil, callback: { (objects, errors) in
           guard let video = objects.first as? OddVideo,
             let cachedVideo = OddContentStore.sharedStore.mediaObjects.first as? OddVideo else { return }
           XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 1, "Fetched Video should be cached")
           XCTAssertEqual(video.id, cachedVideo.id, "The correct video should be cached")
           
           // now fetch again
-          OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], include: nil, callback: { (objects, errors) in
+          OddContentStore.sharedStore.objectsOfType(.video, ids: [videoId], include: nil, callback: { (objects, errors) in
             guard let video = objects.first as? OddVideo else { return }
             XCTAssertEqual(objects.count, 1, "Fetching from cache returns the correct number of objects")
             XCTAssertEqual(video.id, cachedVideo.id, "Fetching from cache returns the correct video")
@@ -391,18 +399,18 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testVideoHasCorrectData() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         let videoId = "42baaa6e1e9ce2bb6d96d53007656f02"
-        OddContentStore.sharedStore.objectsOfType(.Video, ids: [videoId], include: nil, callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.video, ids: [videoId], include: nil, callback: { (objects, errors) in
           guard let video = objects.first as? OddVideo else { return }
           XCTAssertNotNil(video, "SDK should load a video")
           XCTAssertEqual(video.id, "42baaa6e1e9ce2bb6d96d53007656f02", "Video should have correct id")
@@ -417,24 +425,24 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testFetchReturnsOnlyRequestedObjectTypesNoInclude() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         guard let config = OddContentStore.sharedStore.config,
           let menuViewId = config.idForViewName("menu") else { return }
-        OddContentStore.sharedStore.objectsOfType(.View, ids: [menuViewId], include: nil, callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.view, ids: [menuViewId], include: nil, callback: { (objects, errors) in
           guard let view = objects.first as? OddView,
             let node = view.relationshipNodeWithName("items"),
             let ids = node.allIds else { return }
           
-          OddContentStore.sharedStore.objectsOfType(.Collection, ids: ids, include: nil, callback: { (objects, errors) in
+          OddContentStore.sharedStore.objectsOfType(.collection, ids: ids, include: nil, callback: { (objects, errors) in
             XCTAssertEqual(objects.count, 1, "Fetch objects of type should only return the correct types")
             XCTAssertEqual(objects.first?.id, "ab2d92ee98b6309299e92024a487d4c0", "Fetch objects of type should only return the correct types")
             okExpectation.fulfill()
@@ -443,7 +451,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
 
@@ -451,18 +459,18 @@ class OddSDKTests: XCTestCase {
 
   
   func testFetchReturnsOnlyRequestedObjectTypesWithInclude() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
         guard let config = OddContentStore.sharedStore.config,
           let menuViewId = config.idForViewName("menu") else { return }
-        OddContentStore.sharedStore.objectsOfType(.View, ids: [menuViewId], include: "items", callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.view, ids: [menuViewId], include: "items", callback: { (objects, errors) in
           guard let view = objects.first as? OddView,
             let node = view.relationshipNodeWithName("items"),
             let ids = node.allIds else { return }
           
-          OddContentStore.sharedStore.objectsOfType(.Collection, ids: ids, include: nil, callback: { (objects, errors) in
+          OddContentStore.sharedStore.objectsOfType(.collection, ids: ids, include: nil, callback: { (objects, errors) in
             XCTAssertEqual(objects.count, 1, "Fetch objects of type should only return the correct types")
             XCTAssertEqual(objects.first?.id, "ab2d92ee98b6309299e92024a487d4c0", "Fetch objects of type should only return the correct types")
             XCTAssertEqual(errors!.first?.userInfo["error"]! as? String, "0db5528d4c3c7ae4d5f24cce1c9fae51 exists but is not of type collection", "Fetch objects of type should return an error for mismatched types")
@@ -472,21 +480,21 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
     
   }
   
   func testCanFetchNodeIdsOfType() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
-        OddContentStore.sharedStore.objectsOfType(.View, ids: ["menu"], include: "items", callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.view, ids: ["menu"], include: "items", callback: { (objects, errors) in
           guard let view = objects.first as? OddView,
             let node = view.relationshipNodeWithName("items"),
-            let ids = node.idsOfType(.Video) else { return }
+            let ids = node.idsOfType(.video) else { return }
           XCTAssertEqual(ids.count, 1)
           XCTAssertEqual(ids[0], "0db5528d4c3c7ae4d5f24cce1c9fae51")
           okExpectation.fulfill()
@@ -494,17 +502,17 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }
   
   func testCanFetchObjectsInRelationship() {
-    let okExpectation = expectationWithDescription("ok")
+    let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
-        OddContentStore.sharedStore.objectsOfType(.View, ids: ["menu"], include: "items", callback: { (objects, errors) in
+        OddContentStore.sharedStore.objectsOfType(.view, ids: ["menu"], include: "items", callback: { (objects, errors) in
           guard let view = objects.first as? OddView,
             let node = view.relationshipNodeWithName("items") else { return }
           node.getAllObjects({ (objects, errors) in
@@ -517,7 +525,7 @@ class OddSDKTests: XCTestCase {
       }
     }
     
-    waitForExpectationsWithTimeout(EXPECTATION_WAIT, handler: { error in
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
     })
   }

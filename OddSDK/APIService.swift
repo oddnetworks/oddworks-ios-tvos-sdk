@@ -17,10 +17,10 @@ public typealias APICallback = ((AnyObject?, NSError?) -> Void)
 ///
 /// See also: `serverMode`
 @objc public enum OddServerMode: Int {
-  case Staging
-  case Production
-  case Beta
-  case Local
+  case staging
+  case production
+  case beta
+  case local
 }
 
 
@@ -29,11 +29,11 @@ public typealias APICallback = ((AnyObject?, NSError?) -> Void)
 /// No configuration of the Struct is required. All required information is
 /// included by calling `constructHeader()`
 struct UserAgentHeader {
-  let deviceModel = UIDevice.currentDevice().model.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
-  let deviceName = UIDevice.currentDevice().name.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
-  let buildVersion = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String
-  let osVersion = UIDevice.currentDevice().systemVersion.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
-  let os = UIDevice.currentDevice().systemName.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
+  let deviceModel = UIDevice.current.model.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+  let deviceName = UIDevice.current.name.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+  let buildVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+  let osVersion = UIDevice.current.systemVersion.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+  let os = UIDevice.current.systemName.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
   
   /// A helper method for `UserAgentHeader` to build the correct device information fields required
   /// to be provided with each request to the API server
@@ -42,9 +42,14 @@ struct UserAgentHeader {
   ///
   /// returns: A `string` containing the required device information
   func constructHeader() -> String {
-    if let build = buildVersion, encodedBuild = build.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()), deviceModel = deviceModel, deviceName = deviceName, os = os, osVersion = osVersion {
-      let userAgentHeader = "platform[name]=\("Apple")&model[name]=\(deviceModel)&model[version]=\(deviceName)&os[name]=\(os)&os[version]=\(osVersion)&buildVersion=\(encodedBuild)"
-      return userAgentHeader
+    if let build = buildVersion,
+      let encodedBuild = build.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed),
+      let deviceModel = deviceModel,
+      let deviceName = deviceName,
+      let os = os,
+      let osVersion = osVersion {
+        let userAgentHeader = "platform[name]=\("Apple")&model[name]=\(deviceModel)&model[version]=\(deviceName)&os[name]=\(os)&os[version]=\(osVersion)&buildVersion=\(encodedBuild)"
+        return userAgentHeader
     } else {
       return "platform[name]=\("Apple")&model[name]=\("unknown")&model[version]=\("unknown")&os[name]=\("unknown")&os[version]=\("unknown")&buildVersion=\("unknown")"
     }
@@ -84,7 +89,7 @@ public class APIService: NSObject {
     //
     // Valid options are .Production (the default), .Staging & .Beta
     //
-    public var serverMode: OddServerMode = .Production
+    public var serverMode: OddServerMode = .production
   #endif
   
   /// The address of the API server to be used by the `APIService`
@@ -99,9 +104,9 @@ public class APIService: NSObject {
   var baseURL: String {
     get {
       switch serverMode {
-      case .Staging: return "https://device-staging.oddworks.io"
-      case .Beta: return "https://beta.oddworks.io"
-      case .Local: return "http://127.0.0.1:8000"
+      case .staging: return "https://device-staging.oddworks.io"
+      case .beta: return "https://beta.oddworks.io"
+      case .local: return "http://127.0.0.1:8000"
       default: return "https://device.oddworks.io"
       }
     }
@@ -113,8 +118,8 @@ public class APIService: NSObject {
 
   private var userAuthToken: String {
     get {
-      let defaults = NSUserDefaults.standardUserDefaults()
-      guard let token = defaults.stringForKey("OddUserAuthToken") else {
+      let defaults = UserDefaults.standard
+      guard let token = defaults.string(forKey: "OddUserAuthToken") else {
         return authToken
       }
       return token
@@ -151,7 +156,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func get(params: [ String : String ]?, url: String, callback: APICallback) {
+  public func get(_ params: [ String : String ]?, url: String, callback: APICallback) {
     request("GET", params: params, url: url, callback: callback)
   }
   
@@ -163,7 +168,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func post(params: [ String : AnyObject ]?, url: String, callback: APICallback) {
+  public func post(_ params: [ String : AnyObject ]?, url: String, callback: APICallback) {
     request("POST", params: params, url: url, callback: callback)
   }
   
@@ -175,7 +180,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func put(params: [ String : String ]?, url: String, callback: APICallback) {
+  public func put(_ params: [ String : String ]?, url: String, callback: APICallback) {
     request("PUT", params: params, url: url, callback: callback)
   }
   
@@ -187,7 +192,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func delete(params: [ String : String ]?, url: String, callback: APICallback) {
+  public func delete(_ params: [ String : String ]?, url: String, callback: APICallback) {
     request("DELETE", params: params, url: url, callback: callback)
   }
   
@@ -210,19 +215,19 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`, `get()`, `post()`, `put()`, 'delete()'
-  private func request(type: String, params: [ String : AnyObject ]?, url: String, callback: APICallback) {
-    let request = NSMutableURLRequest(URL: NSURL(string: apiURL + url)!)
-    let session = NSURLSession.sharedSession()
-    request.HTTPMethod = type
+  private func request(_ type: String, params: [ String : AnyObject ]?, url: String, callback: APICallback) {
+    let request = NSMutableURLRequest(url: URL(string: apiURL + url)!)
+    let session = URLSession.shared
+    request.httpMethod = type
     
     let err: NSError?
     
     if let parameters = params {
       do {
-        request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(parameters, options: [])
+        request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
       } catch let error as NSError {
         err = error
-        request.HTTPBody = nil
+        request.httpBody = nil
         print("error attaching params: \(err?.localizedDescription)")
       }
     }
@@ -234,23 +239,23 @@ public class APIService: NSObject {
     //Utility Headers:
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
     request.addValue("application/json", forHTTPHeaderField: "Accept")
-    request.addValue(NSLocale.currentLocale().localeIdentifier, forHTTPHeaderField: "Accept-Language")
+    request.addValue(Locale.current.identifier, forHTTPHeaderField: "Accept-Language")
     
     #if os(tvOS)
       request.addValue("tvOS", forHTTPHeaderField: "User-Agent")
     #else
-      if UIDevice.currentDevice().userInterfaceIdiom == .Pad  {
+      if UIDevice.current.userInterfaceIdiom == .pad  {
         request.addValue("iPad", forHTTPHeaderField: "User-Agent")
       } else {
         request.addValue("iPhone", forHTTPHeaderField: "User-Agent")
       }
     #endif  
     
-    let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
+    let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error -> Void in
       
-      if let e = error {
-        if e.code < -999 { // NSURLError.NotConnectedToInternet.rawValue {
-          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddConnectionOfflineNotification, object: e) )
+      if let e = error as? URLError {
+        if e.code == .notConnectedToInternet {
+          NotificationCenter.default.post(Notification(name: OddConstants.OddConnectionOfflineNotification, object: e) )
         }
         callback(nil, e)
         return
@@ -261,20 +266,20 @@ public class APIService: NSObject {
       //
       
       var cacheTime: Int?
-      if let res = response as! NSHTTPURLResponse! {
+      if let res = response as! HTTPURLResponse! {
 
         // headers are defined as [String : String] so...
         if let cacheStr = res.allHeaderFields["Cache-Control"] as? String {
-          let cacheArray = cacheStr.componentsSeparatedByString(", ")
+          let cacheArray = cacheStr.components(separatedBy: ", ")
           let maxAge = cacheArray[1]
-          let cache = maxAge.stringByReplacingOccurrencesOfString("max-age=", withString: "")
+          let cache = maxAge.replacingOccurrences(of: "max-age=", with: "")
           cacheTime = Int(cache)
         }
 
         if res.statusCode == 401 { // unauthorized
           print("Error server responded with 401: Unauthorized to \(url)")
           OddGateKeeper.sharedKeeper.blowAwayCredentials()
-          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "unauthorizedResponseReturned", object: nil))
+          NotificationCenter.default.post(Notification(name: "unauthorizedResponseReturned" as NSNotification.Name, object: nil))
         }
         
         if res.statusCode == 201 {
@@ -311,7 +316,7 @@ public class APIService: NSObject {
   ///
   /// Note: if the server returns an error message in the format "message" : <the error message>
   /// this method returns the message string otherwise "undefined"
-  private func parseError(data: NSData) -> String {
+  private func parseError(_ data: Data) -> String {
     //    let serializationError: NSError?
     //    let json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves) as? [ String:AnyObject ]
     //
@@ -319,7 +324,7 @@ public class APIService: NSObject {
     var serializationError: NSError?
     var json: AnyObject?
     do {
-      json = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves)
+      json = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
     } catch let error as NSError {
       serializationError = error
       json = nil
@@ -349,7 +354,7 @@ public class APIService: NSObject {
   /// - parameter data: An optional `NSData` object containing the server response, if any
   /// - parameter callbck: an `APICallback` that will either contain the json of the
   /// response or nil if no data is found or an error occurred serializing the response
-  private func parseData(data: NSData?, cacheTime: Int? = nil, callback: APICallback) {
+  private func parseData(_ data: Data?, cacheTime: Int? = nil, callback: APICallback) {
     
     func reportJsonError() {
       print("Error could not parse JSON")
@@ -366,7 +371,7 @@ public class APIService: NSObject {
       
       var json: AnyObject?
       do {
-        json = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers)
+        json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers)
         
         if let cacheTime = cacheTime {
           let mutableDict = NSMutableDictionary(dictionary: (json as? NSDictionary)!)

@@ -53,7 +53,7 @@ import UIKit
 //    return types
 //  }
   
-  class func mediaCollectionFromJson(json: jsonObject) -> OddMediaObjectCollection {
+  class func mediaCollectionFromJson(_ json: jsonObject) -> OddMediaObjectCollection {
     let newMediaObjectCollection = OddMediaObjectCollection()
     //set default header to empty
 //    newMediaObjectCollection.headerHeight = 0
@@ -65,7 +65,7 @@ import UIKit
     return newMediaObjectCollection
   }
   
-  override func configureWithJson(json: jsonObject) {
+  override func configureWithJson(_ json: jsonObject) {
     super.configureWithJson(json)
 //    addAddtitionalMetaData(json)
   }

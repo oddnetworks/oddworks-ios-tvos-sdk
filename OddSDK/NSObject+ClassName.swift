@@ -10,10 +10,10 @@ import UIKit
 
 extension NSObject{
   class var nameOfClass: String{
-    return NSStringFromClass(self).componentsSeparatedByString(".").last!
+    return NSStringFromClass(self).components(separatedBy: ".").last!
   }
   
   var nameOfClass: String{
-    return NSStringFromClass(self.dynamicType).componentsSeparatedByString(".").last!
+    return NSStringFromClass(self.dynamicType).components(separatedBy: ".").last!
   }
 }

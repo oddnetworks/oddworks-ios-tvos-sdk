@@ -40,7 +40,7 @@ public struct OddRelationshipNode {
     }
   }
   
-  public func idsOfType(type: OddMediaObjectType) -> Array<String>? {
+  public func idsOfType(_ type: OddMediaObjectType) -> Array<String>? {
     if let single = self.single {
       if single.mediaObjectType == type {
         return [single.id]
@@ -63,18 +63,18 @@ public struct OddRelationshipNode {
     return []
   }
   
-  public func getAllObjects(callback: (objects: Array<OddMediaObject>, errors: Array<NSError>?) ->()) {
+  public func getAllObjects(_ callback: (objects: Array<OddMediaObject>, errors: Array<NSError>?) ->()) {
     let types = self.allTypes
     var allObjects: Array<OddMediaObject> = []
     var allErrors: Array<NSError> = []
-    for (i, type) in types.enumerate() {
+    for (i, type) in types.enumerated() {
       guard let ids = idsOfType(type) else { break }
       OddContentStore.sharedStore.objectsOfType(type, ids: ids, include: nil, callback: { (objects, errors) in
         if errors != nil {
           OddLogger.error("Error loading menuCollections")
           errors?.forEach({allErrors.append($0)})
         }
-        allObjects.appendContentsOf(objects)
+        allObjects.append(contentsOf: objects)
         if i == types.count - 1 {
           callback(objects: allObjects, errors: allErrors.isEmpty ? nil : allErrors)
         }

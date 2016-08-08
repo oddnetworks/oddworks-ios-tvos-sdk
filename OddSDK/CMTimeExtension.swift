@@ -11,7 +11,7 @@ import CoreMedia
 
 extension CMTime {
   
-  func formattedTime(needsConverting: Bool) -> Int {
+  func formattedTime(_ needsConverting: Bool) -> Int {
     let timeValue = needsConverting ? Double(self.value) / 1000000 : Double(self.value)
     let roundedValue = timeValue.roundTimeForMetrics()
     return roundedValue

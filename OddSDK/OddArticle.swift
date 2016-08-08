@@ -21,7 +21,7 @@ import WebKit
 //  override var cellReuseIdentifier: String { return "mediaInfoCell" }
 //  override var cellHeight: CGFloat { return 80 }
 //  
-  class func articleFromJson( json: jsonObject) -> OddArticle {
+  class func articleFromJson( _ json: jsonObject) -> OddArticle {
     let newArticle = OddArticle()
     newArticle.configureWithJson(json)
     
@@ -31,17 +31,18 @@ import WebKit
     return newArticle
   }
   
-  override func configureWithJson(json: jsonObject) {
+  override func configureWithJson(_ json: jsonObject) {
     super.configureWithJson(json)
     addAdditionalMetaData(json)
   }
   
-  func addAdditionalMetaData(json: jsonObject) {
-    if let attributes = json["attributes"] as? jsonObject, source = attributes["source"] as? jsonObject {
-      self.category = attributes["category"] as? String
-      self.source = source["url"] as? String
-      self.createdAt = attributes["createdAt"] as? String
-      self.sourceURL = attributes["url"] as? String
+  func addAdditionalMetaData(_ json: jsonObject) {
+    if let attributes = json["attributes"] as? jsonObject,
+      let source = attributes["source"] as? jsonObject {
+        self.category = attributes["category"] as? String
+        self.source = source["url"] as? String
+        self.createdAt = attributes["createdAt"] as? String
+        self.sourceURL = attributes["url"] as? String
     }
   }
   

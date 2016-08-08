@@ -13,9 +13,9 @@ public typealias jsonObject = Dictionary<String, AnyObject>
 public typealias jsonArray = Array<jsonObject>
 
 enum OddFeatureType {
-  case Media
-  case Collection
-  case Promotion
+  case media
+  case collection
+  case promotion
 }
 
 /// Class to load and store the various OddMediaObject types
@@ -90,7 +90,7 @@ enum OddFeatureType {
   ///    storedMediaObjectWithId( "999", OddVideo() )
   /// ```
   /// - returns: the media object found or nil
-  func storedMediaObjectWithId<T>(idToFind: String?, mediaType: T) -> T? {
+  func storedMediaObjectWithId<T>(_ idToFind: String?, mediaType: T) -> T? {
     if let id = idToFind {
       return mediaObjects.filter({ (mediaObject) -> Bool in
         return mediaObject.id == id && mediaObject is T
@@ -110,7 +110,7 @@ enum OddFeatureType {
   ///    storedMediaObjectsWithId( ["777", "888", "999"], OddVideo() )
   /// ```
   /// - returns: an `Array` of the media objects found or nil
-  func storedMediaObjectsWithIds<T>(idsToFind: Array<String>?, mediaType: T) -> Array<T>? {
+  func storedMediaObjectsWithIds<T>(_ idsToFind: Array<String>?, mediaType: T) -> Array<T>? {
     var collections: Array<T> = Array()
     idsToFind?.forEach({ (id) -> () in
       if let foundObject = storedMediaObjectWithId( id, mediaType: mediaType ) {
@@ -202,13 +202,14 @@ enum OddFeatureType {
   var homeMenu: OddMenu = OddMenu()
   #endif
   
-  var imageCache = NSCache()
+  var imageCache = NSCache<NSString, UIImage>()
+  
   
   ///  Our instance variable used to determine if the content store has completed it
   /// initial load of the `OddConfig`, the home view and any related media objects
   var initialDataLoadComplete = false
   
-  func showVersionInfo(beta beta: Bool = false) {
+  func showVersionInfo(beta: Bool = false) {
     
     var platform = "iOS"
     #if tvOS
@@ -235,7 +236,7 @@ enum OddFeatureType {
   /// OddContentStore instance will contain an instance of OddConfig. 
   /// Initialize will call back the closure passed with the success and/or any error
   /// encountered during the loading of the config
-  public func initialize(success: (Bool, NSError?) -> Void) {
+  public func initialize(_ success: (Bool, NSError?) -> Void) {
     OddLogger.info("INITIALIZE CONTENT STORE")
     self.showSDKInfo()
     fetchConfig { (result, error) in
@@ -271,11 +272,11 @@ enum OddFeatureType {
   /// - parameter callback: `(OddMediaObject?, NSError) -> Void`  a closure to be executed. The object passed will be nil. 
   /// The error will be configured according to the params
   ///
-  func returnError(errorMsg: String, errorCode: Int, notification: String?, callback: (OddMediaObject?, NSError) -> Void) {
+  func returnError(_ errorMsg: String, errorCode: Int, notification: String?, callback: (OddMediaObject?, NSError) -> Void) {
     let errorStr = "Error: \(errorMsg)"
     let error = NSError(domain: "Odd", code: errorCode, userInfo: ["error": errorMsg])
     if let notification = notification {
-      NSNotificationCenter.defaultCenter().postNotificationName(notification, object: self, userInfo: nil)
+      NotificationCenter.default.post(name: Notification.Name(rawValue: notification), object: self, userInfo: nil)
     }
     OddLogger.error(errorStr)
     callback(nil, error)
@@ -284,12 +285,12 @@ enum OddFeatureType {
   /// Parses the config response for the JWT containing a user
   /// if found the jwt is written to the user defaults and used as
   /// the authToken for future requests
-  func parseUserJWT(json: jsonObject) {
+  func parseUserJWT(_ json: jsonObject) {
     guard let data = json["data"] as? jsonObject,
-      attribs = data["attributes"] as? jsonObject,
-      jwt = attribs["jwt"] as? String else { return }
-    NSUserDefaults.standardUserDefaults().setObject(jwt, forKey: "OddUserAuthToken")
-    NSUserDefaults.standardUserDefaults().synchronize()
+      let attribs = data["attributes"] as? jsonObject,
+      let jwt = attribs["jwt"] as? String else { return }
+    UserDefaults.standard.set(jwt, forKey: "OddUserAuthToken")
+    UserDefaults.standard.synchronize()
   }
   
   /// Loads the OddConfig instance for the OddContentStore
@@ -302,18 +303,18 @@ enum OddFeatureType {
   ///
   /// Callback will be executed with the config instance or nil
   /// depending on the success of the loading call
-  func fetchConfig(success: (Bool, NSError?)->Void ) {
+  func fetchConfig(_ success: (Bool, NSError?)->Void ) {
     OddLogger.info("FETCHING CONFIG")
     API.get( nil, url: "config") { ( response, err ) -> () in
       if let error = err {
         OddLogger.error("Error fetching config: \(error.localizedDescription)")
-        NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddErrorFetchingConfigNotification, object: self, userInfo: nil)
+        NotificationCenter.default.post(name: OddConstants.OddErrorFetchingConfigNotification, object: self, userInfo: nil)
         success(false, error)
       } else {
         guard let json = response as? jsonObject,
           let newConfig = OddConfig.configFromJson(json) else {
             OddLogger.error("Error fetching config: unable to parse config")
-            NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddErrorFetchingConfigNotification, object: self, userInfo: nil)
+            NotificationCenter.default.post(name: OddConstants.OddErrorFetchingConfigNotification, object: self, userInfo: nil)
             let error = NSError(domain: "Odd", code: 103, userInfo: ["error": "unable to parse config"])
             success(false, error)
             return
@@ -321,7 +322,7 @@ enum OddFeatureType {
         self.config = newConfig
         self.parseUserJWT(json)
         OddLogger.info("Successfully loaded config")
-        NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddFetchedConfigNotification, object: self, userInfo: ["config" : newConfig])
+        NotificationCenter.default.post(name: OddConstants.OddFetchedConfigNotification, object: self, userInfo: ["config" : newConfig])
         success(true, nil)
       }
     }
@@ -339,7 +340,7 @@ enum OddFeatureType {
   /// Note: Objects are first looked for in the local cache (`mediaObjects`) if no matching object is
   /// found in the cache the server will be polled for a matching object. If no objects
   /// are found an empty `array` is returned
-  public func objectsOfType( type: OddMediaObjectType, ids : Array<String>, include: String?, callback: (Array<OddMediaObject>, Array<NSError>?) -> Void )  {
+  public func objectsOfType( _ type: OddMediaObjectType, ids : Array<String>, include: String?, callback: (Array<OddMediaObject>, Array<NSError>?) -> Void )  {
     
     if self.mediaObjects.isEmpty {
       fetchObjectsOfType(type, ids: ids, include: include, callback: { (objects, errors) -> () in
@@ -387,7 +388,7 @@ enum OddFeatureType {
         })
         
         if errors != nil {
-          localErrors.appendContentsOf(errors!)
+          localErrors.append(contentsOf: errors!)
         }
         
         callback(objects, localErrors.isEmpty ? nil : localErrors)
@@ -403,7 +404,7 @@ enum OddFeatureType {
   /// - parameter callback: `( Array<OddMediaObject> ) -> Void` a callback executed once the search is complete
   /// The array passed to `callback` will either contain the entities matching the query or be empty
   /// if no entities wer found
-  public func fetchObjectsOfType ( type: OddMediaObjectType, ids: Array<String>, include: String?, callback: ( Array<OddMediaObject>, Array<NSError>? ) -> () ) {
+  public func fetchObjectsOfType ( _ type: OddMediaObjectType, ids: Array<String>, include: String?, callback: ( Array<OddMediaObject>, Array<NSError>? ) -> () ) {
     var responseArray: Array<OddMediaObject> = Array()
     var errorArray: Array<NSError> = Array()
     
@@ -455,7 +456,7 @@ enum OddFeatureType {
   ///
   /// See also: `fetchObjectsOfType ( type: String, ids: Array<String>, callback: ( Array<AnyObject> ) -> Void )`
   /// to fetch multiple objects of a given type
-  public func fetchObjectType( type: OddMediaObjectType, id: String, include: String?, callback: ( OddMediaObject?, NSError? ) -> Void ) {
+  public func fetchObjectType( _ type: OddMediaObjectType, id: String, include: String?, callback: ( OddMediaObject?, NSError? ) -> Void ) {
     
     var urlStr = "\(type.toString() )s/\(id)"
     if let include = include { urlStr = "\(urlStr)?include=\(include)" }
@@ -465,7 +466,7 @@ enum OddFeatureType {
         self.returnError("Error fetching \(type.toString()): \(id)", errorCode: 105, notification: nil, callback: callback)
       } else {
         if let json = response as? jsonObject,
-          data = json["data"] as? jsonObject {
+          let data = json["data"] as? jsonObject {
           
           guard let mediaObject = self.buildObjectFromJson(data, ofType: type) else {
             let error = NSError(domain: "Odd", code: 108, userInfo: ["error" : "unable to build media object"])
@@ -478,11 +479,11 @@ enum OddFeatureType {
           }
           
           switch type {
-          case .View:
+          case .view:
             if mediaObject is OddView { callback(mediaObject, nil) }
-          case .Video:
+          case .video:
             if mediaObject is OddVideo { callback(mediaObject, nil) }
-          case .Collection:
+          case .collection:
             if mediaObject is OddMediaObjectCollection { callback(mediaObject, nil) }
           default:
             self.returnError("Error fetching \(type.toString()): \(id)", errorCode: 105, notification: nil, callback: callback)
@@ -503,14 +504,14 @@ enum OddFeatureType {
   /// - parameter callback: `( Array<OddMediaObject> ) -> Void` a callback executed once the search is complete
   /// The array passed to `callback` will either contain the entities matching the query or be empty
   /// if no entities were found
-  public func fetchObjectsWithQuery ( type: OddMediaObjectType, query: String, callback: ( Array<OddMediaObject>, NSError? ) -> () ) {
+  public func fetchObjectsWithQuery ( _ type: OddMediaObjectType, query: String, callback: ( Array<OddMediaObject>, NSError? ) -> () ) {
     API.get(nil, url: query) { (response, error) -> () in
       if error != nil {
         OddLogger.error("Error fetching objects with query")
         callback([], error)
       } else {
         guard let json = response as? jsonObject,
-          data = json["data"] as? jsonArray else {
+          let data = json["data"] as? jsonArray else {
             let error = NSError(domain: "Odd", code: 107, userInfo: ["error" : "unable to parse response"])
             callback([], error)
             return
@@ -529,14 +530,14 @@ enum OddFeatureType {
   /// - parameter json: The raw json to use in object creation
   /// - parameter type: type of object to be created
   ///
-  func buildObjectFromJson(json: jsonObject, ofType type: OddMediaObjectType) -> OddMediaObject? {
+  func buildObjectFromJson(_ json: jsonObject, ofType type: OddMediaObjectType) -> OddMediaObject? {
     var mediaObject: OddMediaObject?
     switch type {
-    case .View:
+    case .view:
       mediaObject = OddView.viewFromJson(json)
-    case .Video:
+    case .video:
       mediaObject = OddVideo.videoFromJson(json)
-    case .Collection:
+    case .collection:
       mediaObject = OddMediaObjectCollection.mediaCollectionFromJson(json)
     default:
       break
@@ -554,13 +555,13 @@ enum OddFeatureType {
   ///
   /// - parameter json: `jsonArray` an array of `jsonObject`s describing the included objects
   ///
-  func buildIncludedMediaObjects(json: jsonArray, cacheTime: Int?) {
+  func buildIncludedMediaObjects(_ json: jsonArray, cacheTime: Int?) {
     json.forEach { (someJson) in
       var objectJson = someJson
       guard let typeString = objectJson["type"] as? String else { return }
       if let type = OddMediaObjectType.fromString(typeString) {
         if let cacheTime = cacheTime { objectJson["cacheTime"] = cacheTime }
-        buildObjectFromJson(objectJson, ofType: type)
+        _ = buildObjectFromJson(objectJson, ofType: type)
       }
     }
   }
@@ -577,7 +578,7 @@ enum OddFeatureType {
   ///
   /// See also: `objectsOfType( type: String, ids : Array<String>, callback: (Array<AnyObject>) ->Void )`
   /// to search the cache and the Server
-  public func mediaObjectWithId(id: String) -> OddMediaObject? {
+  public func mediaObjectWithId(_ id: String) -> OddMediaObject? {
     for mediaObject in mediaObjects {
       if mediaObject.id == id { return mediaObject }
     }
@@ -594,7 +595,7 @@ enum OddFeatureType {
   ///
   /// See also: `objectsOfType( type: String, ids : Array<String>, callback: (Array<AnyObject>) ->Void )`
   /// to search the cache and the Server
-  public func mediaObjectsWithIds(ids: Array<String>) -> Array<OddMediaObject>? {
+  public func mediaObjectsWithIds(_ ids: Array<String>) -> Array<OddMediaObject>? {
     var objects = Array<OddMediaObject>()
     ids.forEach { (id) -> () in
       if let obj = mediaObjectWithId(id) {
@@ -604,9 +605,9 @@ enum OddFeatureType {
     return objects.count > 0 ? objects : nil
   }
   
-  public func searchForTerm(term: String, onResults: ( videos: Array<OddVideo>?, collections: Array<OddMediaObjectCollection>? ) -> Void ) {
-    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-      NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddStartedSearchNotification, object: nil))
+  public func searchForTerm(_ term: String, onResults: ( videos: Array<OddVideo>?, collections: Array<OddMediaObjectCollection>? ) -> Void ) {
+    DispatchQueue.main.async(execute: { () -> Void in
+      NotificationCenter.default.post(Notification(name: OddConstants.OddStartedSearchNotification, object: nil))
     })
     
     API.get( nil, url: "search?q=\(term)") { ( response, error ) -> () in
