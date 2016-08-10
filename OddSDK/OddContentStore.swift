@@ -209,7 +209,7 @@ enum OddFeatureType {
   /// initial load of the `OddConfig`, the home view and any related media objects
   var initialDataLoadComplete = false
   
-  func showVersionInfo(beta: Bool = false) {
+  func showVersionInfo(_ beta: Bool = false) {
     
     var platform = "iOS"
     #if tvOS

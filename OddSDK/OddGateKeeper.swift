@@ -118,7 +118,7 @@ class AuthenticationCredentials: NSObject, NSCoding {
     Keychain.setData(encodedcredentials, forAccount: OddConstants.kAuthenticationCredentialsAccountName, synchronizable: true, background: false)
   }
   
-  func updateAuthenticationCredentials(url: String?, userCode: String?, deviceToken: String?, state: AuthenticationStatus?, accessToken: String?, entitlementCredentials: jsonObject?) {
+  func updateAuthenticationCredentials(_ url: String?, userCode: String?, deviceToken: String?, state: AuthenticationStatus?, accessToken: String?, entitlementCredentials: jsonObject?) {
     
       if let url = url {
         self.url = url
@@ -201,7 +201,7 @@ public class OddGateKeeper: NSObject {
               let deviceToken: String? = data["attributes"]?["device_code"] as? String,
               let userCode: String? = data["attributes"]?["user_code"] as? String {
                 
-                self.authenticationCredentials.updateAuthenticationCredentials( url: url,
+                self.authenticationCredentials.updateAuthenticationCredentials( url,
                                                                          userCode: userCode,
                                                                       deviceToken: deviceToken,
                                                                             state: .Initialized,
@@ -217,7 +217,7 @@ public class OddGateKeeper: NSObject {
   }
   
   public func blowAwayCredentials() {
-    self.authenticationCredentials.updateAuthenticationCredentials( url: nil,
+    self.authenticationCredentials.updateAuthenticationCredentials( nil,
       userCode: nil,
       deviceToken: nil,
       state: .Uninitialized,
@@ -240,7 +240,7 @@ public class OddGateKeeper: NSObject {
         let response = res {
         print("Error:\(error.localizedDescription)")
         if response.statusCode == 401 {
-          self.authenticationCredentials.updateAuthenticationCredentials( url: nil,
+          self.authenticationCredentials.updateAuthenticationCredentials( nil,
             userCode: nil,
             deviceToken: nil,
             state: .Uninitialized,
@@ -260,7 +260,7 @@ public class OddGateKeeper: NSObject {
         let creds = userProfile["entitlementCredentials"] as? jsonObject
         
         print("AUTH DATA: \(data)")
-        self.authenticationCredentials.updateAuthenticationCredentials( url: nil,
+        self.authenticationCredentials.updateAuthenticationCredentials( nil,
           userCode: nil,
           deviceToken: deviceToken,
           state: .Authorized,
@@ -335,7 +335,7 @@ public class OddGateKeeper: NSObject {
   }
 
   public func updateEntitlementCredentials(_ creds: jsonObject) {
-    self.authenticationCredentials.updateAuthenticationCredentials( url: nil,
+    self.authenticationCredentials.updateAuthenticationCredentials( nil,
       userCode: nil,
       deviceToken: nil,
       state: nil,
