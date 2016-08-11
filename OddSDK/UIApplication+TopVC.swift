@@ -17,6 +17,7 @@ extension UIApplication {
     }
     
     if let tab = base as? UITabBarController {
+      #if os(iOS)
       let moreNavigationController = tab.moreNavigationController
       
       if let top = moreNavigationController.topViewController, top.view.window != nil {
@@ -24,6 +25,11 @@ extension UIApplication {
       } else if let selected = tab.selectedViewController {
         return topViewController(selected)
       }
+      #else
+        guard let selected = tab.selectedViewController else { return nil }
+        return topViewController(selected)
+      #endif
+      
     }
     
     if let presented = base?.presentedViewController {
