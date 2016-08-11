@@ -64,7 +64,7 @@ public class OddLogger: NSObject {
   }
   
   // grabs the topmost viewController and presents an alert dialog to the user
-  public static func presentMessageToUser(title: String, message: String, kind: OddLogLevel? = nil) {
+  public static func showAlert(withTitle title: String, message: String, kind: OddLogLevel? = nil) {
     let decoratedTitle = kind != nil ? "\(kind!.glyph()) \(title)" : title
     guard let topVC = UIApplication.topViewController() else { return }
     let alert = UIAlertController(title: decoratedTitle, message: message, preferredStyle: .alert)
