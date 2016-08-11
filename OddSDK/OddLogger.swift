@@ -21,22 +21,37 @@ import UIKit
 }
 
 public class OddLogger: NSObject {
-
+  
+  public static var tag : String = ""
+  
   public static var logLevel: OddLogLevel = .error
+  
+  private static func formattedTag() -> String {
+    return self.tag.isEmpty ? "" : "\(self.tag): "
+  }
+  
+  private static func log(glyph: String, message: String) {
+    if tag.isEmpty {
+      print("\(glyph) \(message)")
+    } else {
+      print("\(glyph) \(tag): \(message)")
+    }
+    
+  }
   
   public static func info(_ message: String) {
     if OddLogger.logLevel.atLeast(.info)   {
-      print("✅ \(message)")
+      log(glyph: "✅", message: message)
     }
   }
   
   public static func warn(_ message: String) {
     if OddLogger.logLevel.atLeast(.warn)  {
-      print("⚠️ \(message)")
+      log(glyph: "⚠️", message: message)
     }
   }
   
   public static func error(_ message: String) {
-    print("❌ \(message)")
+    log(glyph: "❌", message: message)
   }
 }
