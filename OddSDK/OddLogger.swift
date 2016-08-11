@@ -76,6 +76,38 @@ public class OddLogger: NSObject {
     alert.addAction(okAction)
     topVC.present(alert, animated: true, completion: { print("done") })
   }
+  
+  
+  //ERRORS
+  public static func showErrorAlert(error: String) {
+    OddLogger.showAlert(withTitle: "Error", message: error, kind: .error)
+  }
+  
+  public static func logAndDisplayError(error: String) {
+    OddLogger.error(error)
+    OddLogger.showErrorAlert(error: error)
+  }
 
+  //WARNINGS
+  public static func showWarningAlert(warning: String) {
+    OddLogger.showAlert(withTitle: "Warning", message: warning, kind: .warn)
+  }
+  
+  public static func logAndDisplayWarning(warning: String) {
+    OddLogger.error(warning)
+    OddLogger.showWarningAlert(warning: warning)
+  }
+  
+  //INFO
+  public static func showInfoAlert(info: String) {
+    OddLogger.showAlert(withTitle: "Information", message: info, kind: .info)
+  }
+  
+  public static func logAndDisplayInfo(info: String) {
+    OddLogger.info(info)
+    OddLogger.showInfoAlert(info: info)
+  }
+  
+  
   
 }
