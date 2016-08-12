@@ -119,6 +119,7 @@
 		13B9F5031C3AD35500AC04B1 /* Array+Bounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AD1C24611800A0A602 /* Array+Bounds.swift */; };
 		13B9F5061C3AD35A00AC04B1 /* OddMetricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A01C2460E900A0A602 /* OddMetricService.swift */; };
 		13C1DFA31C2876000091BCBA /* OddConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C1DFA21C2876000091BCBA /* OddConstants.swift */; };
+		13FBE1021D5E566B0083B593 /* UIApplication+TopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -671,6 +672,7 @@
 				13B9F5001C3AD35500AC04B1 /* Double+Time.swift in Sources */,
 				130A4CEE1CDBC4950047F553 /* OddStoreKeeper.swift in Sources */,
 				13B9F5021C3AD35500AC04B1 /* NSURL+query.swift in Sources */,
+				13FBE1021D5E566B0083B593 /* UIApplication+TopVC.swift in Sources */,
 				13B9F4EB1C3AD34B00AC04B1 /* OddContentStore.swift in Sources */,
 				1347977B1C51424800876D39 /* Keychain.swift in Sources */,
 				134386621C3D574C0042CCC8 /* OddLogger.swift in Sources */,

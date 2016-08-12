@@ -416,38 +416,39 @@ public class OddGateKeeper: NSObject {
     task.resume()
   }
   
-  public func autoLoginWithURL(url: String, success: (Bool) -> Void) {
-    let defaults = NSUserDefaults.standardUserDefaults()
-    guard let email = defaults.stringForKey(OddConstants.kOddLoginName),
-      let password = defaults.stringForKey(OddConstants.kOddLoginPassword) else { success(false); return }
-    print("Attempting autologin with: \(email) - \(password)")
-    self.loginWithURL(url, email: email, password: password) { (result, error) -> () in
-      success(result)
-    }
-  }
+//  public func autoLoginWithURL(url: String, success: (Bool) -> Void) {
+//    let defaults = NSUserDefaults.standardUserDefaults()
+//    guard let email = defaults.stringForKey(OddConstants.kOddLoginName),
+//      let password = defaults.stringForKey(OddConstants.kOddLoginPassword) else { success(false); return }
+//    print("Attempting autologin with: \(email) - \(password)")
+//    self.loginWithURL(url, email: email, password: password) { (result, error) -> () in
+//      success(result)
+//    }
+//  }
   
   // the server should return 200 with a payload of any credentials required for metrics, etc
-  public func loginWithURL(url: String, email: String, password: String, callback: (Bool, NSError?) -> Void) {
-    let params = [
-      "email" : email,
-      "password" : password,
-      "deviceId" : deviceToken,
-      "applicationId" : foo
-    ]
-    
+//  public func loginWithURL(url: String, email: String, password: String, callback: (Bool, NSError?) -> Void) {
+  public func loginWithURL(url: String, params: [ String : AnyObject ]?, callback: (Bool, NSError?) -> Void) {
+  
     self.post(params, url: url) { (response, error) in
       if error != nil {
         callback(false, error)
       }
       else {
         guard let json = response,
-          let success = json["success"] as? Bool else { callback(false, nil); return }
-        if let meta = json["meta"] as? jsonObject {
+          let success = json["success"] as? Bool,
+          let meta = json["meta"] as? jsonObject else { callback(false, nil); return }
+        if success {
+          print("LOGIN SUCCESS")
           self.userMeta = meta
           OddLogger.info("Received Login Meta: \(self.userMeta)");
-        }
-        if success {
-          self.updateLoginCredentialsWithEmail(email, password: password)
+//          self.updateLoginCredentialsWithEmail(email, password: password)
+        } else {
+          if let title = meta["lead"] as? String,
+            let message = meta["message"] as? String{
+            print("ERROR: \(title): \(message)")
+            OddLogger.showAlert(withTitle: title, message: message, kind: .error)
+          }
         }
         OddLogger.info("Login User Result: \(success)")
         callback(success, nil)

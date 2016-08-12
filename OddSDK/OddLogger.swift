@@ -9,34 +9,105 @@
 import UIKit
 
 /// The level of logging to be displayed on the console.
-/// Levels in order are 
+/// Levels in order are
 @objc public enum OddLogLevel: Int {
-  case Info
-  case Warn
-  case Error
+  case info
+  case warn
+  case error
   
-  func atLeast(level: OddLogLevel) -> Bool {
+  func glyph() -> String {
+    switch self {
+    case .info: return "✅"
+    case .warn: return "⚠️"
+    case .error: return "❌"
+    }
+  }
+  
+  func atLeast(_ level: OddLogLevel) -> Bool {
     return level.rawValue >= self.rawValue
   }
 }
 
 public class OddLogger: NSObject {
-
-  public static var logLevel: OddLogLevel = .Error
   
-  public static func info(message: String) {
-    if OddLogger.logLevel.atLeast(.Info)   {
-      print("\(message)")
+  public static var tag : String = ""
+  
+  public static var logLevel: OddLogLevel = .error
+  
+  private static func formattedTag() -> String {
+    return self.tag.isEmpty ? "" : "\(self.tag): "
+  }
+  
+  private static func log( message: String) {
+    if tag.isEmpty {
+      print("\(logLevel.glyph()) \(message)")
+    } else {
+      print("\(logLevel.glyph()) \(tag): \(message)")
+    }
+    
+  }
+  
+  public static func info(_ message: String) {
+    if OddLogger.logLevel.atLeast(.info)   {
+      log(message)
     }
   }
   
-  public static func warn(message: String) {
-    if OddLogger.logLevel.atLeast(.Warn)  {
-      print("\(message)")
+  public static func warn(_ message: String) {
+    if OddLogger.logLevel.atLeast(.warn)  {
+      log(message)
     }
   }
   
-  public static func error(message: String) {
-    print("\(message)")
+  public static func error(_ message: String) {
+    log(message)
   }
+  
+  // grabs the topmost viewController and presents an alert dialog to the user
+  public static func showAlert(withTitle title: String, message: String, kind: OddLogLevel? = nil) {
+    let decoratedTitle = kind != nil ? "\(kind!.glyph()) \(title)" : title
+    guard let topVC = UIApplication.topViewController() else { return }
+    let alert = UIAlertController(title: decoratedTitle, message: message, preferredStyle: .Alert)
+    let okAction = UIAlertAction(title: "OK", style: .Default, handler: { (action) in
+      topVC.dismissViewControllerAnimated(true, completion: {
+        
+      })
+    })
+    alert.addAction(okAction)
+    topVC.presentViewController(alert, animated: true, completion: { print("done") })
+  }
+  
+  
+  //ERRORS
+  public static func showErrorAlert(error: String) {
+    OddLogger.showAlert(withTitle: "Error", message: error, kind: .error)
+  }
+  
+  public static func logAndDisplayError(error: String) {
+    OddLogger.error(error)
+    OddLogger.showErrorAlert(error)
+  }
+  
+  //WARNINGS
+  public static func showWarningAlert(warning: String) {
+    OddLogger.showAlert(withTitle: "Warning", message: warning, kind: .warn)
+  }
+  
+  public static func logAndDisplayWarning(warning: String) {
+    OddLogger.error(warning)
+    OddLogger.showWarningAlert(warning)
+  }
+  
+  //INFO
+  public static func showInfoAlert(info: String) {
+    OddLogger.showAlert(withTitle: "Information", message: info, kind: .info)
+  }
+  
+  public static func logAndDisplayInfo(info: String) {
+    OddLogger.info(info)
+    OddLogger.showInfoAlert(info)
+  }
+  
+  
+  
 }
