@@ -69,12 +69,16 @@ public class OddLogger: NSObject {
     guard let topVC = UIApplication.topViewController() else { return }
     let alert = UIAlertController(title: decoratedTitle, message: message, preferredStyle: .Alert)
     let okAction = UIAlertAction(title: "OK", style: .Default, handler: { (action) in
-      topVC.dismissViewControllerAnimated(true, completion: {
-        
-      })
+      alert.removeFromParentViewController()
+//      topVC.dismissViewControllerAnimated(true, completion: {
+//        
+//      })
     })
     alert.addAction(okAction)
-    topVC.presentViewController(alert, animated: true, completion: { print("done") })
+    dispatch_async(dispatch_get_main_queue()) { 
+      topVC.presentViewController(alert, animated: true, completion: { print("done") })  
+    }
+    
   }
   
   

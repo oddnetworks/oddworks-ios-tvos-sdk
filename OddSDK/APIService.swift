@@ -283,7 +283,7 @@ public class APIService: NSObject {
           if let localData = data {
             errorMessage = self.parseError(localData)
           }
-          let e = NSError(domain: "ODD", code: 100, userInfo: [ "statusCode": res.statusCode, "message" : errorMessage ])
+          let e = NSError(domain: "ODD", code: res.statusCode, userInfo: [ "statusCode": res.statusCode, "message" : errorMessage ])
           callback(nil, e)
           return
         }

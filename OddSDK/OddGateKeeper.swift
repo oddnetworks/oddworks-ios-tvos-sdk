@@ -240,17 +240,12 @@ public class OddGateKeeper: NSObject {
     let currentAuthenticationState = self.authenticationStatus
     
     OddContentStore.sharedStore.API.post(["type":"authorized_user","attributes":["device_code":"\(deviceToken)"]], url:"auth/device/token") { (res, err) -> () in
-      if let error = err,
-        response = res {
+      if let error = err {
+//        response = res {
         print("Error:\(error.localizedDescription)")
-        if response.statusCode == 401 {
-          self.authenticationCredentials.updateAuthenticationCredentials( url: nil,
-                                                                          userCode: nil,
-                                                                          deviceToken: nil,
-                                                                          state: .Uninitialized,
-                                                                          accessToken: nil,
-                                                                          entitlementCredentials: nil
-          )
+        OddLogger.logAndDisplayError("Unable to authorize user. Error code: \(error.code)")
+        if error.code == 401 {
+          self.blowAwayCredentials()
         } else {
           NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddAuthenticationErrorCheckingStateNotification, object: self.authenticationCredentials, userInfo: nil)
         }
@@ -353,11 +348,11 @@ public class OddGateKeeper: NSObject {
   typealias JSONCallback = ( (jsonObject?, NSError?) -> Void)
   
   private func get(params: [ String : String ]?, url: String, callback: JSONCallback) {
-    request("GET", params: params, url: url, callback: callback)
+    self.request("GET", params: params, url: url, callback: callback)
   }
   
   private func post(params: [ String : AnyObject ]?, url: String, callback: JSONCallback) {
-    request("POST", params: params, url: url, callback: callback)
+    self.request("POST", params: params, url: url, callback: callback)
   }
   
   private func request(type: String, params: [ String : AnyObject ]?, url: String, callback: JSONCallback) {
@@ -394,8 +389,11 @@ public class OddGateKeeper: NSObject {
       if let res = response as! NSHTTPURLResponse! {
         
         if res.statusCode != 200 {
-          OddLogger.error("Error, server responded with: \(res.statusCode)" )
-          let e = NSError(domain: "ODD", code: 101, userInfo: [ "statusCode": res.statusCode, "message" : "unable to complete http request" ])
+          if res.statusCode == 401 {
+            self.blowAwayCredentials()
+          }
+          OddLogger.logAndDisplayError("Error, server responded with: \(res.statusCode)" )
+          let e = NSError(domain: "ODD", code: res.statusCode, userInfo: [ "statusCode": res.statusCode, "message" : "unable to complete http request" ])
           callback(nil, e)
           return
         }
