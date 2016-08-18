@@ -465,21 +465,7 @@ public class OddGateKeeper: NSObject {
   // prior to creating a subscription on the clients servers we request verification that 
   // it is possible to create a subscription using these credentials. No subscription should
   // be created. This is called prior to contacting Apple to process payment for a subscription
-  public func validateSubscription(url: String,
-                                   level: String,
-                                   email: String,
-                                   firstName: String,
-                                   lastName: String,
-                                   password: String, callback: (Bool, jsonObject?, NSError?) -> Void ) {
-    let params = [
-      "level" : level,
-      "email" : email,
-      "firstName" : firstName,
-      "lastName" : lastName,
-      "password" : password,
-      "deviceId" : "abcd",
-      "applicationId" : "1234"
-    ]
+  public func validateSubscription(url: String, params: [ String : AnyObject ]?, callback: (Bool, jsonObject?, NSError?) -> Void ) {
     
     self.post(params, url: url) { (response, error) in
       if error != nil {
@@ -496,32 +482,23 @@ public class OddGateKeeper: NSObject {
   
   // after Apple has taken payment and created a subscription this method is used to create a subscription
   // on the clients servers
-  public func createSubscription(url: String,
-                                 level: String,
-                                 email: String,
-                                 firstName: String,
-                                 lastName: String,
-                                 password: String, callback: (Bool, jsonObject?, NSError?) -> Void ) {
+  public func createSubscription(url: String, params: [ String : AnyObject ]?, callback: (Bool, jsonObject?, NSError?) -> Void ) {
     
-    guard let receiptURL = NSBundle.mainBundle().appStoreReceiptURL,
-      receiptData = NSData(contentsOfURL: receiptURL)?.base64EncodedStringWithOptions(.Encoding64CharacterLineLength) else {
+    guard let params = params,
+      let receiptURL = NSBundle.mainBundle().appStoreReceiptURL,
+      receiptData = NSData(contentsOfURL: receiptURL)?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0)) else {
       OddLogger.error("Unable to retrieve app store receipt")
       callback (false, nil, nil)
       return
     }
     
-    let params = [
-      "level" : level,
-      "email" : email,
-      "firstName" : firstName,
-      "lastName" : lastName,
-      "password" : password,
-      "deviceId" : "abcd",
-      "applicationId" : "1234",
-      "receiptId" : receiptData
-    ]
+    var fullParams = params
     
-    self.post(params, url: url) { (response, error) in
+    fullParams["receiptId"] = receiptData
+    
+    print("FULL PARAMS: \(fullParams)")
+    
+    self.post(fullParams, url: url) { (response, error) in
       if error != nil {
         callback(false, nil, error)
       } else {
