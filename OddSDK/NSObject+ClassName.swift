@@ -14,6 +14,6 @@ extension NSObject{
   }
   
   var nameOfClass: String{
-    return NSStringFromClass(self.dynamicType).components(separatedBy: ".").last!
+    return NSStringFromClass(type(of: self)).components(separatedBy: ".").last!
   }
 }

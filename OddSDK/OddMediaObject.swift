@@ -390,7 +390,7 @@ import UIKit
   /// callback closure is executed with the image as a parameter
   ///
   /// parameter callback: A closure taking a `UIImage` as a parameter to be executed when the image is loaded
-  public func thumbnail(_ callback: (UIImage?) -> Void  ) {
+  public func thumbnail(_ callback: @escaping (UIImage?) -> Void  ) {
     let storedThumbnail = getThumbnail()
     if let thumbnail = storedThumbnail {
       callback(thumbnail)
@@ -526,13 +526,13 @@ import UIKit
   
   func setThumbnail(_ image: UIImage) {
     if let url = self.thumbnailLink {
-      OddContentStore.sharedStore.imageCache.setObject(image, forKey: url)
+      OddContentStore.sharedStore.imageCache.setObject(image, forKey: url as NSString)
     }
   }
   
   func getThumbnail() -> UIImage? {
     if let url = self.thumbnailLink {
-      return OddContentStore.sharedStore.imageCache.object(forKey: url)
+      return OddContentStore.sharedStore.imageCache.object(forKey: url as NSString)
     }
     return nil
   }

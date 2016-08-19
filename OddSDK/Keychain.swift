@@ -24,8 +24,8 @@ struct Keychain {
     do {
       try SecItemWrapper.delete([
         kSecClass as String: kSecClassGenericPassword,
-        kSecAttrService as String: serviceName(),
-        kSecAttrAccount as String: account,
+        kSecAttrService as String: serviceName() as AnyObject,
+        kSecAttrAccount as String: account as AnyObject,
         kSecAttrSynchronizable as String: kSecAttrSynchronizableAny,
         ])
     } catch KeychainError.itemNotFound {
@@ -43,8 +43,8 @@ struct Keychain {
         kSecAttrAccount as String: account,
         kSecAttrSynchronizable as String: kSecAttrSynchronizableAny,
         kSecReturnData as String: kCFBooleanTrue as CFTypeRef,
-      ]
-      let result = try SecItemWrapper.matching(query)
+      ] as [String : Any]
+      let result = try SecItemWrapper.matching(query as [String : AnyObject])
       return result as? Data
     } catch KeychainError.itemNotFound {
       // Ignore this error, simply return nil.
@@ -77,11 +77,11 @@ struct Keychain {
         // Add it.
         try _ = SecItemWrapper.add([
           kSecClass as String: kSecClassGenericPassword,
-          kSecAttrService as String: serviceName(),
-          kSecAttrAccount as String: account,
+          kSecAttrService as String: serviceName() as AnyObject,
+          kSecAttrAccount as String: account as AnyObject,
           kSecAttrSynchronizable as String: synchronizable ?
             kCFBooleanTrue : kCFBooleanFalse,
-          kSecValueData as String: data,
+          kSecValueData as String: data as AnyObject,
           kSecAttrAccessible as String: background ?
             kSecAttrAccessibleAfterFirstUnlock :
           kSecAttrAccessibleWhenUnlocked,
@@ -105,7 +105,7 @@ struct Keychain {
   struct SecItemWrapper {
     static func matching(_ query: [String: AnyObject]) throws -> AnyObject? {
       var result: AnyObject?
-      let rawStatus = SecItemCopyMatching(query, &result)
+      let rawStatus = SecItemCopyMatching(query as CFDictionary, &result)
       
       if let error = KeychainError.errorFromOSStatus(rawStatus) {
         throw error
@@ -115,7 +115,7 @@ struct Keychain {
     
     static func add(_ attributes: [String: AnyObject]) throws -> AnyObject? {
       var result: AnyObject?
-      let rawStatus = SecItemAdd(attributes, &result)
+      let rawStatus = SecItemAdd(attributes as CFDictionary, &result)
       
       if let error = KeychainError.errorFromOSStatus(rawStatus) {
         throw error
@@ -125,14 +125,14 @@ struct Keychain {
     
     static func update(_ query: [String: AnyObject],
       attributesToUpdate: [String: AnyObject]) throws {
-        let rawStatus = SecItemUpdate(query, attributesToUpdate)
+        let rawStatus = SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
         if let error = KeychainError.errorFromOSStatus(rawStatus) {
           throw error
         }
     }
     
     static func delete(_ query: [String: AnyObject]) throws {
-      let rawStatus = SecItemDelete(query)
+      let rawStatus = SecItemDelete(query as CFDictionary)
       if let error = KeychainError.errorFromOSStatus(rawStatus) {
         throw error
       }

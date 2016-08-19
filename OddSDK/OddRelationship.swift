@@ -63,7 +63,7 @@ public struct OddRelationshipNode {
     return []
   }
   
-  public func getAllObjects(_ callback: (objects: Array<OddMediaObject>, errors: Array<NSError>?) ->()) {
+  public func getAllObjects(_ callback: @escaping (_ objects: Array<OddMediaObject>, _ errors: Array<NSError>?) ->()) {
     let types = self.allTypes
     var allObjects: Array<OddMediaObject> = []
     var allErrors: Array<NSError> = []
@@ -76,7 +76,7 @@ public struct OddRelationshipNode {
         }
         allObjects.append(contentsOf: objects)
         if i == types.count - 1 {
-          callback(objects: allObjects, errors: allErrors.isEmpty ? nil : allErrors)
+          callback(allObjects, allErrors.isEmpty ? nil : allErrors)
         }
       })
     }

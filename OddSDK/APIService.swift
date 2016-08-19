@@ -156,7 +156,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func get(_ params: [ String : String ]?, url: String, callback: APICallback) {
+  public func get(_ params: [ String : AnyObject ]?, url: String, callback: APICallback) {
     request("GET", params: params, url: url, callback: callback)
   }
   
@@ -180,7 +180,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func put(_ params: [ String : String ]?, url: String, callback: APICallback) {
+  public func put(_ params: [ String : AnyObject ]?, url: String, callback: APICallback) {
     request("PUT", params: params, url: url, callback: callback)
   }
   
@@ -192,7 +192,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func delete(_ params: [ String : String ]?, url: String, callback: APICallback) {
+  public func delete(_ params: [ String : AnyObject ]?, url: String, callback: APICallback) {
     request("DELETE", params: params, url: url, callback: callback)
   }
   
@@ -257,7 +257,7 @@ public class APIService: NSObject {
         if e.code == .notConnectedToInternet {
           NotificationCenter.default.post(Notification(name: OddConstants.OddConnectionOfflineNotification, object: e) )
         }
-        callback(nil, e)
+        callback(nil, e as NSError?)
         return
       }
       
@@ -279,7 +279,7 @@ public class APIService: NSObject {
         if res.statusCode == 401 { // unauthorized
           print("Error server responded with 401: Unauthorized to \(url)")
           OddGateKeeper.sharedKeeper.blowAwayCredentials()
-          NotificationCenter.default.post(Notification(name: "unauthorizedResponseReturned" as NSNotification.Name, object: nil))
+          NotificationCenter.default.post(Notification(name: NSNotification.Name("unauthorizedResponseReturned") , object: nil))
         }
         
         if res.statusCode == 201 {
@@ -324,7 +324,7 @@ public class APIService: NSObject {
     var serializationError: NSError?
     var json: AnyObject?
     do {
-      json = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+      json = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as AnyObject
     } catch let error as NSError {
       serializationError = error
       json = nil
@@ -371,12 +371,12 @@ public class APIService: NSObject {
       
       var json: AnyObject?
       do {
-        json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers)
+        json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as AnyObject
         
         if let cacheTime = cacheTime {
           let mutableDict = NSMutableDictionary(dictionary: (json as? NSDictionary)!)
           if let theData = mutableDict["data"] as? NSMutableDictionary {
-              theData.setObject(cacheTime, forKey: "cacheTime")
+              theData.setObject(cacheTime, forKey: "cacheTime" as NSCopying)
               json = mutableDict
           }
         }

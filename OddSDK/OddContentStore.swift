@@ -236,7 +236,7 @@ enum OddFeatureType {
   /// OddContentStore instance will contain an instance of OddConfig. 
   /// Initialize will call back the closure passed with the success and/or any error
   /// encountered during the loading of the config
-  public func initialize(_ success: (Bool, NSError?) -> Void) {
+  public func initialize(_ success: @escaping (Bool, NSError?) -> Void) {
     OddLogger.info("INITIALIZE CONTENT STORE")
     self.showSDKInfo()
     fetchConfig { (result, error) in
@@ -303,7 +303,7 @@ enum OddFeatureType {
   ///
   /// Callback will be executed with the config instance or nil
   /// depending on the success of the loading call
-  func fetchConfig(_ success: (Bool, NSError?)->Void ) {
+  func fetchConfig(_ success: @escaping (Bool, NSError?)->Void ) {
     OddLogger.info("FETCHING CONFIG")
     API.get( nil, url: "config") { ( response, err ) -> () in
       if let error = err {
@@ -340,7 +340,7 @@ enum OddFeatureType {
   /// Note: Objects are first looked for in the local cache (`mediaObjects`) if no matching object is
   /// found in the cache the server will be polled for a matching object. If no objects
   /// are found an empty `array` is returned
-  public func objectsOfType( _ type: OddMediaObjectType, ids : Array<String>, include: String?, callback: (Array<OddMediaObject>, Array<NSError>?) -> Void )  {
+  public func objectsOfType( _ type: OddMediaObjectType, ids : Array<String>, include: String?, callback: @escaping (Array<OddMediaObject>, Array<NSError>?) -> Void )  {
     
     if self.mediaObjects.isEmpty {
       fetchObjectsOfType(type, ids: ids, include: include, callback: { (objects, errors) -> () in
@@ -404,7 +404,7 @@ enum OddFeatureType {
   /// - parameter callback: `( Array<OddMediaObject> ) -> Void` a callback executed once the search is complete
   /// The array passed to `callback` will either contain the entities matching the query or be empty
   /// if no entities wer found
-  public func fetchObjectsOfType ( _ type: OddMediaObjectType, ids: Array<String>, include: String?, callback: ( Array<OddMediaObject>, Array<NSError>? ) -> () ) {
+  public func fetchObjectsOfType ( _ type: OddMediaObjectType, ids: Array<String>, include: String?, callback: @escaping ( Array<OddMediaObject>, Array<NSError>? ) -> () ) {
     var responseArray: Array<OddMediaObject> = Array()
     var errorArray: Array<NSError> = Array()
     
@@ -456,7 +456,7 @@ enum OddFeatureType {
   ///
   /// See also: `fetchObjectsOfType ( type: String, ids: Array<String>, callback: ( Array<AnyObject> ) -> Void )`
   /// to fetch multiple objects of a given type
-  public func fetchObjectType( _ type: OddMediaObjectType, id: String, include: String?, callback: ( OddMediaObject?, NSError? ) -> Void ) {
+  public func fetchObjectType( _ type: OddMediaObjectType, id: String, include: String?, callback: @escaping ( OddMediaObject?, NSError? ) -> Void ) {
     
     var urlStr = "\(type.toString() )s/\(id)"
     if let include = include { urlStr = "\(urlStr)?include=\(include)" }
@@ -504,7 +504,7 @@ enum OddFeatureType {
   /// - parameter callback: `( Array<OddMediaObject> ) -> Void` a callback executed once the search is complete
   /// The array passed to `callback` will either contain the entities matching the query or be empty
   /// if no entities were found
-  public func fetchObjectsWithQuery ( _ type: OddMediaObjectType, query: String, callback: ( Array<OddMediaObject>, NSError? ) -> () ) {
+  public func fetchObjectsWithQuery ( _ type: OddMediaObjectType, query: String, callback: @escaping ( Array<OddMediaObject>, NSError? ) -> () ) {
     API.get(nil, url: query) { (response, error) -> () in
       if error != nil {
         OddLogger.error("Error fetching objects with query")
@@ -560,7 +560,7 @@ enum OddFeatureType {
       var objectJson = someJson
       guard let typeString = objectJson["type"] as? String else { return }
       if let type = OddMediaObjectType.fromString(typeString) {
-        if let cacheTime = cacheTime { objectJson["cacheTime"] = cacheTime }
+        if let cacheTime = cacheTime { objectJson["cacheTime"] = cacheTime as AnyObject }
         _ = buildObjectFromJson(objectJson, ofType: type)
       }
     }
@@ -605,7 +605,7 @@ enum OddFeatureType {
     return objects.count > 0 ? objects : nil
   }
   
-  public func searchForTerm(_ term: String, onResults: ( videos: Array<OddVideo>?, collections: Array<OddMediaObjectCollection>? ) -> Void ) {
+  public func searchForTerm(_ term: String, onResults: @escaping ( _ videos: Array<OddVideo>?, _ collections: Array<OddMediaObjectCollection>? ) -> Void ) {
     DispatchQueue.main.async(execute: { () -> Void in
       NotificationCenter.default.post(Notification(name: OddConstants.OddStartedSearchNotification, object: nil))
     })
@@ -613,7 +613,7 @@ enum OddFeatureType {
     API.get( nil, url: "search?q=\(term)") { ( response, error ) -> () in
       if let _ = error {
         print("Error fetching search results")
-        onResults (videos: nil, collections: nil)
+        onResults (nil, nil)
       } else {
         if let json = response as? jsonObject {
           if let data = json["data"] as? Array<jsonObject> {
@@ -636,7 +636,7 @@ enum OddFeatureType {
               }
             }
             OddLogger.info("Found \(videoResults.count) videos and \(collectionResults.count) collections")
-            onResults(videos: videoResults, collections: collectionResults)
+            onResults(videoResults, collectionResults)
           }
         }
       }

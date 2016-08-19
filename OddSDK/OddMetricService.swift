@@ -119,12 +119,12 @@ public struct OddMetricService {
        //   "organizationId" : "\(organizationID)",
           "action" : "\(stat.actionString)"
         ]
-      ]
+      ] as [String : Any]
       
       if contentType != "null" {
         if var attributes = params["attributes"] as? jsonObject {
-          attributes["contentType"] = "\(contentType!)"
-          attributes["contentId"] = "\(contentId!)"
+          attributes["contentType"] = "\(contentType!)" as AnyObject
+          attributes["contentId"] = "\(contentId!)" as AnyObject
           params["attributes"] = attributes
         }
         
@@ -132,16 +132,16 @@ public struct OddMetricService {
           let player = beacon.playerType,
           let elapsed = beacon.elapsed {
           if var attributes = params["attributes"] as? jsonObject {
-            attributes["elapsed"] = elapsed
-            attributes["duration"] = "null"
-            attributes["player"] = player
+            attributes["elapsed"] = elapsed as AnyObject
+            attributes["duration"] = "null" as AnyObject
+            attributes["player"] = player as AnyObject
             params["attributes"] = attributes
           }
             
           //need to have separate in case it is a live stream, in which case duration will not exist
           if let duration = beacon.duration {
             if var attributes = params["attributes"] as? jsonObject {
-              attributes["duration"] = duration
+              attributes["duration"] = duration as AnyObject
               params["attributes"] = attributes
             }
           }
@@ -150,7 +150,7 @@ public struct OddMetricService {
       
       OddLogger.info("PARAMS SENT IN METRIC POST: \(params)")
       
-      APIService.sharedService.post(params, url: "events") { (response, error) -> () in
+      APIService.sharedService.post(params as [String : AnyObject]?, url: "events") { (response, error) -> () in
         if let e = error {
           OddLogger.error("<<Metric post with type '\(stat.actionString)' failed with error: \(e.localizedDescription)>>")
         } else {

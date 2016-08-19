@@ -188,29 +188,39 @@ public class OddGateKeeper: NSObject {
     }
   }
   
-  public func fetchAuthenticationConfig( _ callback: (url: String?, userCode: String?, deviceToken: String?, error: NSError?) -> Void ) {
+  public func fetchAuthenticationConfig( _ callback: @escaping (_ url: String?, _ userCode: String?, _ deviceToken: String?, _ error: NSError?) -> Void ) {
     OddContentStore.sharedStore.API.post(nil, url: "auth/device/code") { (res, err) -> () in
       if let e = err {
         OddLogger.error("Error fetching auth config: \(e)")
-        callback(url: nil, userCode: nil, deviceToken: nil, error: e)
+        callback(nil, nil, nil, e)
       } else {
         if let json = res as? Dictionary<String, AnyObject> {
           OddLogger.info("Auth Config: \(json)")
-          if let data = json["data"] as? Dictionary<String, AnyObject> {
-            if let url: String? = data["attributes"]?["verification_url"] as? String,
-              let deviceToken: String? = data["attributes"]?["device_code"] as? String,
-              let userCode: String? = data["attributes"]?["user_code"] as? String {
-                
-                self.authenticationCredentials.updateAuthenticationCredentials( url,
-                                                                         userCode: userCode,
-                                                                      deviceToken: deviceToken,
-                                                                            state: .Initialized,
-                                                                      accessToken: nil,
-                                                           entitlementCredentials: nil )
-                
-                callback(url: url, userCode: userCode, deviceToken: deviceToken, error: nil)
-            }
+          
+          guard let data = json["data"] as? jsonObject,
+            let attribs = data["attributes"] as? jsonObject,
+            let url = attribs["verification_url"] as? String,
+            let deviceToken = attribs["device_code"] as? String,
+            let userCode = attribs["user_code"] as? String else {
+              let error = NSError(domain: "Odd", code: 100, userInfo: ["error" : "Unable to decode response"])
+              callback(nil, nil, nil, error)
+              return
           }
+          
+         // if let data = json["data"] as? jsonObject,
+           // let attribs = data["attributes"] as? jsonObject{
+//            if let url = attribs["verification_url"] as String,
+//              let deviceToken: String? = data["attributes"]?["device_code"] as String,
+//              let userCode: String? = data["attributes"]?["user_code"] as String {
+                
+          self.authenticationCredentials.updateAuthenticationCredentials( url,
+                                                                     userCode: userCode,
+                                                                  deviceToken: deviceToken,
+                                                                        state: .Initialized,
+                                                                  accessToken: nil,
+                                                       entitlementCredentials: nil )
+            
+          callback(url, userCode, deviceToken, nil)
         }
       }
     }
@@ -235,7 +245,7 @@ public class OddGateKeeper: NSObject {
     
     let currentAuthenticationState = self.authenticationStatus
     
-    OddContentStore.sharedStore.API.post(["type":"authorized_user","attributes":["device_code":"\(deviceToken)"]], url:"auth/device/token") { (res, err) -> () in
+    OddContentStore.sharedStore.API.post(["type":"authorized_user" as AnyObject,"attributes":["device_code":"\(deviceToken)"] as AnyObject], url:"auth/device/token") { (res, err) -> () in
       if let error = err,
         let response = res {
         print("Error:\(error.localizedDescription)")

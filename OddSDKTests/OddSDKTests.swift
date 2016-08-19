@@ -63,7 +63,7 @@ class OddSDKTests: XCTestCase {
      This line is required to allow access to the API. Once you have entered your authToken uncomment
      to continue
      */
-    OddContentStore.sharedStore.API.authToken = "<your auth token>"
+    OddContentStore.sharedStore.API.authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtaW9zIiwidXNlciI6ImFkNjI3MGVmLTVjYTUtNGMxOS1iNDU4LTkxYmFlOGU0OTAwYSIsImlhdCI6MTQ3MDc1OTc5NSwiYXVkIjpbInBsYXRmb3JtIl0sImlzcyI6InVybjpvZGR3b3JrcyJ9.llj5k4Y7t_6mihFdcXFlWqc-HWWNbrvEZ0l-nUFcR6E"
   }
   
   override func setUp() {
