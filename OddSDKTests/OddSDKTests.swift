@@ -530,4 +530,26 @@ class OddSDKTests: XCTestCase {
     })
   }
   
+  func testGateKeeperAuthenticationStatusDefaultsToUninitialized() {
+    let authState = OddGateKeeper.sharedKeeper.authenticationStatus
+    
+    XCTAssertEqual(authState, .Uninitialized, "Authentication State should default to Uninitialized")
+  }
+  
+  func testGateKeeperEntitlementCredentialsNilByDefault() {
+    XCTAssertNil(OddGateKeeper.sharedKeeper.entitlementCredentials(), "Entitlement Credentials should be empty (nil) by default")
+  }
+  
+  func testGateKeeperCanUpdateEntitlementCredentials() {
+    let credentials: jsonObject = [ "foo" : "bar" as AnyObject ]
+    OddGateKeeper.sharedKeeper.updateEntitlementCredentials(credentials)
+    
+    guard let currentCredentials = OddGateKeeper.sharedKeeper.entitlementCredentials() else {
+      XCTAssert(true, "Entitlement Credentials should be present")
+      return
+    }
+    
+    XCTAssertEqual(credentials["foo"] as! String, currentCredentials["foo"] as! String , "Entitlement Credentials should update")
+  }
+  
 }
