@@ -183,6 +183,9 @@ public class OddGateKeeper: NSObject {
   
   var userMeta: jsonObject?
   
+  // custome http headers to be added to all requests to the login/authorization server 
+  public var customUserHeaders: Dictionary<String, String> = Dictionary()
+  
   /// The user/device Authentication Status
   public var authenticationStatus: AuthenticationStatus {
     get {
@@ -198,7 +201,7 @@ public class OddGateKeeper: NSObject {
         callback(url: nil, userCode: nil, deviceToken: nil, error: e)
       } else {
         if let json = res as? Dictionary<String, AnyObject> {
-          OddLogger.info("Auth Config: \(json)")
+//          OddLogger.info("Auth Config: \(json)")
           if let data = json["data"] as? Dictionary<String, AnyObject> {
             if let url: String? = data["attributes"]?["verification_url"] as? String,
               deviceToken: String? = data["attributes"]?["device_code"] as? String,
@@ -376,6 +379,15 @@ public class OddGateKeeper: NSObject {
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
     request.addValue("application/json", forHTTPHeaderField: "Accept")
     
+    
+    self.customUserHeaders.forEach({ (headerName, headerValue) in
+      print("Adding custom header: \(headerName)")
+        request.addValue(headerValue, forHTTPHeaderField: headerName)
+    })
+    
+    
+    // custom headers...
+    
     let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
       
       if let e = error {
@@ -487,7 +499,7 @@ public class OddGateKeeper: NSObject {
     guard let params = params,
       let receiptURL = NSBundle.mainBundle().appStoreReceiptURL,
       receiptData = NSData(contentsOfURL: receiptURL)?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0)) else {
-      OddLogger.error("Unable to retrieve app store receipt")
+      OddLogger.error("Unable to retrieve app store receipt (Subscribe)")
       callback (false, nil, nil)
       return
     }
@@ -496,7 +508,7 @@ public class OddGateKeeper: NSObject {
     
     fullParams["receiptId"] = receiptData
     
-    print("FULL PARAMS: \(fullParams)")
+    print("FULL PARAMS subscribe: \(fullParams)")
     
     self.post(fullParams, url: url) { (response, error) in
       if error != nil {
@@ -507,6 +519,34 @@ public class OddGateKeeper: NSObject {
         
         callback(success, json["meta"] as? jsonObject, nil)
         OddLogger.info("Create Subscription result: \(success)")
+      }
+    }
+  }
+  
+  public func restoreSubscription(url: String, params: [String : AnyObject]?, callback: (Bool, jsonObject?, NSError?) -> Void) {
+    guard let params = params,
+      let receiptURL = NSBundle.mainBundle().appStoreReceiptURL,
+      receiptData = NSData(contentsOfURL: receiptURL)?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0)) else {
+        OddLogger.error("Unable to retrieve app store receipt (Restore)")
+        callback (false, nil, nil)
+        return
+    }
+    
+    var fullParams = params
+    
+    fullParams["receiptId"] = receiptData
+    
+    print("FULL PARAMS restore: \(fullParams)")
+    
+    self.post(fullParams, url: url) { (response, error) in
+      if error != nil {
+        callback(false, nil, error)
+      } else {
+        guard let json = response,
+          let success = json["success"] as? Bool else { callback (false, nil, nil); return }
+        
+        callback(success, json["meta"] as? jsonObject, nil)
+        OddLogger.info("Restore Subscription result: \(success)")
       }
     }
   }

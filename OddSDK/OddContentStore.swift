@@ -342,7 +342,7 @@ public typealias jsonArray = Array<jsonObject>
         callback(nil)
       } else {
         if let json = response as? Dictionary<String, AnyObject> {
-          OddLogger.info("CONFIG: \(json)")
+//          OddLogger.info("CONFIG: \(json)")
           if let newConfig = OddConfig.configFromJson(json) {
             self.config = newConfig
             callback(newConfig)
@@ -360,10 +360,14 @@ public typealias jsonArray = Array<jsonObject>
   /// by the customer. See the explanation of `View` in the notes for
   /// `OddContentStore` above
   func fetchViewInfo(){
+    #if os(iOS)
     loadMenuView { (complete) -> () in
       OddLogger.info("Menu view load completed? \(complete)")
       self.loadHomeView()
     }
+    #else
+      self.loadHomeView()
+    #endif
   }
   
   /// Loads the inital application view
@@ -384,7 +388,7 @@ public typealias jsonArray = Array<jsonObject>
           if let json = response as? jsonObject,
             data = json["data"] as? jsonObject,
             included = json["included"] as? Array<jsonObject> {
-              OddLogger.info("JSON: \(json)")
+//              OddLogger.info("JSON: \(json)")
 //                              OddLogger.info("VIEW DATA: \(data)")
               self.responseData = data
               //                OddLogger.info("INCLUDED: \(included)")
@@ -897,7 +901,6 @@ public typealias jsonArray = Array<jsonObject>
   /// See also: `fetchObjectsOfType ( type: String, ids: Array<String>, callback: ( Array<AnyObject> ) -> Void )`
   /// to fetch multiple objects of a given type
   public func fetchObjectType( type: OddMediaObjectType, id: String, callback: ( OddMediaObject? ) -> Void ) {
-
     API.get(nil , url: "\(type.toString() )s/\(id)") { (response, error) -> () in
       if error != nil {
         OddLogger.error("Error fetching \(type): \(id)")

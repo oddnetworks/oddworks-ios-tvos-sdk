@@ -30,11 +30,13 @@ public protocol StoreKeeperDelegate {
   optional func showPurchaseCompleted(transaction: SKPaymentTransaction)
   optional func showPurchaseFailed(transaction: SKPaymentTransaction)
   optional func showPurchaseRestored(transaction: SKPaymentTransaction)
+  
 }
 
-public protocol StoreKeeperRestorePurchasesDelegate {
+@objc public protocol StoreKeeperRestorePurchasesDelegate {
   func showRestoreCompleted()
   func showRestoreFailedWithError(error: String)
+  optional func finalizePurchaseRestoration()
 }
 
 public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver, SKRequestDelegate {
@@ -51,6 +53,7 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   static public var productIdentifiers: Set<String> = Set()
   private var products: Array<SKProduct> = Array()
   private var productsRequest: SKProductsRequest?
+  private var restoreRequest: SKReceiptRefreshRequest?
   
   public var delegate: StoreKeeperDelegate?
   public var transactionDelegate: StoreKeeperTransactionDelegate?
@@ -102,13 +105,21 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   
   public func request(request: SKRequest, didFailWithError error: NSError) {
     OddLogger.error("Store Request Error: \(error.localizedDescription)")
-    // add alert for error !!
+    //FIXME:  add alert for error !!
+  }
+  
+  func logRequest(request: SKRequest) {
+    guard let req = request as? SKReceiptRefreshRequest else { return }
+    
+    OddLogger.info("Refresh Receipt: \(req.receiptProperties)")
   }
   
   public func requestDidFinish(request: SKRequest) {
     guard request is SKReceiptRefreshRequest else { return }
     
-    OddLogger.info("Store Request did finish")
+//    logRequest(request)
+    OddLogger.info("Receipt Refresh Request did finish")
+    self.restoreDelegate?.finalizePurchaseRestoration?()
   }
   
   // MARK: - Payments
@@ -120,8 +131,12 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   }
   
   public func restorePurchase() {
-    SKPaymentQueue.defaultQueue().addTransactionObserver(self)
-    SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+//    request = [[SKReceiptRefreshRequest alloc] init];
+    self.restoreRequest = SKReceiptRefreshRequest()
+    self.restoreRequest?.delegate = self;
+    self.restoreRequest?.start()
+//    SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+//    SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
   }
   
   public func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
@@ -178,8 +193,18 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   }
   
   func restoreTransaction(transaction: SKPaymentTransaction) {
-    OddLogger.info("StoreKeeper transaction restoration complete: \(transaction.transactionIdentifier!)")
-    self.transactionDelegate?.showPurchaseRestored?(transaction)
+    OddLogger.info("StoreKeeper transaction restoration complete (Apple): \(transaction.transactionIdentifier!)")
+    
+    switch transaction.transactionState {
+    case .Deferred: print("DEFERED")
+    case .Failed: print("FAILED")
+    case .Purchased: print("PURCHASED")
+    case .Purchasing: print("PURCHASING")
+    case .Restored: print("RESTORED")
+    }
+    
+    self.restoreDelegate?.finalizePurchaseRestoration?()
+//    self.transactionDelegate?.showPurchaseRestored?(transaction)
     self.productsRequest = nil
   }
   

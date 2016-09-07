@@ -40,7 +40,6 @@ import WebKit
   }
   
   func addAdditionalMetaData(json: jsonObject) {
-    print("JSON: \(json)")
     if let attributes = json["attributes"] as? jsonObject, ical = attributes["ical"] as? jsonObject, source = attributes["source"] as? jsonObject {
       self.category = attributes["category"] as? String
       self.source = source["url"] as? String

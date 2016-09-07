@@ -301,7 +301,7 @@ import UIKit
     
     self.meta = json["meta"] as? jsonObject
     
-    print("Entitled: \(self.meta?["entitled"] as! Bool) - \(OddGateKeeper.sharedKeeper.authenticationCredentials.state) \(self.title)")
+//    print("Entitled: \(self.meta?["entitled"] as! Bool) - \(OddGateKeeper.sharedKeeper.authenticationCredentials.state) \(self.title)")
     
     self.cacheTime = json["cacheTime"] as? Int
     self.lastUpdate = NSDate()

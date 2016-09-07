@@ -148,7 +148,7 @@ public struct OddMetricService {
         }
       }
       
-      OddLogger.info("PARAMS SENT IN METRIC POST: \(params)")
+//      OddLogger.info("PARAMS SENT IN METRIC POST: \(params)")
       
       APIService.sharedService.post(params, url: "events") { (response, error) -> () in
         if let e = error {
