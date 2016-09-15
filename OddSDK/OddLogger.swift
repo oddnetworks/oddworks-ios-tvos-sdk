@@ -11,12 +11,14 @@ import UIKit
 /// The level of logging to be displayed on the console.
 /// Levels in order are 
 @objc public enum OddLogLevel: Int {
+  case debug
   case info
   case warn
   case error
   
   func glyph() -> String {
     switch self {
+    case .debug: return "🛠"
     case .info: return "✅"
     case .warn: return "⚠️"
     case .error: return "❌"
@@ -38,7 +40,8 @@ public class OddLogger: NSObject {
     return self.tag.isEmpty ? "" : "\(self.tag): "
   }
   
-  private static func log( message: String) {
+  
+  private static func log( logLevel: OddLogLevel, message: String) {
     if tag.isEmpty {
       print("\(logLevel.glyph()) \(message)")
     } else {
@@ -47,23 +50,29 @@ public class OddLogger: NSObject {
     
   }
   
+  public static func debug(_ message: String) {
+    if OddLogger.logLevel.atLeast(.debug) {
+      log(logLevel: .debug, message: message)
+    }
+  }
+  
   public static func info(_ message: String) {
     if OddLogger.logLevel.atLeast(.info)   {
-      log(message: message)
+      log(logLevel: .info, message: message)
     }
   }
   
   public static func warn(_ message: String) {
     if OddLogger.logLevel.atLeast(.warn)  {
-      log(message: message)
+      log(logLevel: .warn, message: message)
     }
   }
   
   public static func error(_ message: String) {
-    log(message: message)
+    log(logLevel: .error, message: message)
   }
   
-  // grabs the topmost viewController and presents an alert dialog to the user
+  // grabs the topmost viewlkController and presents an alert dialog to the user
   public static func showAlert(withTitle title: String, message: String, kind: OddLogLevel? = nil) {
     let decoratedTitle = kind != nil ? "\(kind!.glyph()) \(title)" : title
     guard let topVC = UIApplication.topViewController() else { return }
@@ -107,6 +116,17 @@ public class OddLogger: NSObject {
     OddLogger.info(info)
     OddLogger.showInfoAlert(info: info)
   }
+  
+  //DEBUG
+  public static func showDebugAlert(debug: String) {
+    OddLogger.showAlert(withTitle: "Debug", message: debug, kind: .debug)
+  }
+  
+  public static func logAndDisplayDebug(debug: String) {
+    OddLogger.info(debug)
+    OddLogger.showDebugAlert(debug: debug)
+  }
+
   
   
   
