@@ -83,7 +83,7 @@ public class OddLogger: NSObject {
       })
     })
     alert.addAction(okAction)
-    topVC.present(alert, animated: true, completion: { print("done") })
+    topVC.present(alert, animated: true, completion: { print("presented alert") })
   }
   
   
