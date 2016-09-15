@@ -498,6 +498,20 @@ import UIKit
     return node.numberOfRelationships
   }
   
+  
+  public func objectsForRelationship(withName name: String, _ callback: @escaping (_ objects: Array<OddMediaObject>, _ errors: Array<NSError>?) ->())  {
+    var result = Array<OddMediaObject>()
+    
+    guard let node = self.relationshipNodeWithName(name) else {
+      let e = NSError(domain: "Odd", code: 111, userInfo: ["error": "No node found with name: \(name)"])
+      callback(result, [e])
+      return
+    }
+    
+    node.getAllObjects { (objects, errors) in
+      callback(objects, errors)
+    }
+  }
   //MARK: - Dynamic Media Object
   
   /// A method to configure a `UITableViewCell` when displaying the information

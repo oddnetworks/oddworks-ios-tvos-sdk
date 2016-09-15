@@ -45,6 +45,10 @@ import UIKit
 //    return objectInfos.count
 //  }
   
+  public var numberOfObjects: Int {
+    return self.numberOfItemsInRelationshipNodeWithName("entities")
+  }
+  
 //  var typesOfObjects: Set<OddMediaObjectType> {
 //    var types = Set<OddMediaObjectType>()
 //    objectTypes.forEach { (type) -> () in

@@ -107,6 +107,7 @@ public class APIService: NSObject {
       case .staging: return "https://device-staging.oddworks.io"
       case .beta: return "https://beta.oddworks.io"
       case .local: return "http://127.0.0.1:8000"
+      case .production: return "https://content.oddworks.io"
       default: return "https://device.oddworks.io"
       }
     }
@@ -130,7 +131,7 @@ public class APIService: NSObject {
   /// 
   /// This string is a combination of the `baseURL` and the currently supported 
   /// API version
-  var apiURL: String { return "\(baseURL)/" }
+  var apiURL: String { return "\(baseURL)/v2/" }
   
   /// A `String` built from various device infomation fields to be sent to the API server 
   /// with each request
@@ -156,7 +157,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func get(_ params: [ String : AnyObject ]?, url: String, callback: APICallback) {
+  public func get(_ params: [ String : AnyObject ]?, url: String, callback: @escaping APICallback) {
     request("GET", params: params, url: url, callback: callback)
   }
   
@@ -168,7 +169,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func post(_ params: [ String : AnyObject ]?, url: String, callback: APICallback) {
+  public func post(_ params: [ String : AnyObject ]?, url: String, callback: @escaping APICallback) {
     request("POST", params: params, url: url, callback: callback)
   }
   
@@ -180,7 +181,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func put(_ params: [ String : AnyObject ]?, url: String, callback: APICallback) {
+  public func put(_ params: [ String : AnyObject ]?, url: String, callback: @escaping APICallback) {
     request("PUT", params: params, url: url, callback: callback)
   }
   
@@ -192,7 +193,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func delete(_ params: [ String : AnyObject ]?, url: String, callback: APICallback) {
+  public func delete(_ params: [ String : AnyObject ]?, url: String, callback: @escaping APICallback) {
     request("DELETE", params: params, url: url, callback: callback)
   }
   
@@ -215,7 +216,7 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`, `get()`, `post()`, `put()`, 'delete()'
-  private func request(_ type: String, params: [ String : AnyObject ]?, url: String, callback: APICallback) {
+  private func request(_ type: String, params: [ String : AnyObject ]?, url: String, callback: @escaping APICallback) {
     let request = NSMutableURLRequest(url: URL(string: apiURL + url)!)
     let session = URLSession.shared
     request.httpMethod = type
@@ -354,7 +355,7 @@ public class APIService: NSObject {
   /// - parameter data: An optional `NSData` object containing the server response, if any
   /// - parameter callbck: an `APICallback` that will either contain the json of the
   /// response or nil if no data is found or an error occurred serializing the response
-  private func parseData(_ data: Data?, cacheTime: Int? = nil, callback: APICallback) {
+  private func parseData(_ data: Data?, cacheTime: Int? = nil, callback: @escaping APICallback) {
     
     func reportJsonError() {
       print("Error could not parse JSON")
