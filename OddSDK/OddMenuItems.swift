@@ -74,30 +74,24 @@ struct OddMenuItemCollection {
 
 
 struct OddMenu {
-  var menuItemCollections = Array<OddMenuItemCollection>()
+  var menuItemCollections: Array = Array<OddMenuItemCollection>()
   
-  func menuItemCollectionAtIndex(_ index: UInt) -> OddMenuItemCollection? {
-
-    do {
-      return try menuItemCollections.lookup(index)
-    } catch {
-      return nil
-    }
+  func menuItemCollectionAtIndex(_ index: Int) -> OddMenuItemCollection? {
+    return menuItemCollections.subscript(index)
   }
   
   func menuItemForIndexPath(_ indexPath: IndexPath) -> OddMenuItem? {
     let collectionIndex = (indexPath as NSIndexPath).section
     let itemIndex = (indexPath as NSIndexPath).row
     
-    do {
-      let menuItemCollection = try menuItemCollections.lookup( UInt(collectionIndex) )
-      if let menuItems = menuItemCollection.menuItems {
-        return try menuItems.lookup( UInt(itemIndex) )
-      }
-    } catch {
+    
+    guard let menuItemCollection = menuItemCollectionAtIndex(collectionIndex),
+      let menuItems = menuItemCollection.menuItems else {
       print("Index Error on: menuItemForIndexPath Index = \(collectionIndex):\(itemIndex)" )
+      return nil
     }
-    return nil
+    
+    return menuItems.subscript(itemIndex)
   }
 }
 

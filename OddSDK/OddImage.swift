@@ -10,28 +10,29 @@ import UIKit
 
 public struct OddImage {
   /// The URL to the image. Required
-  var url: String
-  /// the mimeType of the image. Required
-  var mimeType: String
+  public var url: String
+  /// the optional mimeType of the image. Required
+  public var mimeType: String?
   
   /// An optional value for the width of the image
-  var width: Int?
+  public var width: Int?
   
   /// An optional value for the height of the image
-  var height: Int?
+  public var height: Int?
   
-  /// An optional label for the image
-  var label: String?
+  /// An label for the image
+  public var label: String
   
   public static func imageFromJson(_ json: jsonObject) -> OddImage? {
     guard let url       = json["url"] as? String,
-      let mimeType  = json["mimeType"] as? String else {
+      let label     = json["label"] as? String  else {
         return nil
     }
     
+    let mimeType  = json["mimeType"] as? String
     let width     = json["width"] as? Int
     let height    = json["height"] as? Int
-    let label     = json["label"] as? String
+    
     
     return OddImage(url: url, mimeType: mimeType, width: width, height: height, label: label)
   }

@@ -192,15 +192,15 @@ enum OddFeatureType {
   }
   
   
-  #if os(iOS)
+//  #if os(iOS)
   /// The `OddMenu` instance stored in the content store
   /// The menu will be one or more `OddMenuItemCollections`
   /// Currently only provided for iOS apps. No tvOS support
   /// at this time
   ///
   /// Refer to `OddMenu`, `OddMenuItemCollection`
-  var homeMenu: OddMenu = OddMenu()
-  #endif
+//  var homeMenu: OddMenu = OddMenu()
+//  #endif
   
   var imageCache = NSCache<NSString, UIImage>()
   
@@ -255,7 +255,7 @@ enum OddFeatureType {
       self.articleIds?.removeAll()
       self.eventIds?.removeAll()
       self.externalIds?.removeAll()
-      self.homeMenu = nil
+//      self.homeMenu = nil
     #endif
     self.menuItemIds?.removeAll()
   }

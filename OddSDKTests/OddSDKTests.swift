@@ -50,7 +50,7 @@ class OddSDKTests: XCTestCase {
   let EXPECTATION_WAIT : TimeInterval = 10
   
   func configureSDK() {
-    OddContentStore.sharedStore.API.serverMode = .local
+    OddContentStore.sharedStore.API.serverMode = .production
     
     OddLogger.logLevel = .info
     
@@ -173,7 +173,7 @@ class OddSDKTests: XCTestCase {
             XCTAssertNil(node.multiple, "View should only have singular relationships" )
             if let featuredCollections = node.relationship as? OddRelationship {
               XCTAssertNotNil(featuredCollections, "View should have a relationship for featuredCollections")
-              XCTAssertEqual(featuredCollections.id, "51c12f4b70ff4a70925a1be26b8442af", "View should have featuredCollections relationship with correct id")
+              XCTAssertEqual(featuredCollections.id, "nasa-featured-collections", "View should have featuredCollections relationship with correct id")
               XCTAssertEqual(featuredCollections.mediaObjectType.toString(), "collection", "View should have featuredCollections relationship with correct type")
             }
           }
@@ -204,7 +204,7 @@ class OddSDKTests: XCTestCase {
           
           XCTAssertTrue(cache.containsObjectWithId("homepage"), "Lodaing a view should build the view and included objects")
           XCTAssertTrue(cache.containsObjectWithId("0db5528d4c3c7ae4d5f24cce1c9fae51"), "Lodaing a view should build the view and included objects")
-          XCTAssertTrue(cache.containsObjectWithId("51c12f4b70ff4a70925a1be26b8442af"), "Lodaing a view should build the view and included objects")
+          XCTAssertTrue(cache.containsObjectWithId("nasa-featured-collections"), "Lodaing a view should build the view and included objects")
           okExpectation.fulfill()
         })
       }
@@ -415,9 +415,17 @@ class OddSDKTests: XCTestCase {
           XCTAssertNotNil(video, "SDK should load a video")
           XCTAssertEqual(video.id, "42baaa6e1e9ce2bb6d96d53007656f02", "Video should have correct id")
           XCTAssertEqual(video.title, "What's Up - April 2016", "Video should have correct title")
-          XCTAssertEqual(video.notes, "<p><a href='http://www.podtrac.com/pts/redirect.m4v/www.jpl.nasa.gov/videos/whatsup/20160401/JPL-20160401-WHATSUf-0001-720-CC.m4v'>\r\n<img src='http://www.jpl.nasa.gov/multimedia/thumbs/whatsup20140701-226.jpg' align='left' alt='' width='100' height='75' border='0' /></a><br />\r\n<br />\r\nJupiter, Mars, the Lyrid meteor shower and 2016�s best views of Mercury. </p><br clear='all'/><br />", "Video should have the correct description")
+          XCTAssertEqual(video.notes, "Jupiter, Mars, the Lyrid meteor shower and 2016's best views of Mercury.", "Video should have the correct description")
+          XCTAssertEqual(video.sources?.count, 1, "Video should have the correct number of OddImage assets")
+          XCTAssertEqual(video.sources?[0].url, "http://www.podtrac.com/pts/redirect.m4v/www.jpl.nasa.gov/videos/whatsup/20160401/JPL-20160401-WHATSUf-0001-720-CC.m4v", "OddSource asset should have a url" )
+          XCTAssertEqual(video.sources?[0].label, "default", "OddSource asset should have a label")
+          XCTAssertEqual(video.sources?[0].mimeType, "video/mp4", "OddSource asset should have a label")
           XCTAssertEqual(video.urlString, "http://www.podtrac.com/pts/redirect.m4v/www.jpl.nasa.gov/videos/whatsup/20160401/JPL-20160401-WHATSUf-0001-720-CC.m4v", "Video should have correct url")
           XCTAssertEqual(video.duration, 13000000, "Video should have correct duration")
+          XCTAssertEqual(video.images?.count, 1, "Video should have the correct number of OddImage assets")
+          XCTAssertEqual(video.images?[0].url, "http://image.oddworks.io/NASA/space4.jpeg", "OddImage asset should have a url" )
+          XCTAssertEqual(video.images?[0].label, "thumbnail image", "OddImage asset should have a label")
+          XCTAssertEqual(video.images?[0].mimeType, "image/jpeg", "OddImage asset should have a mimeType")
           XCTAssertEqual(video.thumbnailLink, "http://image.oddworks.io/NASA/space4.jpeg", "Video should have correct image link")
           XCTAssertNotNil(video.cacheTime, "Video should have a cacheTime value")
           okExpectation.fulfill()

@@ -172,7 +172,12 @@ import UIKit
   public var duration: Int?
   
   /// The URL string to load the asset from the content provider
-  public var urlString: String?
+  public var urlString: String? {
+    get {
+      guard let source = sources?[0] else { return nil }
+      return source.url
+    }
+  }
   
   /// A URL string to load this media object via API
   public var link: String?
@@ -185,6 +190,8 @@ import UIKit
   /// For Oddworks 2.0+ mediaObjects have an array of images
   public var images: Array<OddImage>?
 
+  /// Oddworks 3.0+ has an array of url source objects
+  public var sources: Array<OddSource>?
   
   /// A customizable URL string that enables formatting on the thumbnailLink
   public var formattedThumbnailLink: String?
@@ -282,7 +289,7 @@ import UIKit
     self.notes = decoder.decodeObject(forKey: "notes") as? String
     self.assetId = decoder.decodeObject(forKey: "assetId") as? String
 //    self.thumbnailLink = decoder.decodeObjectForKey("thumbnailLink") as? String
-    self.urlString = decoder.decodeObject(forKey: "urlString") as? String
+//    self.urlString = decoder.decodeObject(forKey: "urlString") as? String
     self.duration = decoder.decodeObject(forKey: "duration") as? Int
     self.subtitle = decoder.decodeObject(forKey: "subtitle") as? String
     self.downloadDate = decoder.decodeObject(forKey: "downloadDate") as? Date
@@ -302,7 +309,7 @@ import UIKit
       self.notes = attribs["description"] as? String
       self.title = attribs["title"] as? String
       self.subtitle = attribs["subtitle"] as? String
-      self.urlString = attribs["url"] as? String
+//      self.urlString = attribs["url"] as? String
       self.duration = attribs["duration"] as? Int
       self.releaseDate = attribs["releaseDate"] as? String
 //      if let images = attribs["images"] as? jsonObject {
@@ -313,6 +320,15 @@ import UIKit
         images.forEach({ (image) in
           if let newImage = OddImage.imageFromJson(image) {
             self.images?.append(newImage)
+          }
+        })
+      }
+      
+      if let sources = attribs["sources"] as? jsonArray {
+        self.sources = []
+        sources.forEach({ (source) in
+          if let newSource = OddSource.sourceFromJson(source) {
+            self.sources?.append(newSource)
           }
         })
       }
