@@ -108,7 +108,7 @@ public class APIService: NSObject {
       case .beta: return "https://beta.oddworks.io"
       case .local: return "http://127.0.0.1:8000"
       case .production: return "https://content.oddworks.io"
-      default: return "https://device.oddworks.io"
+//      default: return "https://device.oddworks.io"
       }
     }
   }
