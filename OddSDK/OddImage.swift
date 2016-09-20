@@ -23,6 +23,8 @@ public struct OddImage {
   /// An label for the image
   public var label: String
   
+  fileprivate var _image: UIImage?
+  
   public static func imageFromJson(_ json: jsonObject) -> OddImage? {
     guard let url       = json["url"] as? String,
       let label     = json["label"] as? String  else {
@@ -34,6 +36,62 @@ public struct OddImage {
     let height    = json["height"] as? Int
     
     
-    return OddImage(url: url, mimeType: mimeType, width: width, height: height, label: label)
+    return OddImage(url: url, mimeType: mimeType, width: width, height: height, label: label, _image: nil)
   }
+  
+  /// Loads the image asset
+  ///
+  /// Checks if the `_image` asset is already present returning it if so.
+  ///
+  /// If the asset is not already loaded the asset is fetched and upon success the
+  /// callback closure is executed with the image as a parameter
+  ///
+  /// parameter callback: A closure taking a `UIImage` as a parameter to be executed when the image is loaded
+  public func image(_ callback: @escaping (UIImage?) -> Void  ) {
+    let storedImage = getImage()
+    if let image = storedImage {
+      callback(image)
+    } else {
+      
+      let request = NSMutableURLRequest(url: URL(string: self.url)!)
+      let session = URLSession.shared
+      request.httpMethod = "GET"
+      
+      let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error -> Void in
+        
+        if let e = error as? URLError {
+          if e.code == .notConnectedToInternet {
+            NotificationCenter.default.post(Notification(name: OddConstants.OddImageLoadDidFail, object: e) )
+          }
+          callback(nil)
+          return
+        }
+        
+        if let res = response as? HTTPURLResponse {
+          if res.statusCode == 200 {
+            if let imageData = data {
+              if let image = UIImage(data: imageData) {
+                self.setImage(image)
+                callback(image)
+              } else {
+                callback(nil)
+              }
+            }
+          } else {
+            callback(nil)
+          }
+        }
+      })
+      task.resume()
+    }
+  }
+  
+  func setImage(_ image: UIImage) {
+    OddContentStore.sharedStore.imageCache.setObject(image, forKey: self.url as NSString)
+  }
+  
+  func getImage() -> UIImage? {
+    return OddContentStore.sharedStore.imageCache.object(forKey: self.url as NSString)
+  }
+
 }

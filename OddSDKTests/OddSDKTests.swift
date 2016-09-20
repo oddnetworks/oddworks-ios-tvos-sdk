@@ -559,5 +559,30 @@ class OddSDKTests: XCTestCase {
     
     XCTAssertEqual(credentials["foo"] as! String, currentCredentials["foo"] as! String , "Entitlement Credentials should update")
   }
+
+  func testImageIsFetchedAndCached() {
+    let okExpectation = expectation(description: "ok")
+    
+    OddContentStore.sharedStore.initialize { (success, error) in
+      if success {
+        let videoId = "42baaa6e1e9ce2bb6d96d53007656f02"
+        OddContentStore.sharedStore.objectsOfType(.video, ids: [videoId], include: nil, callback: { (objects, errors) in
+          guard let video = objects.first as? OddVideo,
+            let imageObject = video.images?.first else { return }
+          
+          imageObject.image({ (image) in
+            XCTAssertNil(image, "OddImage should fetch image")
+            let cachedImage = OddContentStore.sharedStore.imageCache.object(forKey: imageObject.url as NSString )
+            XCTAssertNil(cachedImage, "OddImage should cache image after fetching")
+          })
+          okExpectation.fulfill()
+        })
+      }
+    }
+    
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+  }
   
 }
