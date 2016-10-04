@@ -114,6 +114,7 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
     OddLogger.info("Refresh Receipt: \(req.receiptProperties)")
   }
   
+  // currently only called when we restore a receipt
   public func requestDidFinish(request: SKRequest) {
     guard request is SKReceiptRefreshRequest else { return }
     
@@ -130,6 +131,7 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
     SKPaymentQueue.defaultQueue().addPayment(payment)
   }
   
+  //
   public func restorePurchase() {
 //    request = [[SKReceiptRefreshRequest alloc] init];
     self.restoreRequest = SKReceiptRefreshRequest()
@@ -191,7 +193,8 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
     self.transactionDelegate?.showPurchaseCompleted?(transaction)
     self.productsRequest = nil
   }
-  
+
+  // not currently used.
   func restoreTransaction(transaction: SKPaymentTransaction) {
     OddLogger.info("StoreKeeper transaction restoration complete (Apple): \(transaction.transactionIdentifier!)")
     
@@ -210,6 +213,10 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   
   public func finishTransaction(transaction: SKPaymentTransaction) {
     SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+    self.reset()
+  }
+  
+  public func reset() {
     self.delegate = nil
     self.transactionDelegate = nil
     self.restoreDelegate = nil

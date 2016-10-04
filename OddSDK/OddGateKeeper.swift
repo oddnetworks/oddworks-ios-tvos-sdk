@@ -204,8 +204,8 @@ public class OddGateKeeper: NSObject {
 //          OddLogger.info("Auth Config: \(json)")
           if let data = json["data"] as? Dictionary<String, AnyObject> {
             if let url: String? = data["attributes"]?["verification_url"] as? String,
-              deviceToken: String? = data["attributes"]?["device_code"] as? String,
-              userCode: String? = data["attributes"]?["user_code"] as? String {
+              let deviceToken: String? = data["attributes"]?["device_code"] as? String,
+              let userCode: String? = data["attributes"]?["user_code"] as? String {
               
               self.authenticationCredentials.updateAuthenticationCredentials( url: url,
                                                                               userCode: userCode,
@@ -498,7 +498,7 @@ public class OddGateKeeper: NSObject {
     
     guard let params = params,
       let receiptURL = NSBundle.mainBundle().appStoreReceiptURL,
-      receiptData = NSData(contentsOfURL: receiptURL)?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0)) else {
+      let receiptData = NSData(contentsOfURL: receiptURL)?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0)) else {
       OddLogger.error("Unable to retrieve app store receipt (Subscribe)")
       callback (false, nil, nil)
       return
@@ -526,7 +526,7 @@ public class OddGateKeeper: NSObject {
   public func restoreSubscription(url: String, params: [String : AnyObject]?, callback: (Bool, jsonObject?, NSError?) -> Void) {
     guard let params = params,
       let receiptURL = NSBundle.mainBundle().appStoreReceiptURL,
-      receiptData = NSData(contentsOfURL: receiptURL)?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0)) else {
+      let receiptData = NSData(contentsOfURL: receiptURL)?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0)) else {
         OddLogger.error("Unable to retrieve app store receipt (Restore)")
         callback (false, nil, nil)
         return
