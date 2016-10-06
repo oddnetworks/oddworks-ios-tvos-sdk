@@ -2,7 +2,7 @@ Apple iOS & tvOS SDK for Oddworks
 ===================================
 An [Oddworks](https://github.com/oddnetworks/oddworks) device client SDK for Apple TV, iPhone, and iPad. Check out [Odd Networks](https://www.oddnetworks.com/) for more information.
 
-[![Gitter chat](https://badges.gitter.im/oddwnetworks/oddworks.png)](https://gitter.im/oddnetworks/oddworks "Gitter chat")
+[![slack.oddnetworks.com](http://slack.oddnetworks.com/badge.svg)](http://slack.oddnetworks.com)
 
 * Create a new streaming app for iPhone and iPad
 * Create your own channel on Apple TV
