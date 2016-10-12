@@ -21,16 +21,16 @@ public struct OddImage {
   public var height: Int?
   
   /// An label for the image
-  public var label: String
+  public var label: String?
   
   fileprivate var _image: UIImage?
   
   public static func imageFromJson(_ json: jsonObject) -> OddImage? {
-    guard let url       = json["url"] as? String,
-      let label     = json["label"] as? String  else {
+    guard let url       = json["url"] as? String else {
         return nil
     }
     
+    let label     = json["label"] as? String
     let mimeType  = json["mimeType"] as? String
     let width     = json["width"] as? Int
     let height    = json["height"] as? Int
