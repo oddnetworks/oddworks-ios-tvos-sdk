@@ -48,10 +48,10 @@ struct UserAgentHeader {
       let deviceName = deviceName,
       let os = os,
       let osVersion = osVersion {
-        let userAgentHeader = "platform[name]=\("Apple")&model[name]=\(deviceModel)&model[version]=\(deviceName)&os[name]=\(os)&os[version]=\(osVersion)&buildVersion=\(encodedBuild)"
+        let userAgentHeader = "platform[name]=\("Apple")&model[name]=\(deviceModel)&model[version]=\(deviceName)&model[brand]=\("Apple")&model[manufacturer]=\("Apple")&os[name]=\(os)&os[version]=\(osVersion)&buildVersion=\(encodedBuild)"
         return userAgentHeader
     } else {
-      return "platform[name]=\("Apple")&model[name]=\("unknown")&model[version]=\("unknown")&os[name]=\("unknown")&os[version]=\("unknown")&buildVersion=\("unknown")"
+      return "platform[name]=\("Apple")&model[name]=\("unknown")&model[version]=\("unknown")&os[name]=\("unknown")&model[brand]=\("Apple")&model[manufacturer]=\("Apple")&os[version]=\("unknown")&buildVersion=\("unknown")"
     }
   }
 }
