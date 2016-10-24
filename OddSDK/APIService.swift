@@ -104,7 +104,7 @@ public class APIService: NSObject {
   var baseURL: String {
     get {
       switch serverMode {
-      case .staging: return "https://device-staging.oddworks.io"
+      case .staging: return "https://odd-content-crtv-staging.herokuapp.com"
       case .beta: return "https://beta.oddworks.io"
       case .local: return "http://127.0.0.1:8000"
       case .production: return "https://content.oddworks.io"

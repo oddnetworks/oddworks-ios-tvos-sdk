@@ -47,10 +47,10 @@ extension OddMediaObject : Idable {}
 
 class OddSDKTests: XCTestCase {
   
-  let EXPECTATION_WAIT : TimeInterval = 10
+  let EXPECTATION_WAIT : TimeInterval = 20
   
   func configureSDK() {
-    OddContentStore.sharedStore.API.serverMode = .production
+    OddContentStore.sharedStore.API.serverMode = .staging
     
     OddLogger.logLevel = .info
     
@@ -63,7 +63,8 @@ class OddSDKTests: XCTestCase {
      This line is required to allow access to the API. Once you have entered your authToken uncomment
      to continue
      */
-    OddContentStore.sharedStore.API.authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtaW9zIiwidXNlciI6ImFkNjI3MGVmLTVjYTUtNGMxOS1iNDU4LTkxYmFlOGU0OTAwYSIsImlhdCI6MTQ3MDc1OTc5NSwiYXVkIjpbInBsYXRmb3JtIl0sImlzcyI6InVybjpvZGR3b3JrcyJ9.llj5k4Y7t_6mihFdcXFlWqc-HWWNbrvEZ0l-nUFcR6E"
+//    OddContentStore.sharedStore.API.authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtaW9zIiwidXNlciI6ImFkNjI3MGVmLTVjYTUtNGMxOS1iNDU4LTkxYmFlOGU0OTAwYSIsImlhdCI6MTQ3MDc1OTc5NSwiYXVkIjpbInBsYXRmb3JtIl0sImlzcyI6InVybjpvZGR3b3JrcyJ9.llj5k4Y7t_6mihFdcXFlWqc-HWWNbrvEZ0l-nUFcR6E"
+    OddContentStore.sharedStore.API.authToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGFubmVsIjoiY3J0diIsInBsYXRmb3JtIjoiY3J0di1hcHBsZS1pb3MiLCJhdWQiOlsicGxhdGZvcm0iXSwiaXNzIjoidXJuOm9kZHdvcmtzOmNydHYifQ.FtXwsbETtPIBMN42L2c5VBEvextXX0Hz7J5rYWOR3Ew"
   }
   
   override func setUp() {
