@@ -58,7 +58,11 @@ public struct OddRelationshipNode {
       return [single.mediaObjectType]
     }
     if let multiple = multiple {
-      return Set(multiple.map({$0.mediaObjectType}))
+      let types = Array<OddMediaObjectType>()
+      self.multiple?.forEach({ (relationship) in
+        types.append(relationship.mediaObjectType)
+      })
+      return Set(types)
     }
     return []
   }
