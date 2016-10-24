@@ -123,7 +123,7 @@ public class APIService: NSObject {
       guard let token = defaults.string(forKey: "OddUserAuthToken") else {
         return authToken
       }
-      return token
+      return authToken
     }
   }
 
