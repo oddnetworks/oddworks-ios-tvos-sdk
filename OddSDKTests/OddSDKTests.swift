@@ -589,12 +589,13 @@ class OddSDKTests: XCTestCase {
   func testLoginReturnsSuccess()  {
     let okExpectation = expectation(description: "ok")
     
-    OddContentStore.sharedStore.login { (success) in
+    OddContentStore.sharedStore.login(email: "success@nasa.gov", password: "foobar") { (success) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
         print("***** LOGIN FAILURE *****")
       }
+      XCTAssertTrue(success, "Login should succeed with valid credentials")
       okExpectation.fulfill()
     }
     
@@ -602,5 +603,24 @@ class OddSDKTests: XCTestCase {
       XCTAssertNil(error, "Error")
     })
 
+  }
+  
+  func testLoginFails()  {
+    let okExpectation = expectation(description: "ok")
+    
+    OddContentStore.sharedStore.login(email: "foo@bar.com", password: "foobar") { (success) in
+      if success {
+        print("***** LOGIN SUCCESS *****")
+      } else {
+        print("***** LOGIN FAILURE *****")
+      }
+      XCTAssertFalse(success, "Login should fail with invalid credentials")
+      okExpectation.fulfill()
+    }
+    
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+    
   }
 }

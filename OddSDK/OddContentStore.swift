@@ -282,16 +282,8 @@ enum OddFeatureType {
     callback(nil, error)
   }
   
-  /// Parses the config response for the JWT containing a user
-  /// if found the jwt is written to the user defaults and used as
-  /// the authToken for future requests
-  func parseUserJWT(_ json: jsonObject) {
-    guard let data = json["data"] as? jsonObject,
-      let attribs = data["attributes"] as? jsonObject,
-      let jwt = attribs["jwt"] as? String else { return }
-    UserDefaults.standard.set(jwt, forKey: "OddUserAuthToken")
-    UserDefaults.standard.synchronize()
-  }
+  
+  
   
   /// Loads the OddConfig instance for the OddContentStore
   ///
@@ -320,7 +312,6 @@ enum OddFeatureType {
             return
         }
         self.config = newConfig
-        self.parseUserJWT(json)
         OddLogger.info("Successfully loaded config")
         NotificationCenter.default.post(name: OddConstants.OddFetchedConfigNotification, object: self, userInfo: ["config" : newConfig])
         success(true, nil)
@@ -643,14 +634,29 @@ enum OddFeatureType {
     }
   }
   
-  public func login (  callback: @escaping (Bool) -> () ) {
+  /// The jwt is written to the user defaults and used as
+  /// the authToken for future requests
+  func storeUserJWT(_ jwt: String) {
+    
+  }
+  
+  func parseUserJWTFromJson(_ json: jsonObject) -> Bool {
+    guard let jwt = json["jwt"] as? String else {
+      return false
+    }
+    UserDefaults.standard.set(jwt, forKey: "OddUserAuthToken")
+    UserDefaults.standard.synchronize()
+    return true
+  }
+  
+  public func login (email: String, password: String, callback: @escaping (Bool) -> () ) {
     
     let params = [
       "data": [
         "type": "authentication",
         "attributes": [
-          "email": "success@crtv.com",
-          "password": "DoesNotMatter"
+          "email": email,
+          "password": password
         ]
       ]
     ]
@@ -667,9 +673,8 @@ enum OddFeatureType {
             callback(false)
             return
         }
-        let jwt = attribs["jwt"] as? String
-        print ("Login succeeded with: \(jwt)")
-        callback(true)
+        let success = self.parseUserJWTFromJson(attribs)
+        callback(success)
       }
     }
   }
