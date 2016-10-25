@@ -643,6 +643,38 @@ enum OddFeatureType {
     }
   }
   
+  public func login (  callback: @escaping (Bool) -> () ) {
+    
+    let params = [
+      "data": [
+        "type": "authentication",
+        "attributes": [
+          "email": "success@crtv.com",
+          "password": "DoesNotMatter"
+        ]
+      ]
+    ]
+    
+    API.post(params as [String : AnyObject]?, url: "login") { (response, error) -> () in
+      if error != nil {
+        OddLogger.error("Error logging in")
+        callback(false)
+      } else {
+        guard let json = response as? jsonObject,
+          let data = json["data"] as? jsonObject,
+            let attribs = data["attributes"] as? jsonObject else {
+            OddLogger.error("Unable to parse login response")
+            callback(false)
+            return
+        }
+        let jwt = attribs["jwt"] as? String
+        print ("Login succeeded with: \(jwt)")
+        callback(true)
+      }
+    }
+  }
+
+  
   /// A helper method to provide information about the media objects
   /// currently in the `mediaStore`
   ///

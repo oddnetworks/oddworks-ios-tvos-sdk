@@ -50,7 +50,7 @@ class OddSDKTests: XCTestCase {
   let EXPECTATION_WAIT : TimeInterval = 20
   
   func configureSDK() {
-    OddContentStore.sharedStore.API.serverMode = .staging
+    OddContentStore.sharedStore.API.serverMode = .test
     
     OddLogger.logLevel = .info
     
@@ -64,7 +64,7 @@ class OddSDKTests: XCTestCase {
      to continue
      */
 //    OddContentStore.sharedStore.API.authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtaW9zIiwidXNlciI6ImFkNjI3MGVmLTVjYTUtNGMxOS1iNDU4LTkxYmFlOGU0OTAwYSIsImlhdCI6MTQ3MDc1OTc5NSwiYXVkIjpbInBsYXRmb3JtIl0sImlzcyI6InVybjpvZGR3b3JrcyJ9.llj5k4Y7t_6mihFdcXFlWqc-HWWNbrvEZ0l-nUFcR6E"
-    OddContentStore.sharedStore.API.authToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGFubmVsIjoiY3J0diIsInBsYXRmb3JtIjoiY3J0di1hcHBsZS1pb3MiLCJhdWQiOlsicGxhdGZvcm0iXSwiaXNzIjoidXJuOm9kZHdvcmtzOmNydHYifQ.FtXwsbETtPIBMN42L2c5VBEvextXX0Hz7J5rYWOR3Ew"
+    OddContentStore.sharedStore.API.authToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGFubmVsIjoibmFzYSIsInBsYXRmb3JtIjoiYXBwbGUtaW9zIiwiYXVkIjpbInBsYXRmb3JtIl0sImlzcyI6InVybjpvZGR3b3JrcyJ9.FHZRkkkTJbRul-kFJ3tkp5ShNEMDdlHE-OJpbLWBPjQ"
   }
   
   override func setUp() {
@@ -344,7 +344,7 @@ class OddSDKTests: XCTestCase {
       if success {
         OddContentStore.sharedStore.searchForTerm("space", onResults: { (videos, collections) in
           
-          XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 10, "Search should return the correct number of video results")
+          XCTAssertEqual(OddContentStore.sharedStore.mediaObjects.count, 5, "Search should return the correct number of video results")
           
           okExpectation.fulfill()
         })
@@ -585,5 +585,22 @@ class OddSDKTests: XCTestCase {
       XCTAssertNil(error, "Error")
     })
   }
-  
+ 
+  func testLoginReturnsSuccess()  {
+    let okExpectation = expectation(description: "ok")
+    
+    OddContentStore.sharedStore.login { (success) in
+      if success {
+        print("***** LOGIN SUCCESS *****")
+      } else {
+        print("***** LOGIN FAILURE *****")
+      }
+      okExpectation.fulfill()
+    }
+    
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
+      XCTAssertNil(error, "Error")
+    })
+
+  }
 }

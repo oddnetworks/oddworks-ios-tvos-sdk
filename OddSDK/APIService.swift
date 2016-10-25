@@ -20,6 +20,7 @@ public typealias APICallback = ((AnyObject?, NSError?) -> Void)
   case staging
   case production
   case beta
+  case test
   case local
 }
 
@@ -108,6 +109,7 @@ public class APIService: NSObject {
       case .beta: return "https://beta.oddworks.io"
       case .local: return "http://127.0.0.1:8000"
       case .production: return "https://content.oddworks.io"
+      case .test: return "https://content.oddworks.io"
 //      default: return "https://device.oddworks.io"
       }
     }
