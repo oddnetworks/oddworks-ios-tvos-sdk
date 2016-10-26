@@ -644,7 +644,7 @@ enum OddFeatureType {
     guard let jwt = json["jwt"] as? String else {
       return false
     }
-    UserDefaults.standard.set(jwt, forKey: "OddUserAuthToken")
+    UserDefaults.standard.set(jwt, forKey: OddConstants.kUserAuthenticationTokenKey)
     UserDefaults.standard.synchronize()
     return true
   }

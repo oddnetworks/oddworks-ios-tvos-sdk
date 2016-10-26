@@ -623,4 +623,14 @@ class OddSDKTests: XCTestCase {
     })
     
   }
+  
+  func testAuthTokenCheckWorks()  {
+    UserDefaults.standard.set(nil, forKey: OddConstants.kUserAuthenticationTokenKey)
+    var tokenPresent = OddGateKeeper.sharedKeeper.authTokenPresent()
+    XCTAssertFalse(tokenPresent, "Auth Token Should not be present until login")
+    
+    UserDefaults.standard.set("somejwttokenvalue", forKey: OddConstants.kUserAuthenticationTokenKey)
+    tokenPresent = OddGateKeeper.sharedKeeper.authTokenPresent()
+    XCTAssertTrue(tokenPresent, "Auth Token Should be present after login")
+  }
 }

@@ -316,7 +316,7 @@ public class OddGateKeeper: NSObject {
   }
   
   public func authTokenPresent() -> Bool {
-    return UserDefaults.value(forKey: "OddUserAuthToken") != nil
+    return UserDefaults.standard.string(forKey: OddConstants.kUserAuthenticationTokenKey) != nil
   }
   
   /// Convenience method to retun all keys in the

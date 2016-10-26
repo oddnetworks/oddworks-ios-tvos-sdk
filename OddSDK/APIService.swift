@@ -122,7 +122,7 @@ public class APIService: NSObject {
   private var userAuthToken: String {
     get {
       let defaults = UserDefaults.standard
-      guard let token = defaults.string(forKey: "OddUserAuthToken") else {
+      guard let token = defaults.string(forKey: OddConstants.kUserAuthenticationTokenKey) else {
         return authToken
       }
       return token
