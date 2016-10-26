@@ -315,6 +315,10 @@ public class OddGateKeeper: NSObject {
     return OddGateKeeper.sharedKeeper.authenticationStatus == .Authorized
   }
   
+  public func authTokenPresent() -> Bool {
+    return UserDefaults.value(forKey: "OddUserAuthToken") != nil
+  }
+  
   /// Convenience method to retun all keys in the
   /// entitlements credentials dictionary
   public func entitlementKeys() -> Set<String>? {
