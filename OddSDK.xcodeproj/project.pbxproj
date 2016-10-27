@@ -35,6 +35,9 @@
 		130AA71B1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
 		130AA71C1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
 		130AA71D1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
+		1328908A1DC133D400F31614 /* OddViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132890891DC133D400F31614 /* OddViewer.swift */; };
+		1328908F1DC1343000F31614 /* OddViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132890891DC133D400F31614 /* OddViewer.swift */; };
+		132890901DC1343500F31614 /* OddViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132890891DC133D400F31614 /* OddViewer.swift */; };
 		134173601D9068220053CD7E /* OddSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1382F1A51D906586009F0344 /* OddSource.swift */; };
 		134386611C3D574C0042CCC8 /* OddLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134386601C3D574C0042CCC8 /* OddLogger.swift */; };
 		134386621C3D574C0042CCC8 /* OddLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134386601C3D574C0042CCC8 /* OddLogger.swift */; };
@@ -165,6 +168,7 @@
 
 /* Begin PBXFileReference section */
 		130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddGateKeeper.swift; sourceTree = "<group>"; };
+		132890891DC133D400F31614 /* OddViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddViewer.swift; sourceTree = "<group>"; };
 		134386601C3D574C0042CCC8 /* OddLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddLogger.swift; sourceTree = "<group>"; };
 		134797791C51424800876D39 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		1353FA801C46F0B200B57A83 /* DebugApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebugApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -330,6 +334,7 @@
 				13C1DFA21C2876000091BCBA /* OddConstants.swift */,
 				134386601C3D574C0042CCC8 /* OddLogger.swift */,
 				135E68791C24608200A0A602 /* OddView.swift */,
+				132890891DC133D400F31614 /* OddViewer.swift */,
 				13A5BA4B1CD9265500DF4A7F /* OddRelationship.swift */,
 				1382F1A51D906586009F0344 /* OddSource.swift */,
 			);
@@ -660,6 +665,7 @@
 				13A5BA501CD93BD500DF4A7F /* OddSDKPerformanceTests.swift in Sources */,
 				135E2E4F1CCA7121002A3ADA /* NSObject+ClassName.swift in Sources */,
 				134173601D9068220053CD7E /* OddSource.swift in Sources */,
+				132890901DC1343500F31614 /* OddViewer.swift in Sources */,
 				135E2E421CCA5EA8002A3ADA /* OddMediaObject.swift in Sources */,
 				13A5BA4E1CD9265500DF4A7F /* OddRelationship.swift in Sources */,
 				135E2E3E1CCA5EA8002A3ADA /* OddExternal.swift in Sources */,
@@ -695,6 +701,7 @@
 				135E68821C24608200A0A602 /* APIService.swift in Sources */,
 				135E68B21C24611800A0A602 /* NSObject+ClassName.swift in Sources */,
 				135E68951C2460BA00A0A602 /* OddExternal.swift in Sources */,
+				1328908A1DC133D400F31614 /* OddViewer.swift in Sources */,
 				135E689A1C2460BA00A0A602 /* OddMediaObjectCollection.swift in Sources */,
 				135E68931C2460BA00A0A602 /* OddArticle.swift in Sources */,
 				13BA17E31D525AC7001733C1 /* OddImage.swift in Sources */,
@@ -750,6 +757,7 @@
 				13B9F4F71C3AD34B00AC04B1 /* OddView.swift in Sources */,
 				13B9F4F01C3AD34B00AC04B1 /* OddMediaObject.swift in Sources */,
 				13B9F5061C3AD35A00AC04B1 /* OddMetricService.swift in Sources */,
+				1328908F1DC1343000F31614 /* OddViewer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

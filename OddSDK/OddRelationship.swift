@@ -8,9 +8,17 @@
 
 import UIKit
 
-public struct OddRelationship {
+public struct OddRelationship: Hashable, Equatable {
   public var id: String
   public var mediaObjectType: OddMediaObjectType
+  
+  public var hashValue: Int {
+    return id.hashValue
+  }
+  
+  public static func ==(lhs: OddRelationship, rhs: OddRelationship) -> Bool {
+    return lhs.id == rhs.id && lhs.mediaObjectType == rhs.mediaObjectType
+  }
 }
 
 public struct OddRelationshipNode {

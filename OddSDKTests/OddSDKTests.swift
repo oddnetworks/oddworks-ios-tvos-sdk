@@ -78,6 +78,10 @@ class OddSDKTests: XCTestCase {
     OddContentStore.sharedStore.resetStore()
   }
   
+  func clearAuthToken() {
+    UserDefaults.standard.set(nil, forKey: OddConstants.kUserAuthenticationTokenKey)
+  }
+  
   
   func testCanFetchConfig() {
     let okExpectation = expectation(description: "ok")
@@ -96,21 +100,28 @@ class OddSDKTests: XCTestCase {
     })
   }
   
+//  If the following test is run along with the other tests Xcode will report it failing while it
+//  meets all the assertion checks. If you can figure it out you are way cooler than me.
+//  It will pass if run alone. Technically it passes in the group but Xcode is Xcode so thats that
   func testConfigHasCorrectViews() {
     let okExpectation = expectation(description: "ok")
     
     OddContentStore.sharedStore.initialize { (success, error) in
       if success {
-        guard let config = OddContentStore.sharedStore.config else { return }
+        guard let config = OddContentStore.sharedStore.config else { print("#### NO CONFIG #####");return }
         XCTAssertEqual(config.viewNames()?.count, 3, "Config should have correct number of views")
         XCTAssertEqual(config.idForViewName("homepage"), "homepage", "Config should have the correct views")
         XCTAssertEqual(config.idForViewName("splash"), "splash", "Config should have the correct views")
         XCTAssertEqual(config.idForViewName("menu"), "menu", "Config should have the correct views")
         okExpectation.fulfill()
+        print("!!!!!!!!!!!!!! CONFIG TEST VALID !!!!!!!!!!!!!!!!!!")
+      } else {
+        print("!!!!!!!!!!!!!! some error?? !!!!!!!!!!!!!!!!!!")
       }
     }
     
     waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
+      print("!!!!!!!!!!!!!! CONFIG TEST TIMEOUT?? !!!!!!!!!!!!!!!!!!")
       XCTAssertNil(error, "Error")
     })
   }
@@ -545,11 +556,16 @@ class OddSDKTests: XCTestCase {
     XCTAssertEqual(authState, .Uninitialized, "Authentication State should default to Uninitialized")
   }
   
-  func testGateKeeperEntitlementCredentialsNilByDefault() {
+  func xtestGateKeeperEntitlementCredentialsNilByDefault() {
+    OddGateKeeper.sharedKeeper.blowAwayCredentials()
     XCTAssertNil(OddGateKeeper.sharedKeeper.entitlementCredentials(), "Entitlement Credentials should be empty (nil) by default")
   }
   
   func testGateKeeperCanUpdateEntitlementCredentials() {
+    
+    OddGateKeeper.sharedKeeper.blowAwayCredentials()
+    XCTAssertNil(OddGateKeeper.sharedKeeper.entitlementCredentials(), "Entitlement Credentials should be empty (nil) by default")
+    
     let credentials: jsonObject = [ "foo" : "bar" as AnyObject ]
     OddGateKeeper.sharedKeeper.updateEntitlementCredentials(credentials)
     
@@ -601,6 +617,7 @@ class OddSDKTests: XCTestCase {
     
     waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
+      self.clearAuthToken()
     })
 
   }
@@ -620,17 +637,38 @@ class OddSDKTests: XCTestCase {
     
     waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
       XCTAssertNil(error, "Error")
+      self.clearAuthToken()
     })
     
   }
   
   func testAuthTokenCheckWorks()  {
-    UserDefaults.standard.set(nil, forKey: OddConstants.kUserAuthenticationTokenKey)
+    clearAuthToken()
     var tokenPresent = OddGateKeeper.sharedKeeper.authTokenPresent()
     XCTAssertFalse(tokenPresent, "Auth Token Should not be present until login")
     
-    UserDefaults.standard.set("somejwttokenvalue", forKey: OddConstants.kUserAuthenticationTokenKey)
-    tokenPresent = OddGateKeeper.sharedKeeper.authTokenPresent()
-    XCTAssertTrue(tokenPresent, "Auth Token Should be present after login")
+    
+    let okExpectation = expectation(description: "ok")
+    
+    OddContentStore.sharedStore.login(email: "success@nasa.gov", password: "foobar") { (success) in
+      if success {
+        print("***** LOGIN SUCCESS *****")
+        UserDefaults.standard.set("somejwttokenvalue", forKey: OddConstants.kUserAuthenticationTokenKey)
+        tokenPresent = OddGateKeeper.sharedKeeper.authTokenPresent()
+        XCTAssertTrue(tokenPresent, "Auth Token Should be present after login")
+      } else {
+        print("***** LOGIN FAILURE *****")
+        XCTAssert(false, "Auth Token Should be present after login")
+      }
+  
+      okExpectation.fulfill()
+    }
+    
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
+      XCTAssertNil(error, "Error")
+      self.clearAuthToken()
+    })
+    
+    
   }
 }

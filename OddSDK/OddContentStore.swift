@@ -332,15 +332,30 @@ enum OddFeatureType {
   /// found in the cache the server will be polled for a matching object. If no objects
   /// are found an empty `array` is returned
   public func objectsOfType( _ type: OddMediaObjectType, ids : Array<String>, include: String?, callback: @escaping (Array<OddMediaObject>, Array<NSError>?) -> Void )  {
+  
+    var objects: Array<OddMediaObject> = Array()
+    var unMatchedIds: Array<String> = []
+    var localErrors: Array<NSError> = []
     
-    if self.mediaObjects.isEmpty {
-      fetchObjectsOfType(type, ids: ids, include: include, callback: { (objects, errors) -> () in
-        callback(objects, errors)
+    func doFetch(ids: Array<String>) {
+      fetchObjectsOfType(type, ids: ids, include: include, callback: { (fetchedObjects, errors) -> () in
+        //        callback(objects, errors)
+        fetchedObjects.forEach({ (obj) -> () in
+          objects.append(obj)
+        })
+        
+        if errors != nil {
+          localErrors.append(contentsOf: errors!)
+        }
+        
+        callback(objects, localErrors.isEmpty ? nil : localErrors)
       })
+    }
+  
+    if self.mediaObjects.isEmpty {
+      doFetch(ids: ids)
     } else {
-      var objects: Array<OddMediaObject> = Array()
-      var unMatchedIds: Array<String> = []
-      var localErrors: Array<NSError> = []
+      
       
       for id: String in ids {
         var match = false
@@ -373,17 +388,18 @@ enum OddFeatureType {
       }
       
       //fetch the batch of unmatched objects
-      fetchObjectsOfType(type, ids: unMatchedIds, include: nil, callback: { (fetchedObjects, errors) -> () in
-        fetchedObjects.forEach({ (obj) -> () in
-          objects.append(obj)
-        })
-        
-        if errors != nil {
-          localErrors.append(contentsOf: errors!)
-        }
-        
-        callback(objects, localErrors.isEmpty ? nil : localErrors)
-      })
+      doFetch(ids: unMatchedIds)
+//      fetchObjectsOfType(type, ids: unMatchedIds, include: nil, callback: { (fetchedObjects, errors) -> () in
+//        fetchedObjects.forEach({ (obj) -> () in
+//          objects.append(obj)
+//        })
+//        
+//        if errors != nil {
+//          localErrors.append(contentsOf: errors!)
+//        }
+//        
+//        callback(objects, localErrors.isEmpty ? nil : localErrors)
+//      })
     }
   }
   
@@ -408,23 +424,25 @@ enum OddFeatureType {
         
         if let error = err {
           errorArray.append(error)
-          return
+
         }
         
-        switch item {
-        case is OddView:
-          if let foundView = item as? OddView {
-            responseArray.append(foundView)
+        if item != nil {
+          switch item {
+          case is OddView:
+            if let foundView = item as? OddView {
+              responseArray.append(foundView)
+            }
+          case is OddVideo:
+            if let foundVideo = item as? OddVideo {
+              responseArray.append(foundVideo)
+            }
+          case is OddMediaObjectCollection:
+            if let foundCollection = item as? OddMediaObjectCollection {
+              responseArray.append(foundCollection)
+            }
+          default: break
           }
-        case is OddVideo:
-          if let foundVideo = item as? OddVideo {
-            responseArray.append(foundVideo)
-          }
-        case is OddMediaObjectCollection:
-          if let foundCollection = item as? OddMediaObjectCollection {
-            responseArray.append(foundCollection)
-          }
-        default: break
         }
         
         let errors: Array<NSError>? = errorArray.count == 0 ? nil : errorArray
@@ -480,8 +498,6 @@ enum OddFeatureType {
             self.returnError("Error fetching \(type.toString()): \(id)", errorCode: 105, notification: nil, callback: callback)
 //            callback(nil)
           }
-          
-          
         } // if
       }
     }
