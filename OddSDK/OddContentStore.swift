@@ -650,51 +650,6 @@ enum OddFeatureType {
     }
   }
   
-  /// The jwt is written to the user defaults and used as
-  /// the authToken for future requests
-  func storeUserJWT(_ jwt: String) {
-    
-  }
-  
-  func parseUserJWTFromJson(_ json: jsonObject) -> Bool {
-    guard let jwt = json["jwt"] as? String else {
-      return false
-    }
-    UserDefaults.standard.set(jwt, forKey: OddConstants.kUserAuthenticationTokenKey)
-    UserDefaults.standard.synchronize()
-    return true
-  }
-  
-  public func login (email: String, password: String, callback: @escaping (Bool) -> () ) {
-    
-    let params = [
-      "data": [
-        "type": "authentication",
-        "attributes": [
-          "email": email,
-          "password": password
-        ]
-      ]
-    ]
-    
-    API.post(params as [String : AnyObject]?, url: "login") { (response, error) -> () in
-      if error != nil {
-        OddLogger.error("Error logging in")
-        callback(false)
-      } else {
-        guard let json = response as? jsonObject,
-          let data = json["data"] as? jsonObject,
-            let attribs = data["attributes"] as? jsonObject else {
-            OddLogger.error("Unable to parse login response")
-            callback(false)
-            return
-        }
-        let success = self.parseUserJWTFromJson(attribs)
-        callback(success)
-      }
-    }
-  }
-
   
   /// A helper method to provide information about the media objects
   /// currently in the `mediaStore`

@@ -605,7 +605,7 @@ class OddSDKTests: XCTestCase {
   func testLoginReturnsSuccess()  {
     let okExpectation = expectation(description: "ok")
     
-    OddContentStore.sharedStore.login(email: "success@nasa.gov", password: "foobar") { (success) in
+    OddGateKeeper.sharedKeeper.login(email: "success@nasa.gov", password: "foobar") { (success) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
@@ -625,7 +625,7 @@ class OddSDKTests: XCTestCase {
   func testLoginFails()  {
     let okExpectation = expectation(description: "ok")
     
-    OddContentStore.sharedStore.login(email: "foo@bar.com", password: "foobar") { (success) in
+    OddGateKeeper.sharedKeeper.login(email: "foo@bar.com", password: "foobar") { (success) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
@@ -650,7 +650,7 @@ class OddSDKTests: XCTestCase {
     
     let okExpectation = expectation(description: "ok")
     
-    OddContentStore.sharedStore.login(email: "success@nasa.gov", password: "foobar") { (success) in
+    OddGateKeeper.sharedKeeper.login(email: "success@nasa.gov", password: "foobar") { (success) in
       if success {
         print("***** LOGIN SUCCESS *****")
         UserDefaults.standard.set("somejwttokenvalue", forKey: OddConstants.kUserAuthenticationTokenKey)

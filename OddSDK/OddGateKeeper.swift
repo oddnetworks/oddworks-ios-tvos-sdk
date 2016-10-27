@@ -357,4 +357,47 @@ public class OddGateKeeper: NSObject {
       entitlementCredentials: creds
     )
   }
+  
+  func parseUserInfoFromJson(_ json: jsonObject) -> Bool {
+    guard let id = json["id"] as? String,
+      let attribs = json["attributes"] as? jsonObject,
+      let jwt = attribs["jwt"] as? String else {
+      return false
+    }
+    UserDefaults.standard.set(jwt, forKey: OddConstants.kUserAuthenticationTokenKey)
+    UserDefaults.standard.set(id, forKey: OddConstants.kUserIdKey)
+    UserDefaults.standard.synchronize()
+    return true
+  }
+
+  
+  public func login (email: String, password: String, callback: @escaping (Bool) -> () ) {
+    
+    let params = [
+      "data": [
+        "type": "authentication",
+        "attributes": [
+          "email": email,
+          "password": password
+        ]
+      ]
+    ]
+    
+    OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "login") { (response, error) -> () in
+      if error != nil {
+        OddLogger.error("Error logging in")
+        callback(false)
+      } else {
+        guard let json = response as? jsonObject,
+          let data = json["data"] as? jsonObject else {
+            OddLogger.error("Unable to parse login response")
+            callback(false)
+            return
+        }
+        let success = self.parseUserInfoFromJson(data)
+        callback(success)
+      }
+    }
+  }
+  
 }
