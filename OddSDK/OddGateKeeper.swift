@@ -358,6 +358,12 @@ public class OddGateKeeper: NSObject {
     )
   }
   
+  func clearUserInfo() {
+    UserDefaults.standard.set(nil, forKey: OddConstants.kUserAuthenticationTokenKey)
+    UserDefaults.standard.set(nil, forKey: OddConstants.kUserIdKey)
+    UserDefaults.standard.synchronize()
+  }
+  
   func parseUserInfoFromJson(_ json: jsonObject) -> Bool {
     guard let id = json["id"] as? String,
       let attribs = json["attributes"] as? jsonObject,

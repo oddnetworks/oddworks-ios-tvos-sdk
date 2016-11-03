@@ -56,6 +56,9 @@ import Foundation
   // The notification posted by the 'OddContentStore' when a search request is made to the API server
   public static let OddStartedSearchNotification = Notification.Name("OddStartedSearchNotification")
   
+  // The notification posted by the 'OddContentStore' when a watchlist fetch request is made to the API server
+  public static let OddStartedWatchlistFetchNotification = Notification.Name("OddStartedWatchlistFetchNotification")
+  
   
   // The notification posted by the 'OddGateKeeper' when a users Authorization/Entitlement State has changed
   public static let OddAuthenticationStateChangedNotification = Notification.Name("OddAuthenticationStateChangedNotification")
@@ -68,4 +71,7 @@ import Foundation
   
   // The notification posted by 'OddMediaObject' when an image doesn't load
   public static let OddImageLoadDidFail = Notification.Name("OddImageLoadDidFail")
+  
+  // The notification posted upon successfully updating the viewers watchlist
+  public static let OddWatchlistUpdated = Notification.Name("OddWatchlistUpdated")
 }

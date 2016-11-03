@@ -259,6 +259,14 @@ enum OddFeatureType {
     #endif
     self.menuItemIds?.removeAll()
   }
+  
+  public func buildError(_ errorMsg: String, errorCode: Int, notification: String?) -> NSError {
+    let error = NSError(domain: "Odd", code: errorCode, userInfo: ["error": errorMsg])
+    if let notification = notification {
+      NotificationCenter.default.post(name: Notification.Name(rawValue: notification), object: self, userInfo: nil)
+    }
+    return error
+  }
 
   /// Private helper to process errors in a standard way
   ///
@@ -273,16 +281,11 @@ enum OddFeatureType {
   /// The error will be configured according to the params
   ///
   func returnError(_ errorMsg: String, errorCode: Int, notification: String?, callback: (OddMediaObject?, NSError) -> Void) {
+    let error = buildError(errorMsg, errorCode: errorCode, notification: notification)
     let errorStr = "Error: \(errorMsg)"
-    let error = NSError(domain: "Odd", code: errorCode, userInfo: ["error": errorMsg])
-    if let notification = notification {
-      NotificationCenter.default.post(name: Notification.Name(rawValue: notification), object: self, userInfo: nil)
-    }
     OddLogger.error(errorStr)
     callback(nil, error)
   }
-  
-  
   
   
   /// Loads the OddConfig instance for the OddContentStore
@@ -649,7 +652,6 @@ enum OddFeatureType {
       }
     }
   }
-  
   
   /// A helper method to provide information about the media objects
   /// currently in the `mediaStore`

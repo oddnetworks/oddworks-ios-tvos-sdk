@@ -578,4 +578,82 @@ import UIKit
     return result
   }
   
+  public func addToWatchList(onResult: @escaping ( _ success: Bool, _ error: NSError? ) -> Void) -> Void {
+    if self.contentTypeString == "video" || self.contentTypeString == "collection" {
+      
+      guard let theId = self.id,
+        let objectType = OddMediaObjectType.fromString(self.contentTypeString) else {
+          let error = OddContentStore.sharedStore.buildError("Incorrect Media Object data", errorCode: 115, notification: nil)
+          onResult(false, error)
+          return
+      }
+      
+      let params = [
+        "data": [
+          "id": theId,
+          "type": self.contentTypeString
+        ]
+      ]
+      
+      OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "viewers/\(OddViewer.current.id)/relationships/watchlist") { (response, error) -> () in
+        if error != nil {
+          let error = OddContentStore.sharedStore.buildError("Error adding item to watchlist", errorCode: 112, notification: nil)
+          onResult(false, error)
+        } else {
+          if response?.statusCode == 202 {
+            let watchItem = OddRelationship(id: theId, mediaObjectType: objectType)
+            OddViewer.current.watchList.insert(watchItem)
+            NotificationCenter.default.post(Notification(name: OddConstants.OddWatchlistUpdated , object: nil))
+            onResult(true, nil)
+          } else {
+            let error = OddContentStore.sharedStore.buildError("Incorrect server response for add to watchlist", errorCode: 114, notification: nil)
+            onResult(false, error)
+          }
+        }
+      }
+    } else {
+      let error = OddContentStore.sharedStore.buildError("Watchlist does not support object type", errorCode: 116, notification: nil)
+      onResult(false, error)
+    }
+  }
+
+  
+  public func removeFromWatchList(onResult: @escaping ( _ success: Bool, _ error: NSError? ) -> Void) -> Void {
+    if self.contentTypeString == "video" || self.contentTypeString == "collection" {
+      
+      guard let theId = self.id,
+        let objectType = OddMediaObjectType.fromString(self.contentTypeString) else {
+          let error = OddContentStore.sharedStore.buildError("Incorrect Media Object data", errorCode: 115, notification: nil)
+          onResult(false, error)
+          return
+      }
+      
+      let params = [
+        "data": [
+          "id": theId,
+          "type": self.contentTypeString
+        ]
+      ]
+      
+      OddContentStore.sharedStore.API.delete(params as [String : AnyObject]?, url: "viewers/\(OddViewer.current.id)/relationships/watchlist") { (response, error) -> () in
+        if error != nil {
+          let error = OddContentStore.sharedStore.buildError("Error removing item from watchlist", errorCode: 117, notification: nil)
+          onResult(false, error)
+        } else {
+          if response?.statusCode == 202 {
+            let watchItem = OddRelationship(id: theId, mediaObjectType: objectType)
+            OddViewer.current.watchList.insert(watchItem)
+            NotificationCenter.default.post(Notification(name: OddConstants.OddWatchlistUpdated , object: nil))
+            onResult(true, nil)
+          } else {
+            let error = OddContentStore.sharedStore.buildError("Incorrect server response for remove from watchlist", errorCode: 118, notification: nil)
+            onResult(false, error)
+          }
+        }
+      }
+    } else {
+      let error = OddContentStore.sharedStore.buildError("Watchlist does not support object type", errorCode: 119, notification: nil)
+      onResult(false, error)
+    }
+  }
 }

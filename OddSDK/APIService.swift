@@ -291,6 +291,13 @@ public class APIService: NSObject {
           return
         }
         
+        // 202 is the correct response for add to watchlist
+        if res.statusCode == 202 {
+          OddLogger.info("Server responded with \(res.statusCode). Object created.")
+          callback(response, nil)
+          return
+        }
+        
         if res.statusCode != 200 {
           OddLogger.error("Error, server responded with: \(res.statusCode)" )
           var errorMessage = "No data returned"
