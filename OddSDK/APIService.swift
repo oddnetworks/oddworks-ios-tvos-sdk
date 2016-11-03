@@ -205,7 +205,7 @@ public class APIService: NSObject {
     let session = NSURLSession.sharedSession()
     request.HTTPMethod = type
 
-    OddLogger.info("Requesting: \(request.URL!.absoluteString)")
+//    OddLogger.info("Requesting: \(request.URL!.absoluteString)")
     let err: NSError?
     
     if let parameters = params {
