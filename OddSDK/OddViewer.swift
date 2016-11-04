@@ -20,7 +20,7 @@ public class OddViewer {
     }
   }
   
-  public var watchList: Set<OddRelationship> = Set()
+  public var watchlist: Set<OddRelationship> = Set()
   
   static public let current = OddViewer()
   
@@ -75,13 +75,13 @@ public class OddViewer {
         
 //        print("WATCHLIST: \(data)")
         OddViewer.current.buildWatchListFromJson(json: data)
-        onResults(OddViewer.current.watchList, nil)
+        onResults(OddViewer.current.watchlist, nil)
       }
     }
   }
 
   public static func watchlistMediaObjects(onComplete: @escaping ( _ mediaObjects: Array<OddMediaObject>, _ errors: Array<NSError> ) -> Void ) {
-    if OddViewer.current.watchList.isEmpty {
+    if OddViewer.current.watchlist.isEmpty {
       onComplete(Array(), Array())
     }
     
@@ -143,7 +143,7 @@ public class OddViewer {
   }
   
   fileprivate func watchlistItemsOfType(type: OddMediaObjectType) -> Array<OddRelationship>? {
-    let objects = OddViewer.current.watchList.filter { return $0.mediaObjectType == type }
+    let objects = OddViewer.current.watchlist.filter { return $0.mediaObjectType == type }
     
     if objects.isEmpty {
       return nil
@@ -167,11 +167,17 @@ public class OddViewer {
       }
       
       let watchItem = OddRelationship(id: id, mediaObjectType: objectType)
-      self.watchList.insert(watchItem)
+      self.watchlist.insert(watchItem)
       OddLogger.info("Added \(watchItem.id) to watchlist")
     }
   }
   
+  func watchlistContains(mediaObject: OddMediaObject) -> Bool {
+    guard let type = mediaObject.mediaObjectType,
+      let id = mediaObject.id else { return false }
+    let item = OddRelationship(id: id, mediaObjectType: type)
+    return self.watchlist.contains(item)
+  }
   
 }
 

@@ -219,6 +219,12 @@ import UIKit
   /// Must be overwritten by subclasses
   var contentTypeString: String { return "media" }
   
+  var mediaObjectType: OddMediaObjectType? {
+    get {
+      return OddMediaObjectType.fromString(self.contentTypeString)
+    }
+  }
+  
   /// A string denoting the type of cell to use when displaying this objects information.
   ///
   /// Must be overwritten by subclasses
@@ -602,7 +608,7 @@ import UIKit
         } else {
           if response?.statusCode == 202 {
             let watchItem = OddRelationship(id: theId, mediaObjectType: objectType)
-            OddViewer.current.watchList.insert(watchItem)
+            OddViewer.current.watchlist.insert(watchItem)
             NotificationCenter.default.post(Notification(name: OddConstants.OddWatchlistUpdated , object: nil))
             onResult(true, nil)
           } else {
@@ -642,7 +648,7 @@ import UIKit
         } else {
           if response?.statusCode == 202 {
             let watchItem = OddRelationship(id: theId, mediaObjectType: objectType)
-            OddViewer.current.watchList.insert(watchItem)
+            OddViewer.current.watchlist.remove(watchItem)
             NotificationCenter.default.post(Notification(name: OddConstants.OddWatchlistUpdated , object: nil))
             onResult(true, nil)
           } else {

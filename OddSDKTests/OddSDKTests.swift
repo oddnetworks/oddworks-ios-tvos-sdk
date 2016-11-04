@@ -683,7 +683,6 @@ class OddSDKTests: XCTestCase {
     OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
       if success {
         print("***** LOGIN SUCCESS *****")
-        
       } else {
         print("***** LOGIN FAILURE *****")
       }
@@ -753,6 +752,53 @@ class OddSDKTests: XCTestCase {
     })
   }
   
+  func testAddToWatchlist() {
+    clearAuthToken()
+    OddGateKeeper.sharedKeeper.clearUserInfo()
+    
+    let okExpectation = expectation(description: "ok")
+    
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+      if success {
+        print("***** LOGIN SUCCESS *****")
+      } else {
+        print("***** LOGIN FAILURE *****")
+      }
+      
+      //var numberOfWatchlistItems = 0
+      
+      OddViewer.fetchWatchlist(onResults: { (relationships, error) in
+        print("FETCHED")
+        let numberOfWatchlistItems = OddViewer.current.watchlist.count
+        
+        OddContentStore.sharedStore.initialize { (success, error) in
+          if success {
+            let objectId = "442070aae9803cfa8b23498c64444ac7"
+            OddContentStore.sharedStore.objectsOfType(.video, ids: [objectId], include: nil, callback: { (objects, errors) in
+              if let video = objects.first as? OddVideo {
+                video.addToWatchList(onResult: { (success, error) in
+                  
+                  XCTAssertTrue(success, "A media object should be added to the viewers watchlist")
+                  XCTAssertEqual(OddViewer.current.watchlist.count, numberOfWatchlistItems + 1, "A media object should be added to the viewers watchlist")
+                  XCTAssertTrue(OddViewer.current.watchlistContains(mediaObject: video), "A media object should be added to the viewers watchlist")
+                  okExpectation.fulfill()
+                })
+              }
+            })
+          }
+        }
+      })
+      
+      
+    }
+    
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
+      XCTAssertNil(error, "Error")
+      self.clearAuthToken()
+    })
+  }
+  
+  
   func testRemoveFromWatchlist() {
     clearAuthToken()
     OddGateKeeper.sharedKeeper.clearUserInfo()
@@ -769,21 +815,25 @@ class OddSDKTests: XCTestCase {
       OddContentStore.sharedStore.initialize { (success, error) in
         if success {
           let objectId = "442070aae9803cfa8b23498c64444ac7"
-          OddContentStore.sharedStore.objectsOfType(.video, ids: [objectId], include: nil, callback: { (objects, errors) in
-            if let video = objects.first as? OddVideo {
-              video.addToWatchList(onResult: { (success, error) in
-                if success {
-                  XCTAssertEqual(OddViewer.current.watchList.count, 1, "A media object should be added to the viewers watchlist prior to removal")
-                  video.removeFromWatchList(onResult: { (success, error) in
-                    XCTAssertTrue(success, "A media object should be remvoed from the viewers watchlist")
-                    XCTAssertEqual(OddViewer.current.watchList.count, 0, "A media object should be removed from the viewers watchlist")
-                    okExpectation.fulfill()
-                  })
-                  
-                }
-                
-              })
-            }
+          
+          OddViewer.fetchWatchlist(onResults: { (relationships, error) in
+            print("FETCHED")
+            let numberOfWatchlistItems = OddViewer.current.watchlist.count
+            OddContentStore.sharedStore.objectsOfType(.video, ids: [objectId], include: nil, callback: { (objects, errors) in
+              if let video = objects.first as? OddVideo {
+                video.addToWatchList(onResult: { (success, error) in
+                  if success {
+                    XCTAssertEqual(OddViewer.current.watchlist.count, numberOfWatchlistItems + 1, "A media object should be added to the viewers watchlist prior to removal")
+                    video.removeFromWatchList(onResult: { (success, error) in
+                      XCTAssertTrue(success, "A media object should be remvoed from the viewers watchlist")
+                      XCTAssertEqual(OddViewer.current.watchlist.count, numberOfWatchlistItems, "A media object should be removed from the viewers watchlist")
+                      okExpectation.fulfill()
+                    })
+                    
+                  }
+                })
+              }
+            })
           })
         }
       }
@@ -794,44 +844,5 @@ class OddSDKTests: XCTestCase {
       self.clearAuthToken()
     })
   }
-  
-  func testAddToWatchlist() {
-    clearAuthToken()
-    OddGateKeeper.sharedKeeper.clearUserInfo()
-    
-    let okExpectation = expectation(description: "ok")
-    
-    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
-      if success {
-        print("***** LOGIN SUCCESS *****")
-      } else {
-        print("***** LOGIN FAILURE *****")
-      }
-      
-      OddContentStore.sharedStore.initialize { (success, error) in
-        if success {
-          let objectId = "442070aae9803cfa8b23498c64444ac7"
-          OddContentStore.sharedStore.objectsOfType(.video, ids: [objectId], include: nil, callback: { (objects, errors) in
-            if let video = objects.first as? OddVideo {
-              video.addToWatchList(onResult: { (success, error) in
-                
-                XCTAssertTrue(success, "A media object should be added to the viewers watchlist")
-                XCTAssertEqual(OddViewer.current.watchList.count, 1, "A media object should be added to the viewers watchlist")
-                XCTAssertEqual(OddViewer.current.watchList.first?.id, objectId)
-                okExpectation.fulfill()
-              })
-            }
-          })
-        }
-      }
-    }
-    
-    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
-      XCTAssertNil(error, "Error")
-      self.clearAuthToken()
-    })
-  }
-  
-
 
 }
