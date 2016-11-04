@@ -19,7 +19,7 @@ import UIKit
 /// An `OddMediaObjectCollection` may hold any other `OddMediaObject`s
 @objc public class OddMediaObjectCollection: OddMediaObject {
   
-//  override var contentTypeString: String { return "mediaObjectCollection" }
+override var contentTypeString: String { return "collection" }
   
 //  override var cellReuseIdentifier: String { return "mediaInfoCell" }
 //  override var cellHeight: CGFloat { return 80 }

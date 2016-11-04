@@ -42,30 +42,9 @@ public class OddViewer {
         OddLogger.error(errorMessage)
         onResults (nil, error)
       } else {
-        
-        let res = [
-          "data": [
-            [
-              "id": "jpl-lift-off",
-              "type": "collection"
-            ],
-            [
-              "id": "016cd09e066c396d7822ae94c16bb358",
-              "type": "video"
-            ]
-          ],
-          "links": [
-            "self": "http://localhost:3000/views/paul@oddnetworks.com/relationships/watchlist"
-          ],
-          "meta": [
-            "channel": "nasa",
-            "platform": "roku"
-          ]
-          ] as [String : Any]
-        
         // temporary until real data
-        //        guard let json = response as? jsonObject,
-        guard let data = res["data"] as? Array<jsonObject> else {
+          guard let json = response as? jsonObject,
+            let data = json["data"] as? Array<jsonObject> else {
           let errorMessage = "Error parsing watchlist json"
           let error = OddContentStore.sharedStore.buildError(errorMessage, errorCode: 110, notification: nil)
           OddLogger.error(errorMessage)
@@ -114,6 +93,8 @@ public class OddViewer {
           onComplete(results, errorResults)
         }
       }
+    } else {
+        checkedCollections = true
     }
     
     if let videos = OddViewer.current.watchlistItemsOfType(type: .video) {
@@ -139,6 +120,8 @@ public class OddViewer {
           onComplete(results, errorResults)
         }
       }
+    } else {
+      checkedVideos = true
     }
   }
   

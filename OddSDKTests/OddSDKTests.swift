@@ -769,20 +769,24 @@ class OddSDKTests: XCTestCase {
       
       OddViewer.fetchWatchlist(onResults: { (relationships, error) in
         print("FETCHED")
-        let numberOfWatchlistItems = OddViewer.current.watchlist.count
+        
         
         OddContentStore.sharedStore.initialize { (success, error) in
           if success {
-            let objectId = "442070aae9803cfa8b23498c64444ac7"
-            OddContentStore.sharedStore.objectsOfType(.video, ids: [objectId], include: nil, callback: { (objects, errors) in
-              if let video = objects.first as? OddVideo {
-                video.addToWatchList(onResult: { (success, error) in
-                  
-                  XCTAssertTrue(success, "A media object should be added to the viewers watchlist")
-                  XCTAssertEqual(OddViewer.current.watchlist.count, numberOfWatchlistItems + 1, "A media object should be added to the viewers watchlist")
-                  XCTAssertTrue(OddViewer.current.watchlistContains(mediaObject: video), "A media object should be added to the viewers watchlist")
-                  okExpectation.fulfill()
+            let objectId = "54f4e66b94717d175ec8b16b27606379"
+            OddContentStore.sharedStore.objectsOfType(.collection, ids: [objectId], include: nil, callback: { (objects, errors) in
+              if let collection = objects.first as? OddMediaObjectCollection {
+                collection.removeFromWatchList(onResult: { (success, error) in
+                  let numberOfWatchlistItems = OddViewer.current.watchlist.count
+                  collection.addToWatchList(onResult: { (success, error) in
+                    
+                    XCTAssertTrue(success, "A media object should be added to the viewers watchlist")
+                    XCTAssertEqual(OddViewer.current.watchlist.count, numberOfWatchlistItems + 1, "A media object should be added to the viewers watchlist")
+                    XCTAssertTrue(OddViewer.current.watchlistContains(mediaObject: collection), "A media object should be added to the viewers watchlist")
+                    okExpectation.fulfill()
+                  })
                 })
+                
               }
             })
           }
