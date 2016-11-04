@@ -51,6 +51,11 @@ import UIKit
   /// provided as a separate asset
   public var closedCaptionsUrlString: String?
   
+  // The play progress for the current viewer
+  public var position: Int?
+  
+  public var complete: Bool?
+  
   /// Configures an `OddVideo` from a json object
   ///
   /// - parameter json: A `jsonObject` containing information pertaining to the video asset
@@ -85,16 +90,55 @@ import UIKit
   /// Note: Should not be called directly. Doing so may result in an object not
   /// fully configured
   func addAdditionalMetaData(_ json: jsonObject) {
-    if let attributes = json["attributes"] as? jsonObject,
-      let player = attributes["player"] as? jsonObject {
-        self._playerType = player["type"] as? String
-        self.pCode = player["pCode"] as? String
-        self.embedCode = player["embedCode"] as? String
-        self.domain = player["domain"] as? String
-        self.playerUrlString = player["url"] as? String
-        
-        self.closedCaptionsUrlString = attributes["closedCaptions"] as? String
+    if let attributes = json["attributes"] as? jsonObject {
+      self.position = attributes["position"] as? Int
+      self.complete = attributes["complete"] as? Bool
+        if let player = attributes["player"] as? jsonObject {
+          self._playerType = player["type"] as? String
+          self.pCode = player["pCode"] as? String
+          self.embedCode = player["embedCode"] as? String
+          self.domain = player["domain"] as? String
+          self.playerUrlString = player["url"] as? String
+          
+          self.closedCaptionsUrlString = attributes["closedCaptions"] as? String
+      }
     }
   }
   
+  func postPlayPosition(_ position: Int = 0, complete: Bool = false, onResult: @escaping ( _ success: Bool, _ error: NSError? ) -> Void) -> Void {
+    guard let theId = self.id else {
+        let error = OddContentStore.sharedStore.buildError("Incorrect Media Object data", errorCode: 120, notification: nil)
+        onResult(false, error)
+        return
+    }
+    
+    let params = [
+      "data": [
+        "type": "progress",
+        "attributes": [
+          "position": position,
+          "complete": complete
+        ]
+      ]
+    ]
+    
+    OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "videos/\(theId)/progress") { (response, error) -> () in
+      if error != nil {
+        let error = OddContentStore.sharedStore.buildError("Error adding item to watchlist", errorCode: 112, notification: nil)
+        onResult(false, error)
+      } else {
+        if response?.statusCode == 201 {
+          self.position = position
+          self.complete = complete
+          
+          //OddContentStore.sharedStore.mediaObjects.remove(self)
+          onResult(true, nil)
+        } else {
+          let error = OddContentStore.sharedStore.buildError("Incorrect server response for add to watchlist", errorCode: 121, notification: nil)
+          onResult(false, error)
+        }
+      }
+    }
+
+  }
 }

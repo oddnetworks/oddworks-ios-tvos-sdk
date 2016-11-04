@@ -848,5 +848,84 @@ class OddSDKTests: XCTestCase {
       self.clearAuthToken()
     })
   }
+  
+  
+  func testVideoPlayProgressCanBePosted() {
+    clearAuthToken()
+    OddGateKeeper.sharedKeeper.clearUserInfo()
+    
+    let okExpectation = expectation(description: "ok")
+    
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+      if success {
+        print("***** LOGIN SUCCESS *****")
+      } else {
+        print("***** LOGIN FAILURE *****")
+      }
+      
+      OddContentStore.sharedStore.initialize { (success, error) in
+        if success {
+          let objectId = "442070aae9803cfa8b23498c64444ac7"
+        
+          let newPos = Int(arc4random_uniform(9999) + 1)
+          
+          OddContentStore.sharedStore.objectsOfType(.video, ids: [objectId], include: nil, callback: { (objects, errors) in
+            guard let video = objects.first as? OddVideo else { return }
+          
+              video.postPlayPosition(newPos, onResult: { (success, error) in
+                if success {
+                  XCTAssertEqual(video.position, newPos, "Video should have play progress updated")
+                  okExpectation.fulfill()
+                }
+              })
+            
+          })
+        }
+      }
+    }
+    
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
+      XCTAssertNil(error, "Error")
+      self.clearAuthToken()
+    })
+  }
+
+  func testVideoPlayProgressCanBeMarkedComplete() {
+    clearAuthToken()
+    OddGateKeeper.sharedKeeper.clearUserInfo()
+    
+    let okExpectation = expectation(description: "ok")
+    
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+      if success {
+        print("***** LOGIN SUCCESS *****")
+      } else {
+        print("***** LOGIN FAILURE *****")
+      }
+      
+      OddContentStore.sharedStore.initialize { (success, error) in
+        if success {
+          let objectId = "442070aae9803cfa8b23498c64444ac7"
+          
+          OddContentStore.sharedStore.objectsOfType(.video, ids: [objectId], include: nil, callback: { (objects, errors) in
+            guard let video = objects.first as? OddVideo else { return }
+            
+            video.postPlayPosition(complete: true, onResult: { (success, error) in
+              if success {
+                XCTAssertEqual(video.complete, true, "Video should have play progress updated")
+                okExpectation.fulfill()
+              }
+            })
+            
+          })
+        }
+      }
+    }
+    
+    waitForExpectations(timeout: EXPECTATION_WAIT, handler: { error in
+      XCTAssertNil(error, "Error")
+      self.clearAuthToken()
+    })
+  }
 
 }
