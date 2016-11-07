@@ -88,7 +88,17 @@ public struct OddRelationshipNode {
         }
         allObjects.append(contentsOf: objects)
         if i == types.count - 1 {
-          callback(allObjects, allErrors.isEmpty ? nil : allErrors)
+          var results = Array<OddMediaObject>()
+          
+          self.allIds?.forEach({ (id) in
+            allObjects.forEach({ (obj) in
+              if obj.id == id {
+                results.append(obj)
+              }
+            })
+          })
+          
+          callback(results, allErrors.isEmpty ? nil : allErrors)
         }
       })
     }
