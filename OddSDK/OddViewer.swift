@@ -42,18 +42,26 @@ public class OddViewer {
         OddLogger.error(errorMessage)
         onResults (nil, error)
       } else {
-        // temporary until real data
-          guard let json = response as? jsonObject,
-            let data = json["data"] as? Array<jsonObject> else {
+          guard let json = response as? jsonObject else {
+            let errorMessage = "Error parsing watchlist json"
+            let error = OddContentStore.sharedStore.buildError(errorMessage, errorCode: 110, notification: nil)
+            OddLogger.error(errorMessage)
+            onResults (nil, error)
+            return
+          }
+        
+        if let data = json["data"] as? Array<jsonObject> {
+          OddViewer.current.buildWatchListFromJson(json: data)
+        } else if let data = json["data"] as? jsonObject {
+//        print("WATCHLIST: \(data)")
+          OddViewer.current.buildWatchListFromJson(json: [data])
+        } else {
           let errorMessage = "Error parsing watchlist json"
           let error = OddContentStore.sharedStore.buildError(errorMessage, errorCode: 110, notification: nil)
           OddLogger.error(errorMessage)
           onResults (nil, error)
           return
         }
-        
-//        print("WATCHLIST: \(data)")
-        OddViewer.current.buildWatchListFromJson(json: data)
         onResults(OddViewer.current.watchlist, nil)
       }
     }
