@@ -236,6 +236,7 @@ public class OddGateKeeper: NSObject {
     )
   }
   
+  
   public func fetchAuthenticationToken() {
     print("checking for Authentication")
   
@@ -359,6 +360,7 @@ public class OddGateKeeper: NSObject {
   }
   
   func clearUserInfo() {
+    OddLogger.info("Deleting User Info")
     UserDefaults.standard.set(nil, forKey: OddConstants.kUserAuthenticationTokenKey)
     UserDefaults.standard.set(nil, forKey: OddConstants.kUserIdKey)
     UserDefaults.standard.synchronize()

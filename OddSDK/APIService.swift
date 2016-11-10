@@ -244,6 +244,8 @@ public class APIService: NSObject {
     request.addValue("application/json", forHTTPHeaderField: "Accept")
     request.addValue(Locale.current.identifier, forHTTPHeaderField: "Accept-Language")
     
+    
+    
     #if os(tvOS)
       request.addValue("tvOS", forHTTPHeaderField: "User-Agent")
     #else
@@ -280,8 +282,9 @@ public class APIService: NSObject {
         }
 
         if res.statusCode == 401 { // unauthorized
-          print("Error server responded with 401: Unauthorized to \(url)")
-          OddGateKeeper.sharedKeeper.blowAwayCredentials()
+          print("Error server responded with 401: Unauthorized to \(url) with \(self.authToken)")
+//          OddGateKeeper.sharedKeeper.blowAwayCredentials()
+          OddGateKeeper.sharedKeeper.clearUserInfo()
           NotificationCenter.default.post(Notification(name: NSNotification.Name("unauthorizedResponseReturned") , object: nil))
         }
         
