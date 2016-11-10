@@ -359,8 +359,13 @@ public class OddGateKeeper: NSObject {
     )
   }
   
-  func clearUserInfo() {
-    OddLogger.info("Deleting User Info")
+  public func clearUserInfo() {
+    let token = UserDefaults.standard.string(forKey: OddConstants.kUserAuthenticationTokenKey)
+    if token != nil {
+      OddLogger.info("Deleting User Info - \(token!)")
+    } else {
+      OddLogger.info("Deleting User Info")
+    }
     UserDefaults.standard.set(nil, forKey: OddConstants.kUserAuthenticationTokenKey)
     UserDefaults.standard.set(nil, forKey: OddConstants.kUserIdKey)
     UserDefaults.standard.synchronize()
@@ -375,6 +380,7 @@ public class OddGateKeeper: NSObject {
     UserDefaults.standard.set(jwt, forKey: OddConstants.kUserAuthenticationTokenKey)
     UserDefaults.standard.set(id, forKey: OddConstants.kUserIdKey)
     UserDefaults.standard.synchronize()
+    OddLogger.info(("Stored User JWT: \(jwt)"))
     return true
   }
 
