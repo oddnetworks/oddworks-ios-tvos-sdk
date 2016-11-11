@@ -347,18 +347,14 @@ public class APIService: NSObject {
     if(serializationError != nil) {
       return "undefined"
     } else {
-      if let jsonMessage = json {
-        if let message = jsonMessage["message"] as? String {
-          return message
-        } else {
-          if let message = jsonMessage["emails.address"] as? Array<String> {
-            print("Email \(message[0])")
-            return "Email \(message[0])"
-          }
-        }
-        
+      guard let json = json as? jsonObject,
+        let errors = json["errors"] as? jsonArray,
+        let firstError = errors.first,
+        let error = firstError["detail"] as? String else {
+          return "Unspecified error"
       }
-      return "undefined"
+      
+      return error
     }
   }
   

@@ -385,7 +385,7 @@ public class OddGateKeeper: NSObject {
   }
 
   
-  public func login (email: String, password: String, callback: @escaping (Bool) -> () ) {
+  public func login (email: String, password: String, callback: @escaping (Bool, String?) -> () ) {
     
     let params = [
       "data": [
@@ -399,17 +399,23 @@ public class OddGateKeeper: NSObject {
     
     OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "login") { (response, error) -> () in
       if error != nil {
-        OddLogger.error("Error logging in")
-        callback(false)
+        guard let errorMessage = error?.userInfo["message"] as? String else {
+          OddLogger.error("Error logging in")
+          callback(false, "Unspecified Login error")
+          return
+        }
+        OddLogger.error(errorMessage)
+        callback(false, errorMessage)
+        return
       } else {
         guard let json = response as? jsonObject,
           let data = json["data"] as? jsonObject else {
             OddLogger.error("Unable to parse login response")
-            callback(false)
+            callback(false, "Unable to parse login response")
             return
         }
         let success = self.parseUserInfoFromJson(data)
-        callback(success)
+        callback(success, nil)
       }
     }
   }

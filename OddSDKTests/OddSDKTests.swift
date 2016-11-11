@@ -610,8 +610,8 @@ class OddSDKTests: XCTestCase {
  
   func testLoginReturnsSuccess()  {
     let okExpectation = expectation(description: "ok")
-    
-    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+    clearAuthToken()
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success, error) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
@@ -628,16 +628,18 @@ class OddSDKTests: XCTestCase {
 
   }
   
-  func testLoginFails()  {
+  func testLoginFailsWithError()  {
     let okExpectation = expectation(description: "ok")
-    
-    OddGateKeeper.sharedKeeper.login(email: "foo@bar.com", password: "foobar") { (success) in
+    clearAuthToken()
+    OddGateKeeper.sharedKeeper.login(email: "foo@bar.com", password: "foobar") { (success, error) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
         print("***** LOGIN FAILURE *****")
       }
-      XCTAssertFalse(success, "Login should fail with invalid credentials")
+      XCTAssertNotNil(error, "Login should fail with an error message")
+      print("\(error)")
+      XCTAssertEqual(error, "Error: No account with this email address exists. Please try again.", "Login should fail with correct error message")
       okExpectation.fulfill()
     }
     
@@ -656,7 +658,7 @@ class OddSDKTests: XCTestCase {
     
     let okExpectation = expectation(description: "ok")
     
-    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success, error) in
       if success {
         print("***** LOGIN SUCCESS *****")
         UserDefaults.standard.set("somejwttokenvalue", forKey: OddConstants.kUserAuthenticationTokenKey)
@@ -682,7 +684,7 @@ class OddSDKTests: XCTestCase {
     
     let okExpectation = expectation(description: "ok")
     
-    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success, error) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
@@ -704,7 +706,7 @@ class OddSDKTests: XCTestCase {
     
     let okExpectation = expectation(description: "ok")
     
-    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success, error) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
@@ -731,7 +733,7 @@ class OddSDKTests: XCTestCase {
     
     let okExpectation = expectation(description: "ok")
     
-    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success, error) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
@@ -760,7 +762,7 @@ class OddSDKTests: XCTestCase {
     
     let okExpectation = expectation(description: "ok")
     
-    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success, error) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
@@ -811,7 +813,7 @@ class OddSDKTests: XCTestCase {
     
     let okExpectation = expectation(description: "ok")
     
-    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success, error) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
@@ -858,7 +860,7 @@ class OddSDKTests: XCTestCase {
     
     let okExpectation = expectation(description: "ok")
     
-    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success, error) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
@@ -898,7 +900,7 @@ class OddSDKTests: XCTestCase {
     
     let okExpectation = expectation(description: "ok")
     
-    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success) in
+    OddGateKeeper.sharedKeeper.login(email: VALID_LOGIN, password: VALID_PASSWORD) { (success, error) in
       if success {
         print("***** LOGIN SUCCESS *****")
       } else {
