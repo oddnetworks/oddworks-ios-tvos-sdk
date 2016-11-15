@@ -56,6 +56,9 @@ import UIKit
   
   public var complete: Bool?
   
+  public var shareText: String?
+  public var sharingEnabled: Bool?
+  
   /// Configures an `OddVideo` from a json object
   ///
   /// - parameter json: A `jsonObject` containing information pertaining to the video asset
@@ -101,6 +104,10 @@ import UIKit
           self.playerUrlString = player["url"] as? String
           
           self.closedCaptionsUrlString = attributes["closedCaptions"] as? String
+      }
+      if let sharing = attributes["sharing"] as? jsonObject {
+        self.sharingEnabled = sharing["enabled"] as? Bool
+        self.shareText = sharing["text"] as? String
       }
     }
   }
