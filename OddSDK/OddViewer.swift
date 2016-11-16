@@ -163,7 +163,7 @@ public class OddViewer {
     }
   }
   
-  func watchlistContains(mediaObject: OddMediaObject) -> Bool {
+  public func watchlistContains(mediaObject: OddMediaObject) -> Bool {
     guard let type = mediaObject.mediaObjectType,
       let id = mediaObject.id else { return false }
     let item = OddRelationship(id: id, mediaObjectType: type)
