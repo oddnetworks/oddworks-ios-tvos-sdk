@@ -22,6 +22,7 @@ public typealias APICallback = ((AnyObject?, NSError?) -> Void)
   case beta
   case test
   case local
+  case custom
 }
 
 
@@ -93,6 +94,8 @@ public class APIService: NSObject {
     public var serverMode: OddServerMode = .production
   #endif
   
+  public var customHostURL: String = "https://content.oddworks.com"
+  
   /// The address of the API server to be used by the `APIService`
   ///
   /// This is combined with a version string to determine the API view format provided to 
@@ -108,8 +111,9 @@ public class APIService: NSObject {
       case .staging: return "https://odd-content-crtv-staging.herokuapp.com"
       case .beta: return "https://beta.oddworks.io"
       case .local: return "http://127.0.0.1:8000"
-      case .production: return "https://content.oddworks.io"
-      case .test: return "https://content.oddworks.io"
+      case .production: return "https://content-crtv.oddnetworks.com"
+      case .test: return "https://content.oddworks.com"
+      case .custom: return customHostURL
 //      default: return "https://device.oddworks.io"
       }
     }
@@ -223,6 +227,8 @@ public class APIService: NSObject {
     let session = URLSession.shared
     request.httpMethod = type
     
+    
+    
     let err: NSError?
     
     if let parameters = params {
@@ -255,6 +261,11 @@ public class APIService: NSObject {
         request.addValue("iPhone", forHTTPHeaderField: "User-Agent")
       }
     #endif  
+   
+    print("URL: \(apiURL)\(url)")
+    request.allHTTPHeaderFields?.forEach({ (header) in
+      print("HEADER: \(header)")
+    })
     
     let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error -> Void in
       
