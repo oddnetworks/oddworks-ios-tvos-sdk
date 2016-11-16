@@ -12,18 +12,6 @@ import UIKit
 /// or the error returned from the server
 public typealias APICallback = ((AnyObject?, NSError?) -> Void)
 
-/// The APIService can be configured to use either the
-/// Staging or Production servers using this enum type.
-///
-/// See also: `serverMode`
-@objc public enum OddServerMode: Int {
-  case staging
-  case production
-  case beta
-  case test
-  case local
-}
-
 
 /// A Struct to encapsulate various device information fields
 ///
@@ -67,53 +55,10 @@ public class APIService: NSObject {
   /// Access should be made through this singleton
   static let sharedService = APIService()
   
-  /// Determines whether to access the Staging or Production Server
-  /// 
-  /// Defaults to Production
+  /// The url string used by the APIService to contact the API server
   ///
-  /// Valid options are .Production (the default), .Staging & .Beta
-  /// 
-  /// Do not use .Beta unless directed to be Oddworks. Customer data
-  /// is not normally synched to the beta server
-  #if BETA
-    /// Determines whether to access the Staging or Production Server
-    ///
-    /// The BETA SDK Defaults to Beta
-    ///
-    /// Valid options are .Production (the default), .Staging & .Beta
-    ///
-    public var serverMode: OddServerMode = .Beta
-  #else
-    // Determines whether to access the Staging or Production Server
-    //
-    // Release versions of the SDK Default to Production
-    //
-    // Valid options are .Production (the default), .Staging & .Beta
-    //
-    public var serverMode: OddServerMode = .production
-  #endif
-  
-  /// The address of the API server to be used by the `APIService`
-  ///
-  /// This is combined with a version string to determine the API view format provided to 
-  /// client applications
-  /// 
-  /// This value is read only and configured by setting `serverMode`
-  /// 
-  /// Currently, unless `.Staging` is set for `serverMode` it will hit the production server
-  ///
-  var baseURL: String {
-    get {
-      switch serverMode {
-      case .staging: return "https://odd-content-crtv-staging.herokuapp.com"
-      case .beta: return "https://beta.oddworks.io"
-      case .local: return "http://127.0.0.1:8000"
-      case .production: return "https://content.oddworks.io"
-      case .test: return "https://content.oddworks.io"
-//      default: return "https://device.oddworks.io"
-      }
-    }
-  }
+  /// Should include the version and will default to the SaaS instance.
+  public var apiEndpoint: String = "https://content.oddworks.io/v2/"
   
   /// The device/organization specific authorization token as provided by Odd
   /// must be set before the API can be accessed successfully.
@@ -129,13 +74,7 @@ public class APIService: NSObject {
     }
   }
 
-  /// The url sting used by the APIService to contact the API server
-  /// 
-  /// This string is a combination of the `baseURL` and the currently supported 
-  /// API version
-  var apiURL: String { return "\(baseURL)/v2/" }
-  
-  /// A `String` built from various device infomation fields to be sent to the API server 
+  /// A `String` built from various device infomation fields to be sent to the API server
   /// with each request
   var agentHeader = UserAgentHeader()
   
@@ -219,7 +158,7 @@ public class APIService: NSObject {
   ///
   /// See also: `APICallback`, `get()`, `post()`, `put()`, 'delete()'
   private func request(_ type: String, params: [ String : AnyObject ]?, url: String, callback: @escaping APICallback) {
-    let request = NSMutableURLRequest(url: URL(string: apiURL + url)!)
+    let request = NSMutableURLRequest(url: URL(string: apiEndpoint + url)!)
     let session = URLSession.shared
     request.httpMethod = type
     
