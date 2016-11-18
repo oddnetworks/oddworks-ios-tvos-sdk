@@ -112,7 +112,7 @@ import UIKit
     }
   }
   
-  func postPlayPosition(_ position: Int = 0, complete: Bool = false, onResult: @escaping ( _ success: Bool, _ error: NSError? ) -> Void) -> Void {
+  public func postPlayPosition(_ position: Int = 0, complete: Bool = false, onResult: @escaping ( _ success: Bool, _ error: NSError? ) -> Void) -> Void {
     guard let theId = self.id else {
         let error = OddContentStore.sharedStore.buildError("Incorrect Media Object data", errorCode: 120, notification: nil)
         onResult(false, error)
@@ -141,7 +141,7 @@ import UIKit
           //OddContentStore.sharedStore.mediaObjects.remove(self)
           onResult(true, nil)
         } else {
-          let error = OddContentStore.sharedStore.buildError("Incorrect server response for add to watchlist", errorCode: 121, notification: nil)
+          let error = OddContentStore.sharedStore.buildError("Incorrect server response for post video progress", errorCode: 121, notification: nil)
           onResult(false, error)
         }
       }
