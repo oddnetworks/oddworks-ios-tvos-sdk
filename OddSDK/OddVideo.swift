@@ -131,7 +131,7 @@ import UIKit
     
     OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "videos/\(theId)/progress") { (response, error) -> () in
       if error != nil {
-        let error = OddContentStore.sharedStore.buildError("Error adding item to watchlist", errorCode: 112, notification: nil)
+        let error = OddContentStore.sharedStore.buildError("Error posting video play progress", errorCode: 112, notification: nil)
         onResult(false, error)
       } else {
         if response?.statusCode == 201 {
