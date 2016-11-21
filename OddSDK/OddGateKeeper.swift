@@ -189,7 +189,7 @@ public class OddGateKeeper: NSObject {
   }
   
   public func fetchAuthenticationConfig( _ callback: @escaping (_ url: String?, _ userCode: String?, _ deviceToken: String?, _ error: NSError?) -> Void ) {
-    OddContentStore.sharedStore.API.post(nil, url: "auth/device/code") { (res, err) -> () in
+    OddContentStore.sharedStore.API.post(nil, url: "auth/device/code", altDomain: nil) { (res, err) -> () in
       if let e = err {
         OddLogger.error("Error fetching auth config: \(e)")
         callback(nil, nil, nil, e)
@@ -246,7 +246,7 @@ public class OddGateKeeper: NSObject {
     
     let currentAuthenticationState = self.authenticationStatus
     
-    OddContentStore.sharedStore.API.post(["type":"authorized_user" as AnyObject,"attributes":["device_code":"\(deviceToken)"] as AnyObject], url:"auth/device/token") { (res, err) -> () in
+    OddContentStore.sharedStore.API.post(["type":"authorized_user" as AnyObject,"attributes":["device_code":"\(deviceToken)"] as AnyObject], url:"auth/device/token", altDomain: nil) { (res, err) -> () in
       if let error = err,
         let response = res {
         print("Error:\(error.localizedDescription)")
@@ -397,7 +397,7 @@ public class OddGateKeeper: NSObject {
       ]
     ]
     
-    OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "login") { (response, error) -> () in
+    OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "login", altDomain: nil) { (response, error) -> () in
       if error != nil {
         guard let errorMessage = error?.userInfo["message"] as? String else {
           OddLogger.error("Error logging in")

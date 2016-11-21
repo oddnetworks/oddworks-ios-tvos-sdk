@@ -185,8 +185,8 @@ public class APIService: NSObject, OddHTTPRequestService {
 //
 //  }
   
-  public func post(_ params: [String : AnyObject]?, url: String, altDomain: String? = nil, callback: @escaping (AnyObject?, NSError?) -> Void) {
-    request("POST", params: params, url: url, callback: callback)
+  public func post(_ params: [String : AnyObject]?, url: String, altDomain: String?, callback: @escaping (AnyObject?, NSError?) -> Void) {
+    request("POST", params: params, url: url, altDomain: altDomain, callback: callback)
   }
   
   /// Performs a `PUT` request on the API Server
@@ -284,7 +284,7 @@ public class APIService: NSObject, OddHTTPRequestService {
       }
     #endif  
    
-    print("URL: \(apiURL)\(url)")
+    print("URL: \(domain)\(url)")
     request.allHTTPHeaderFields?.forEach({ (header) in
       print("HEADER: \(header)")
     })

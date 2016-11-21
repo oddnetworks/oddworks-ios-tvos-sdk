@@ -601,7 +601,7 @@ import UIKit
         ]
       ]
       
-      OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "viewers/\(OddViewer.current.id)/relationships/watchlist") { (response, error) -> () in
+      OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "viewers/\(OddViewer.current.id)/relationships/watchlist", altDomain: nil) { (response, error) -> () in
         if error != nil {
           let error = OddContentStore.sharedStore.buildError("Error adding item to watchlist", errorCode: 112, notification: nil)
           onResult(false, error)

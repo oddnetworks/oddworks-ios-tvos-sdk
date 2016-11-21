@@ -129,7 +129,7 @@ import UIKit
       ]
     ]
     
-    OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "videos/\(theId)/progress") { (response, error) -> () in
+    OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "videos/\(theId)/progress", altDomain: nil) { (response, error) -> () in
       if error != nil {
         let error = OddContentStore.sharedStore.buildError("Error posting video play progress", errorCode: 112, notification: nil)
         onResult(false, error)
