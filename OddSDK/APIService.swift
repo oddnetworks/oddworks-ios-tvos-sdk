@@ -8,6 +8,12 @@
 
 import UIKit
 
+/// Allows dependency injection for HTTPRequest handlers
+public protocol OddHTTPRequestService {
+  func post(_ params: [ String : AnyObject ]?, url: String, altDomain: String?, callback: @escaping APICallback)
+}
+
+
 /// A helper object to provide either an object
 /// or the error returned from the server
 public typealias APICallback = ((AnyObject?, NSError?) -> Void)
@@ -62,8 +68,8 @@ struct UserAgentHeader {
 /// Handles http requests for the API server.
 /// Parses reponses or errors returning the appropriate
 /// `JSON` or server error information
-public class APIService: NSObject {
-
+public class APIService: NSObject, OddHTTPRequestService {
+  
   /// Only one instance of this class is required for any app.
   /// Access should be made through this singleton
   static let sharedService = APIService()
@@ -112,7 +118,7 @@ public class APIService: NSObject {
       case .beta: return "https://beta.oddworks.io"
       case .local: return "http://127.0.0.1:8000"
       case .production: return "https://content-crtv.oddnetworks.com"
-      case .test: return "https://content.oddworks.com"
+      case .test: return "https://content.oddworks.io"
       case .custom: return customHostURL
 //      default: return "https://device.oddworks.io"
       }
@@ -175,7 +181,11 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`
-  public func post(_ params: [ String : AnyObject ]?, url: String, callback: @escaping APICallback) {
+//  public func post(_ params: [ String : AnyObject ]?, url: String, altDomain: String? = nil, callback: @escaping (AnyObject?, NSError?) -> Void) {
+//
+//  }
+  
+  public func post(_ params: [String : AnyObject]?, url: String, altDomain: String? = nil, callback: @escaping (AnyObject?, NSError?) -> Void) {
     request("POST", params: params, url: url, callback: callback)
   }
   
@@ -222,12 +232,24 @@ public class APIService: NSObject {
   /// requested object or an error if the request failed
   ///
   /// See also: `APICallback`, `get()`, `post()`, `put()`, 'delete()'
-  private func request(_ type: String, params: [ String : AnyObject ]?, url: String, callback: @escaping APICallback) {
-    let request = NSMutableURLRequest(url: URL(string: apiURL + url)!)
+  private func request(_ type: String,
+                       params: [ String : AnyObject ]?,
+                       url: String,
+                       altDomain: String? = nil,
+                       callback: @escaping APICallback) {
+    
+    // this is hacky. clean up laterz
+    
+    var domain = apiURL
+    if altDomain != nil {
+      domain = altDomain!
+    }
+    
+    print("REQUESTING: \(domain)\(url)")
+    
+    let request = NSMutableURLRequest(url: URL(string: domain + url)!)
     let session = URLSession.shared
     request.httpMethod = type
-    
-    
     
     let err: NSError?
     

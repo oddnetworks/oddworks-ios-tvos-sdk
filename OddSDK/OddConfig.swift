@@ -40,80 +40,56 @@ struct AdServiceConfiguration {
   }
 }
 
-struct StatConfig {
+struct EventSettings {
   var action: OddMetricAction
   var actionString: String
   var enabled: Bool
   var interval: Double?
 }
 
-struct AnalyticsConfiguration {
-  var enabledStats: Array<StatConfig> = [
-      StatConfig(action: .AppInit, actionString: "app:init", enabled: true, interval: nil),
-      StatConfig(action: .ViewLoad, actionString: "view:load", enabled: true, interval: nil),
-      StatConfig(action: .VideoPlay, actionString: "video:play", enabled: true, interval: nil),
-      StatConfig(action: .VideoPlaying, actionString: "video:playing", enabled: true, interval: 3),
-      StatConfig(action: .VideoStop, actionString: "video:stop", enabled: true, interval: nil),
-      StatConfig(action: .VideoError, actionString: "video:error", enabled: true, interval: nil)
+struct EventsConfiguration {
+  var enabledStats: Array<EventSettings> = [
+    EventSettings(action: .AppInit, actionString: "app:init", enabled: true, interval: nil),
+    EventSettings(action: .ViewLoad, actionString: "view:load", enabled: true, interval: nil),
+    EventSettings(action: .VideoLoad, actionString: "video:load", enabled: true, interval: nil),
+    EventSettings(action: .VideoPlay, actionString: "video:play", enabled: true, interval: nil),
+    EventSettings(action: .VideoPlaying, actionString: "video:playing", enabled: true, interval: 3),
+    EventSettings(action: .VideoStop, actionString: "video:stop", enabled: true, interval: nil),
+    EventSettings(action: .VideoError, actionString: "video:error", enabled: true, interval: nil),
+    EventSettings(action: .UserNew, actionString: "user:new", enabled: true, interval: nil)
   ]
   
   mutating func configureWithJSON(_ metrics: jsonObject) {
+    
+    func appendIfEnabled(_ actionName: String) {
+      if let metric = metrics[actionName] as? Dictionary<String, AnyObject>,
+        let actionString = metric["action"] as? String,
+        let enabled = metric["enabled"] as? Bool,
+        let action = OddMetricAction(rawValue: actionName) {
+        var adjustedInterval: Double? = nil
+        if let interval = metric["interval"] as? Double {
+          adjustedInterval = interval / 1000
+        }
+        let metricStat = EventSettings(action: action, actionString: actionString, enabled: enabled, interval: adjustedInterval )
+        enabledStats.append(metricStat)
+      }
+    }
+    
     enabledStats.removeAll()
     //appInit
-    if let videoPlay = metrics["appInit"] as? Dictionary<String, AnyObject>,
-      let actionString = videoPlay["action"] as? String,
-      let enabled = videoPlay["enabled"] as? Bool {
-        let appInitStat = StatConfig(action: .AppInit, actionString: actionString, enabled: enabled, interval: nil)
-        enabledStats.append(appInitStat)
-    }
-    
-    //viewLoad
-    if let viewLoad = metrics["viewLoad"] as? Dictionary<String, AnyObject>,
-      let actionString = viewLoad["action"] as? String,
-      let enabled = viewLoad["enabled"] as? Bool {
-        let viewLoadStat = StatConfig(action: .ViewLoad, actionString: actionString, enabled: enabled, interval: nil)
-        enabledStats.append(viewLoadStat)
-    }
-    
-    //videoPlay
-    if let videoPlay = metrics["videoPlay"] as? Dictionary<String, AnyObject>,
-      let actionString = videoPlay["action"] as? String,
-      let enabled = videoPlay["enabled"] as? Bool {
-        let videoPlayStat = StatConfig(action: .VideoPlay, actionString: actionString, enabled: enabled, interval: nil)
-        enabledStats.append(videoPlayStat)
-    }
-    
-    //videoPlaying
-    if let videoPlaying = metrics["videoPlaying"] as? Dictionary<String, AnyObject>,
-      let actionString = videoPlaying["action"] as? String,
-      let enabled = videoPlaying["enabled"] as? Bool,
-      let interval = videoPlaying["interval"] as? Double  {
-        //given in milliseconds, timer takes seconds
-        let convertedInterval = interval / 1000
-        let videoPlayingStat = StatConfig(action: .VideoPlaying, actionString: actionString, enabled: enabled, interval: convertedInterval)
-        enabledStats.append(videoPlayingStat)
-    }
-    
-    //videoStop
-    if let videoStop = metrics["videoStop"] as? Dictionary<String, AnyObject>,
-      let actionString = videoStop["action"] as? String,
-      let enabled = videoStop["enabled"] as? Bool {
-        let videoStopStat = StatConfig(action: .VideoStop, actionString: actionString, enabled: enabled, interval: nil)
-        enabledStats.append(videoStopStat)
-    }
-    
-    //videoError
-    if let videoError = metrics["videoError"] as? Dictionary<String, AnyObject>,
-      let actionString = videoError["action"] as? String,
-      let enabled = videoError["enabled"] as? Bool {
-        let videoErrorStat = StatConfig(action: .VideoError, actionString: actionString, enabled: enabled, interval: nil)
-        enabledStats.append(videoErrorStat)
-    }
+    appendIfEnabled("appInit")
+    appendIfEnabled("viewLoad")
+    appendIfEnabled("videoLoad")
+    appendIfEnabled("videoPlay")
+    appendIfEnabled("videoPlaying")
+    appendIfEnabled("videoStop")
+    appendIfEnabled("videoError")
+    appendIfEnabled("userNew")
   }
-  
-  func findEnabled(_ action: OddMetricAction) -> StatConfig? {
-    var relevantStat: StatConfig?
-    enabledStats.forEach({ (stat: StatConfig) in
+ 
+  func findEnabled(_ action: OddMetricAction) -> EventSettings? {
+    var relevantStat: EventSettings?
+    enabledStats.forEach({ (stat: EventSettings) in
       if stat.action == action && stat.enabled == true {
         relevantStat = stat
       }
@@ -121,13 +97,14 @@ struct AnalyticsConfiguration {
     return relevantStat != nil ? relevantStat! : nil
   }
 }
+  
 
 @objc public class OddConfig: NSObject {
   var views: jsonObject?
 //  var homeViewId: String?
 //  var splashViewId: String?
 //  var menuViewId: String?
-  var analyticsManager = AnalyticsConfiguration()
+  var analyticsManager = EventsConfiguration()
   var adManager = AdServiceConfiguration()
   var requiresAuthentication: Bool = false
   

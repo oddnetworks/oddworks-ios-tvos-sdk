@@ -25,6 +25,15 @@ public struct OddImage {
   
   fileprivate var _image: UIImage?
   
+  init(url: String, mimeType: String?, width: Int?, height: Int?, label: String?) {
+    self.url = url
+    self.mimeType = mimeType
+    self.width = width
+    self.height = height
+    self.label = label
+    self._image = nil
+  }
+  
   public static func imageFromJson(_ json: jsonObject) -> OddImage? {
     guard let url       = json["url"] as? String else {
         return nil
@@ -36,7 +45,7 @@ public struct OddImage {
     let height    = json["height"] as? Int
     
     
-    return OddImage(url: url, mimeType: mimeType, width: width, height: height, label: label, _image: nil)
+    return OddImage(url: url, mimeType: mimeType, width: width, height: height, label: label)
   }
   
   /// Loads the image asset

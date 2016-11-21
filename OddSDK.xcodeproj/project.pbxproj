@@ -59,7 +59,6 @@
 		1353FA991C46F10400B57A83 /* UIApplication+TopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */; };
 		1353FA9A1C46F10400B57A83 /* NSURL+query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AC1C24611800A0A602 /* NSURL+query.swift */; };
 		1353FA9B1C46F10400B57A83 /* Array+Bounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AD1C24611800A0A602 /* Array+Bounds.swift */; };
-		1353FA9E1C46F10400B57A83 /* OddMetricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A01C2460E900A0A602 /* OddMetricService.swift */; };
 		1353FAA21C46F10400B57A83 /* OddContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68841C2460BA00A0A602 /* OddContentStore.swift */; };
 		1353FAA31C46F10400B57A83 /* OddEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68851C2460BA00A0A602 /* OddEvent.swift */; };
 		1353FAA41C46F10400B57A83 /* OddArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68861C2460BA00A0A602 /* OddArticle.swift */; };
@@ -88,7 +87,6 @@
 		135E2E461CCA5EA8002A3ADA /* OddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68791C24608200A0A602 /* OddView.swift */; };
 		135E2E471CCA70FE002A3ADA /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134797791C51424800876D39 /* Keychain.swift */; };
 		135E2E481CCA70FE002A3ADA /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
-		135E2E491CCA70FE002A3ADA /* OddMetricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A01C2460E900A0A602 /* OddMetricService.swift */; };
 		135E2E4A1CCA70FE002A3ADA /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E687B1C24608200A0A602 /* APIService.swift */; };
 		135E2E4B1CCA7121002A3ADA /* UIApplication+TopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */; };
 		135E2E4D1CCA7121002A3ADA /* CMTimeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A41C24611800A0A602 /* CMTimeExtension.swift */; };
@@ -112,7 +110,6 @@
 		135E68991C2460BA00A0A602 /* OddVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688C1C2460BA00A0A602 /* OddVideo.swift */; };
 		135E689A1C2460BA00A0A602 /* OddMediaObjectCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688D1C2460BA00A0A602 /* OddMediaObjectCollection.swift */; };
 		135E689B1C2460BA00A0A602 /* OddMediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E688E1C2460BA00A0A602 /* OddMediaObject.swift */; };
-		135E68A21C2460E900A0A602 /* OddMetricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A01C2460E900A0A602 /* OddMetricService.swift */; };
 		135E68AF1C24611800A0A602 /* CMTimeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A41C24611800A0A602 /* CMTimeExtension.swift */; };
 		135E68B01C24611800A0A602 /* String+NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A51C24611800A0A602 /* String+NSDate.swift */; };
 		135E68B11C24611800A0A602 /* NSDate+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A61C24611800A0A602 /* NSDate+String.swift */; };
@@ -123,6 +120,11 @@
 		135E68B61C24611800A0A602 /* UIApplication+TopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */; };
 		135E68B71C24611800A0A602 /* NSURL+query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AC1C24611800A0A602 /* NSURL+query.swift */; };
 		135E68B81C24611800A0A602 /* Array+Bounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AD1C24611800A0A602 /* Array+Bounds.swift */; };
+		1363E4041DE39FB800207C21 /* OddEventsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1363E4031DE39FB800207C21 /* OddEventsService.swift */; };
+		1363E4051DE39FB800207C21 /* OddEventsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1363E4031DE39FB800207C21 /* OddEventsService.swift */; };
+		1363E4061DE39FB800207C21 /* OddEventsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1363E4031DE39FB800207C21 /* OddEventsService.swift */; };
+		1363E4081DE3A77600207C21 /* OddTestEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1363E4071DE3A77600207C21 /* OddTestEvents.swift */; };
+		1363E40A1DE3A7C300207C21 /* String+JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1363E4091DE3A7C300207C21 /* String+JWT.swift */; };
 		1382F1A61D906586009F0344 /* OddSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1382F1A51D906586009F0344 /* OddSource.swift */; };
 		1382F1A71D906586009F0344 /* OddSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1382F1A51D906586009F0344 /* OddSource.swift */; };
 		138733751D5CF8B00014B6E0 /* UIApplication+TopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */; };
@@ -149,7 +151,6 @@
 		13B9F5001C3AD35500AC04B1 /* Double+Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AA1C24611800A0A602 /* Double+Time.swift */; };
 		13B9F5021C3AD35500AC04B1 /* NSURL+query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AC1C24611800A0A602 /* NSURL+query.swift */; };
 		13B9F5031C3AD35500AC04B1 /* Array+Bounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AD1C24611800A0A602 /* Array+Bounds.swift */; };
-		13B9F5061C3AD35A00AC04B1 /* OddMetricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68A01C2460E900A0A602 /* OddMetricService.swift */; };
 		13BA17E31D525AC7001733C1 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BA17E21D525AC7001733C1 /* OddImage.swift */; };
 		13BA17E41D525AC7001733C1 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BA17E21D525AC7001733C1 /* OddImage.swift */; };
 		13BA17E51D539403001733C1 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BA17E21D525AC7001733C1 /* OddImage.swift */; };
@@ -196,7 +197,6 @@
 		135E688D1C2460BA00A0A602 /* OddMediaObjectCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = OddMediaObjectCollection.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		135E688E1C2460BA00A0A602 /* OddMediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = OddMediaObject.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		135E688F1C2460BA00A0A602 /* OddMenuItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddMenuItems.swift; sourceTree = "<group>"; };
-		135E68A01C2460E900A0A602 /* OddMetricService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddMetricService.swift; sourceTree = "<group>"; };
 		135E68A41C24611800A0A602 /* CMTimeExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CMTimeExtension.swift; sourceTree = "<group>"; };
 		135E68A51C24611800A0A602 /* String+NSDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+NSDate.swift"; sourceTree = "<group>"; };
 		135E68A61C24611800A0A602 /* NSDate+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+String.swift"; sourceTree = "<group>"; };
@@ -207,6 +207,9 @@
 		135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+TopVC.swift"; sourceTree = "<group>"; };
 		135E68AC1C24611800A0A602 /* NSURL+query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+query.swift"; sourceTree = "<group>"; };
 		135E68AD1C24611800A0A602 /* Array+Bounds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Bounds.swift"; sourceTree = "<group>"; };
+		1363E4031DE39FB800207C21 /* OddEventsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddEventsService.swift; sourceTree = "<group>"; };
+		1363E4071DE3A77600207C21 /* OddTestEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddTestEvents.swift; sourceTree = "<group>"; };
+		1363E4091DE3A7C300207C21 /* String+JWT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+JWT.swift"; sourceTree = "<group>"; };
 		1382F1A51D906586009F0344 /* OddSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddSource.swift; sourceTree = "<group>"; };
 		13A5BA4B1CD9265500DF4A7F /* OddRelationship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddRelationship.swift; sourceTree = "<group>"; };
 		13A5BA4F1CD93BD500DF4A7F /* OddSDKPerformanceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddSDKPerformanceTests.swift; sourceTree = "<group>"; };
@@ -269,6 +272,7 @@
 			children = (
 				13A5BA4F1CD93BD500DF4A7F /* OddSDKPerformanceTests.swift */,
 				135E2E311CCA5C50002A3ADA /* OddSDKTests.swift */,
+				1363E4071DE3A77600207C21 /* OddTestEvents.swift */,
 				135E2E331CCA5C50002A3ADA /* Info.plist */,
 			);
 			path = OddSDKTests;
@@ -344,6 +348,7 @@
 		135E68A31C24610700A0A602 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				1363E4091DE3A7C300207C21 /* String+JWT.swift */,
 				135E68A41C24611800A0A602 /* CMTimeExtension.swift */,
 				135E68A51C24611800A0A602 /* String+NSDate.swift */,
 				135E68A61C24611800A0A602 /* NSDate+String.swift */,
@@ -363,7 +368,7 @@
 			children = (
 				134797791C51424800876D39 /* Keychain.swift */,
 				130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */,
-				135E68A01C2460E900A0A602 /* OddMetricService.swift */,
+				1363E4031DE39FB800207C21 /* OddEventsService.swift */,
 				135E687B1C24608200A0A602 /* APIService.swift */,
 			);
 			name = Services;
@@ -632,7 +637,6 @@
 				1353FA9A1C46F10400B57A83 /* NSURL+query.swift in Sources */,
 				1353FA9B1C46F10400B57A83 /* Array+Bounds.swift in Sources */,
 				1347977C1C51424800876D39 /* Keychain.swift in Sources */,
-				1353FA9E1C46F10400B57A83 /* OddMetricService.swift in Sources */,
 				1353FAA21C46F10400B57A83 /* OddContentStore.swift in Sources */,
 				1353FAA31C46F10400B57A83 /* OddEvent.swift in Sources */,
 				1353FAA41C46F10400B57A83 /* OddArticle.swift in Sources */,
@@ -661,7 +665,9 @@
 				135E2E501CCA7121002A3ADA /* Array+Bounds.swift in Sources */,
 				135E2E4B1CCA7121002A3ADA /* UIApplication+TopVC.swift in Sources */,
 				135E2E481CCA70FE002A3ADA /* OddGateKeeper.swift in Sources */,
+				1363E4081DE3A77600207C21 /* OddTestEvents.swift in Sources */,
 				135E2E3D1CCA5EA8002A3ADA /* OddConfig.swift in Sources */,
+				1363E4061DE39FB800207C21 /* OddEventsService.swift in Sources */,
 				13A5BA501CD93BD500DF4A7F /* OddSDKPerformanceTests.swift in Sources */,
 				135E2E4F1CCA7121002A3ADA /* NSObject+ClassName.swift in Sources */,
 				134173601D9068220053CD7E /* OddSource.swift in Sources */,
@@ -669,6 +675,7 @@
 				135E2E421CCA5EA8002A3ADA /* OddMediaObject.swift in Sources */,
 				13A5BA4E1CD9265500DF4A7F /* OddRelationship.swift in Sources */,
 				135E2E3E1CCA5EA8002A3ADA /* OddExternal.swift in Sources */,
+				1363E40A1DE3A7C300207C21 /* String+JWT.swift in Sources */,
 				135E2E521CCA7121002A3ADA /* UIViewController+TitleImage.swift in Sources */,
 				135E2E4E1CCA7121002A3ADA /* Double+Time.swift in Sources */,
 				13BA17E51D539403001733C1 /* OddImage.swift in Sources */,
@@ -685,7 +692,6 @@
 				135E2E401CCA5EA8002A3ADA /* OddVideo.swift in Sources */,
 				135E2E471CCA70FE002A3ADA /* Keychain.swift in Sources */,
 				135E2E4A1CCA70FE002A3ADA /* APIService.swift in Sources */,
-				135E2E491CCA70FE002A3ADA /* OddMetricService.swift in Sources */,
 				135E2E541CCA7121002A3ADA /* NSDate+String.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -722,8 +728,8 @@
 				135E68911C2460BA00A0A602 /* OddContentStore.swift in Sources */,
 				135E68B11C24611800A0A602 /* NSDate+String.swift in Sources */,
 				130AA71B1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */,
-				135E68A21C2460E900A0A602 /* OddMetricService.swift in Sources */,
 				135E68B41C24611800A0A602 /* UIViewController+TitleImage.swift in Sources */,
+				1363E4041DE39FB800207C21 /* OddEventsService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -749,6 +755,7 @@
 				13B9F4FF1C3AD35500AC04B1 /* UIViewController+TitleImage.swift in Sources */,
 				13B9F4FC1C3AD35500AC04B1 /* NSDate+String.swift in Sources */,
 				13B9F4EF1C3AD34B00AC04B1 /* OddMediaObjectCollection.swift in Sources */,
+				1363E4051DE39FB800207C21 /* OddEventsService.swift in Sources */,
 				13B9F4EE1C3AD34B00AC04B1 /* OddVideo.swift in Sources */,
 				13B9F4FB1C3AD35500AC04B1 /* String+NSDate.swift in Sources */,
 				130AA71C1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */,
@@ -756,7 +763,6 @@
 				13B9F4ED1C3AD34B00AC04B1 /* OddPromotion.swift in Sources */,
 				13B9F4F71C3AD34B00AC04B1 /* OddView.swift in Sources */,
 				13B9F4F01C3AD34B00AC04B1 /* OddMediaObject.swift in Sources */,
-				13B9F5061C3AD35A00AC04B1 /* OddMetricService.swift in Sources */,
 				1328908F1DC1343000F31614 /* OddViewer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
