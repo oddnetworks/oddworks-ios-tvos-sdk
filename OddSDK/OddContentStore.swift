@@ -444,6 +444,10 @@ enum OddFeatureType {
             if let foundCollection = item as? OddMediaObjectCollection {
               responseArray.append(foundCollection)
             }
+          case is OddPromotion:
+            if let foundPromotion = item as? OddPromotion {
+              responseArray.append(foundPromotion)
+            }
           default: break
           }
         }
@@ -497,6 +501,8 @@ enum OddFeatureType {
             if mediaObject is OddVideo { callback(mediaObject, nil) }
           case .collection:
             if mediaObject is OddMediaObjectCollection { callback(mediaObject, nil) }
+          case .promotion:
+            if mediaObject is OddPromotion { callback(mediaObject, nil) }
           default:
             self.returnError("Error fetching \(type.toString()): \(id)", errorCode: 105, notification: nil, callback: callback)
 //            callback(nil)
@@ -549,6 +555,8 @@ enum OddFeatureType {
       mediaObject = OddVideo.videoFromJson(json)
     case .collection:
       mediaObject = OddMediaObjectCollection.mediaCollectionFromJson(json)
+    case .promotion:
+      mediaObject = OddPromotion.promotionFromJson(json)
     default:
       break
     } // switch

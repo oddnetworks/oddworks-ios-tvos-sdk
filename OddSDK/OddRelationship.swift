@@ -83,7 +83,7 @@ public struct OddRelationshipNode {
       guard let ids = idsOfType(type) else { break }
       OddContentStore.sharedStore.objectsOfType(type, ids: ids, include: nil, callback: { (objects, errors) in
         if errors != nil {
-          OddLogger.error("Error loading menuCollections")
+          OddLogger.error("Error loading: \(ids)")
           errors?.forEach({allErrors.append($0)})
         }
         allObjects.append(contentsOf: objects)
