@@ -16,7 +16,7 @@ public struct OddMediaPlayerInfo {
   var errorMessage: String?
 }
 
-enum OddMetricAction: String {
+public enum OddMetricAction: String {
   case AppInit      = "appInit"
   case ViewLoad     = "viewLoad"
   case VideoLoad    = "videoLoad"
