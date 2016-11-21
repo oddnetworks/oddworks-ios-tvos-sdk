@@ -99,7 +99,7 @@ enum OddMetricAction: String {
     postMetricForAction(.AppInit, playerInfo: nil, content: nil, callback: callback)
   }
   
-  func postMetricForAction(_ action: OddMetricAction, playerInfo: OddMediaPlayerInfo?, content: OddMediaObject?, callback: APICallback?) {
+  public func postMetricForAction(_ action: OddMetricAction, playerInfo: OddMediaPlayerInfo?, content: OddMediaObject?, callback: APICallback?) {
     if let stat = OddContentStore.sharedStore.config?.analyticsManager.findEnabled(action) {
       //parsing content
       var contentId: String?
