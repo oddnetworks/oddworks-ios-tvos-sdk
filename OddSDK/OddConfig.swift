@@ -104,7 +104,7 @@ public struct EventsConfiguration {
 //  var homeViewId: String?
 //  var splashViewId: String?
 //  var menuViewId: String?
-  var analyticsManager = EventsConfiguration()
+  public var analyticsManager = EventsConfiguration()
   var adManager = AdServiceConfiguration()
   var requiresAuthentication: Bool = false
   
