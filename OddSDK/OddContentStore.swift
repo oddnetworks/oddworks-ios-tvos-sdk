@@ -628,7 +628,7 @@ enum OddFeatureType {
       NotificationCenter.default.post(Notification(name: OddConstants.OddStartedSearchNotification, object: nil))
     })
     
-    API.get( nil, url: "search?q=\(term)") { ( response, error ) -> () in
+    API.get( nil, url: "search?q=\(term.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)") { ( response, error ) -> () in
       if let _ = error {
         print("Error fetching search results")
         onResults (nil, nil)
