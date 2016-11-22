@@ -41,10 +41,10 @@ struct AdServiceConfiguration {
 }
 
 public struct EventSettings {
-  var action: OddMetricAction
-  var actionString: String
-  var enabled: Bool
-  var interval: Double?
+  public var action: OddMetricAction
+  public var actionString: String
+  public var enabled: Bool
+  public var interval: Double?
 }
 
 public struct EventsConfiguration {
