@@ -40,14 +40,14 @@ struct AdServiceConfiguration {
   }
 }
 
-struct EventSettings {
+public struct EventSettings {
   var action: OddMetricAction
   var actionString: String
   var enabled: Bool
   var interval: Double?
 }
 
-struct EventsConfiguration {
+public struct EventsConfiguration {
   var enabledStats: Array<EventSettings> = [
     EventSettings(action: .AppInit, actionString: "app:init", enabled: true, interval: nil),
     EventSettings(action: .ViewLoad, actionString: "view:load", enabled: true, interval: nil),
@@ -87,7 +87,7 @@ struct EventsConfiguration {
     appendIfEnabled("userNew")
   }
  
-  func findEnabled(_ action: OddMetricAction) -> EventSettings? {
+  public func findEnabled(_ action: OddMetricAction) -> EventSettings? {
     var relevantStat: EventSettings?
     enabledStats.forEach({ (stat: EventSettings) in
       if stat.action == action && stat.enabled == true {
