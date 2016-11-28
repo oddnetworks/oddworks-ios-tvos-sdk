@@ -474,6 +474,11 @@ enum OddFeatureType {
   /// to fetch multiple objects of a given type
   public func fetchObjectType( _ type: OddMediaObjectType, id: String, include: String?, callback: @escaping ( OddMediaObject?, NSError? ) -> Void ) {
     
+    if id.isEmpty {
+      self.returnError("Error fetching \(type.toString()): no ID present", errorCode: 123, notification: nil, callback: callback)
+    }
+    
+    
     var urlStr = "\(type.toString() )s/\(id)"
     if let include = include { urlStr = "\(urlStr)?include=\(include)" }
     
