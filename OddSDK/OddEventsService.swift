@@ -99,20 +99,26 @@ public enum OddMetricAction: String {
   public func postMetricForAction(_ action: OddMetricAction, playerInfo: OddMediaPlayerInfo?, content: OddMediaObject?, callback: APICallback?) {
     if let stat = OddContentStore.sharedStore.config?.analyticsManager.findEnabled(action) {
       //parsing content
-      var contentId: String?
-      var contentType: String?
-      var contentTitle: String?
-      var contentThumbnailURL: String?
+      var contentId = "null"
+      var contentType = "null"
+      var contentTitle =  "null"
+      var contentThumbnailURL = "null"
       //      let organizationID = OddContentStore.sharedStore.organizationId
       
       if let content = content {
-        contentId = content.id
         contentType = content.contentTypeString
-        contentTitle = content.title
-        contentThumbnailURL = content.thumbnailLink
-      } else {
-        contentId = "null"
-        contentType = "null"
+        
+        if let id = content.id {
+          contentId = id
+        }
+        
+        if let title = content.title {
+          contentTitle = title
+        }
+        
+        if let thumbnail = content.thumbnailLink {
+          contentThumbnailURL = thumbnail
+        }
       }
       
       var params = [
@@ -127,10 +133,10 @@ public enum OddMetricAction: String {
       
       if contentType != "null" {
         if var attributes = params["attributes"] as? jsonObject {
-          attributes["contentType"] = "\(contentType!)" as AnyObject?
-          attributes["contentId"] = "\(contentId!)" as AnyObject?
-          attributes["contentTitle"] = "\(contentTitle!)" as AnyObject?
-          attributes["contentThumbnailURL"] = "\(contentThumbnailURL!)" as AnyObject?
+          attributes["contentType"] = "\(contentType)" as AnyObject?
+          attributes["contentId"] = "\(contentId)" as AnyObject?
+          attributes["contentTitle"] = "\(contentTitle)" as AnyObject?
+          attributes["contentThumbnailURL"] = "\(contentThumbnailURL)" as AnyObject?
           params["attributes"] = attributes
         }
         
