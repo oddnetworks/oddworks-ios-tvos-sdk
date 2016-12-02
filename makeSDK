@@ -1,0 +1,65 @@
+# Build OddSDKs Script
+
+# 1
+# Set bash script to exit immediately if any commands fail.
+set -e
+
+# 2
+# Setup some constants for use later on.
+FRAMEWORK_NAME="OddSDK"
+FRAMEWORK_NAME_TVOS="OddSDKtvOS"
+
+# 3a
+# If remnants from a previous build exist, delete them.
+if [ -d "${SRCROOT}/build" ]; then
+rm -rf "${SRCROOT}/build"
+fi
+
+# 3b
+# if an older xcarchive exists nuke it
+if [ -d "${HOME}/Desktop/${FRAMEWORK_NAME}.xcarchive" ]; then
+rm -rf "${HOME}/Desktop/${FRAMEWORK_NAME}.xcarchive"
+fi
+
+if [ -d "${HOME}/Desktop/${FRAMEWORK_NAME_TVOS}.xcarchive" ]; then
+rm -rf "${HOME}/Desktop/${FRAMEWORK_NAME_TVOS}.xcarchive"
+fi
+
+# 3c
+# Remove .framework file if exists on Desktop from previous run.
+if [ -d "${HOME}/Desktop/${FRAMEWORK_NAME}/${FRAMEWORK_NAME}.framework" ]; then
+rm -rf "${HOME}/Desktop/${FRAMEWORK_NAME}/${FRAMEWORK_NAME}.framework"
+fi
+
+if [ -d "${HOME}/Desktop/${FRAMEWORK_NAME}/${FRAMEWORK_NAME_TVOS}.framework" ]; then
+rm -rf "${HOME}/Desktop/${FRAMEWORK_NAME}/${FRAMEWORK_NAME_TVOS}.framework"
+fi
+
+# 4
+# Build the framework for iOS and tvOS
+xcodebuild archive -scheme OddSDK -archivePath "${HOME}/Desktop/OddSDK"
+xcodebuild archive -scheme OddSDKtvOS -archivePath "${HOME}/Desktop/OddSDKtvOS"
+
+# 5
+# create SDK folder if it doesn't exist alredy
+mkdir -p "${HOME}/Desktop/${FRAMEWORK_NAME}"
+
+# 6
+# Copy the device version of framework to Desktop.
+cp -r "${HOME}/Desktop/${FRAMEWORK_NAME}.xcarchive/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework" "${HOME}/Desktop/${FRAMEWORK_NAME}/${FRAMEWORK_NAME}.framework"
+cp -r "${HOME}/Desktop/${FRAMEWORK_NAME_TVOS}.xcarchive/Products/Library/Frameworks/${FRAMEWORK_NAME_TVOS}.framework" "${HOME}/Desktop/${FRAMEWORK_NAME}/${FRAMEWORK_NAME_TVOS}.framework" 
+
+# 7
+# Delete the most recent archive.
+if [ -d "${HOME}/Desktop/${FRAMEWORK_NAME}.xcarchive" ]; then
+rm -rf "${HOME}/Desktop/${FRAMEWORK_NAME}.xcarchive"
+fi
+
+if [ -d "${HOME}/Desktop/${FRAMEWORK_NAME_TVOS}.xcarchive" ]; then
+rm -rf "${HOME}/Desktop/${FRAMEWORK_NAME_TVOS}.xcarchive"
+fi
+
+echo "***************************************"
+echo "   OddSDKs successfully created"
+echo " ${HOME}/Desktop/${FRAMEWORK_NAME}"
+echo "***************************************"
