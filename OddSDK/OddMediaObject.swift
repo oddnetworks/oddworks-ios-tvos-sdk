@@ -174,8 +174,9 @@ import UIKit
   /// The URL string to load the asset from the content provider
   public var urlString: String? {
     get {
-      guard let source = sources?[0] else { return nil }
-      return source.url
+//      guard let source = sources?[0] else { return nil }
+      guard let sourceUrl = bestSourceURL()  else { return nil }
+      return sourceUrl
     }
   }
   
@@ -662,4 +663,47 @@ import UIKit
       onResult(false, error)
     }
   }
+  
+  func bestSourceURL() -> String? {
+    
+    func bestBitrateSource(fromSources sources: [OddSource]) -> OddSource? {
+      if sources.isEmpty { return nil }
+      var highest = -1
+      var result = sources.first
+      sources.forEach({ (source) in
+        if source.maxBitrate != nil {
+          if source.maxBitrate! > highest {
+            highest = source.maxBitrate!
+            result = source
+          }
+        } else {
+          OddLogger.error("No maxBitrate on MediaObject")
+        }
+      })
+      
+      return result
+    }
+    
+    guard let sources = self.sources else { return nil }
+    
+    if sources.count == 1 {
+      guard let source = sources.first else { return nil }
+        let url = source.url
+      return url
+    }
+    
+    let hlsSources = sources.filter {$0.container?.uppercased() == "M2TS"}
+    let mp4Sources = sources.filter {$0.container?.uppercased() == "MP4"}
+    
+    if !hlsSources.isEmpty {
+      guard let result = bestBitrateSource(fromSources: hlsSources) else { return nil }
+      return result.url
+    } else if !mp4Sources.isEmpty {
+      guard let result = bestBitrateSource(fromSources: mp4Sources) else { return nil }
+      return result.url
+    }
+    return nil
+  }
+  
+  
 }
