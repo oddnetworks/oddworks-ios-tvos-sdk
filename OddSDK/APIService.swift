@@ -29,6 +29,17 @@ public typealias APICallback = ((AnyObject?, NSError?) -> Void)
   case test
   case local
   case custom
+    
+    public static func serverMode(fromString mode: String) -> OddServerMode {
+        switch mode {
+        case "staging":     return .staging
+        case "production":  return .production
+        case "beta":        return .beta
+        case "test":        return .test
+        case "local":       return .local
+        default: return .custom
+        }
+    }
 }
 
 
@@ -114,7 +125,7 @@ public class APIService: NSObject, OddHTTPRequestService {
   var baseURL: String {
     get {
       switch serverMode {
-      case .staging: return "https://odd-content-crtv-staging.herokuapp.com"
+      case .staging: return "https://odd-content-staging.herokuapp.com"
       case .beta: return "https://beta.oddworks.io"
       case .local: return "http://127.0.0.1:8000"
       case .production: return "https://content-crtv.oddnetworks.com"

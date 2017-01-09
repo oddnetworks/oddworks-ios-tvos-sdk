@@ -107,7 +107,7 @@ public struct EventsConfiguration {
   public var analyticsManager = EventsConfiguration()
   var adManager = AdServiceConfiguration()
   var requiresAuthentication: Bool = false
-  
+    
   class func configFromJson( _ json : Dictionary<String, AnyObject> ) -> OddConfig? {
     let newConfig = OddConfig()
     guard let data = json["data"] as? Dictionary<String, AnyObject>,
