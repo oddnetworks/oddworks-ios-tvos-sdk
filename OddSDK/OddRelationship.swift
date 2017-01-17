@@ -81,8 +81,9 @@ public struct OddRelationshipNode {
     var allErrors: Array<NSError> = []
     for (i, type) in types.enumerated() {
       guard let ids = idsOfType(type) else { break }
-      
-      OddContentStore.sharedStore.objectsOfType(type, ids: ids, include: nil, callback: { (objects, errors) in
+    
+      let includeParam: String? = type == .collection ? "entities": nil
+      OddContentStore.sharedStore.objectsOfType(type, ids: ids, include: includeParam, callback: { (objects, errors) in
         if errors != nil {
           OddLogger.error("Error loading: \(ids)")
           errors?.forEach({allErrors.append($0)})
