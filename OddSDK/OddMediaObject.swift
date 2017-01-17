@@ -534,6 +534,24 @@ import UIKit
       callback(objects, errors)
     }
   }
+    
+//    public func objectsForRelationships(withNames names: Array<String>, _ callback: @escaping (_ objects: [[OddMediaObject]], _ errors: [[NSError]?]) ->())  {
+//        var results: [[OddMediaObject]] = []
+//        var resultErrors: [[NSError]?] = []
+//        names.forEach { (name) in
+//            print("FETCHING: \(name)")
+//            objectsForRelationship(withName: name, { (objects, errors) in
+//                results.append(objects)
+//                resultErrors.append(errors)
+//                if results.count == names.count {
+//                    print("HAVE RESULTS")
+//                    callback(results, resultErrors)
+//                }
+//            })
+//        }
+//    }
+    
+    
   //MARK: - Dynamic Media Object
   
   /// A method to configure a `UITableViewCell` when displaying the information

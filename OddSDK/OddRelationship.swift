@@ -81,24 +81,26 @@ public struct OddRelationshipNode {
     var allErrors: Array<NSError> = []
     for (i, type) in types.enumerated() {
       guard let ids = idsOfType(type) else { break }
+      
       OddContentStore.sharedStore.objectsOfType(type, ids: ids, include: nil, callback: { (objects, errors) in
         if errors != nil {
           OddLogger.error("Error loading: \(ids)")
           errors?.forEach({allErrors.append($0)})
         }
         allObjects.append(contentsOf: objects)
+        
         if i == types.count - 1 {
-          var results = Array<OddMediaObject>()
-          
+            print("Types: \(i + 1) Objects: \(allObjects.count)")
+          var sortedResults: Array<OddMediaObject> = []
           self.allIds?.forEach({ (id) in
             allObjects.forEach({ (obj) in
               if obj.id == id {
-                results.append(obj)
+                sortedResults.append(obj)
               }
             })
           })
           
-          callback(results, allErrors.isEmpty ? nil : allErrors)
+          callback(sortedResults, allErrors.isEmpty ? nil : allErrors)
         }
       })
     }
