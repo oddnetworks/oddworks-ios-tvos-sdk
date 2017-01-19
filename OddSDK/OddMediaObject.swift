@@ -535,21 +535,27 @@ import UIKit
     }
   }
     
-//    public func objectsForRelationships(withNames names: Array<String>, _ callback: @escaping (_ objects: [[OddMediaObject]], _ errors: [[NSError]?]) ->())  {
-//        var results: [[OddMediaObject]] = []
-//        var resultErrors: [[NSError]?] = []
-//        names.forEach { (name) in
-//            print("FETCHING: \(name)")
-//            objectsForRelationship(withName: name, { (objects, errors) in
-//                results.append(objects)
-//                resultErrors.append(errors)
-//                if results.count == names.count {
-//                    print("HAVE RESULTS")
-//                    callback(results, resultErrors)
-//                }
-//            })
-//        }
-//    }
+    public func objectsForRelationships(withNames names: Array<String>, _ callback: @escaping (_ objects: [String: [OddMediaObject]], _ errors: [[NSError]]?) ->())  {
+        var results: [String: [OddMediaObject]] = [:]
+        var resultErrors: [[NSError]] = []
+        names.forEach { (name) in
+            objectsForRelationship(withName: name, { (objects, errors) in
+                results[name] = objects
+                
+                if errors != nil {
+                    resultErrors.append(errors!)
+                }
+                
+                if results.count == names.count {
+                    if resultErrors.isEmpty {
+                        callback(results, nil)
+                    } else {
+                        callback(results, resultErrors)
+                    }
+                }
+            })
+        }
+    }
     
     
   //MARK: - Dynamic Media Object

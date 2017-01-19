@@ -91,7 +91,7 @@ public struct OddRelationshipNode {
         allObjects.append(contentsOf: objects)
         
         if allErrors.count + allObjects.count == self.allIds?.count {
-            print("Types: \(i + 1) Objects: \(allObjects.count)")
+//            print("Types: \(i + 1) Objects: \(allObjects.count)")
           var sortedResults: Array<OddMediaObject> = []
           self.allIds?.forEach({ (id) in
             allObjects.forEach({ (obj) in

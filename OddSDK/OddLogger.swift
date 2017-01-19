@@ -72,18 +72,20 @@ public class OddLogger: NSObject {
     log(logLevel: .error, message: message)
   }
   
-  // grabs the topmost viewlkController and presents an alert dialog to the user
+    
+  // grabs the topmost viewController and presents an alert dialog to the user
   public static func showAlert(withTitle title: String, message: String, kind: OddLogLevel? = nil) {
     let decoratedTitle = kind != nil ? "\(kind!.glyph()) \(title)" : title
     guard let topVC = UIApplication.topViewController() else { return }
     let alert = UIAlertController(title: decoratedTitle, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action) in
-      topVC.dismiss(animated: true, completion: {
         
-      })
     })
     alert.addAction(okAction)
-    topVC.present(alert, animated: true, completion: { /*print("presented alert")*/ })
+    DispatchQueue.main.async {
+        topVC.present(alert, animated: true, completion: { /*print("presented alert")*/ })
+    }
+    
   }
   
   
