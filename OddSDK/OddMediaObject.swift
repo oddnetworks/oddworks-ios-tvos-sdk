@@ -427,7 +427,11 @@ import UIKit
         path = formattedPath
       }
       if let path = path {
-        let request = NSMutableURLRequest(url: URL(string: path)!)
+        guard let url = URL(string: path) else {
+            callback(nil)
+            return
+        }
+        let request = NSMutableURLRequest(url: url)
 // some optimization of this may be possible by configuring the maximum number of connections
 // for your session. Your mileage may vary. Uncomment the next 3 lines and comment line 340 out
 // to adjust number of connections used per sesssion
@@ -728,6 +732,82 @@ import UIKit
     }
     return nil
   }
+    
+    // MARK: - Images
+    
+    func addToCache(image: UIImage, key: String) {
+        OddContentStore.sharedStore.imageCache.setObject(image, forKey: key as NSString)
+    }
+    
+    func getFromCache(key: String) -> UIImage? {
+        return OddContentStore.sharedStore.imageCache.object(forKey: key as NSString)
+    }
   
+    func urlForImage(withLabel label: String) -> String? {
+        guard let images = self.images else { return nil }
+        
+        let results = images.filter { (image) -> Bool in
+            image.label == label
+        }
+        
+        return results.first?.url
+    }
+    
+    /// Loads the media objects thumbnail image asset
+    ///
+    /// Checks if the `_thumbnail` asset is already present returning it if so.
+    ///
+    /// If the asset is not already loaded the asset is fetched and upon success the
+    /// callback closure is executed with the image as a parameter
+    ///
+    /// parameter callback: A closure taking a `UIImage` as a parameter to be executed when the image is loaded
+    public func image(withLabel label: String, _ callback: @escaping (UIImage?) -> Void  ) {
+        
+        guard let imageUrl = urlForImage(withLabel: label) else {
+            callback(nil)
+            return
+        }
+        
+        let storedImage = getFromCache(key: imageUrl)
+        if let cachedImage = storedImage {
+            callback(cachedImage)
+        } else {
+            guard let url = URL(string: imageUrl) else {
+                callback(nil)
+                return
+            }
+            let request = NSMutableURLRequest(url: url)
+            let session = URLSession.shared
+            request.httpMethod = "GET"
+            
+            let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error -> Void in
+                
+                if let e = error as? URLError {
+                    if e.code == .notConnectedToInternet {
+                        NotificationCenter.default.post(Notification(name: OddConstants.OddImageLoadDidFail, object: e) )
+                    }
+                    callback(nil)
+                    return
+                }
+                
+                if let res = response as? HTTPURLResponse {
+                    if res.statusCode == 200 {
+                        if let imageData = data {
+                            if let image = UIImage(data: imageData) {
+                                self.addToCache(image: image, key: imageUrl)
+                                callback(image)
+                            } else {
+                                callback(nil)
+                            }
+                        }
+                    } else {
+                        callback(nil)
+                    }
+                }
+            })
+            task.resume()
+        }
+    }
+
   
 }
