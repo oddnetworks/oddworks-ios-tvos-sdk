@@ -478,7 +478,7 @@ enum OddFeatureType {
       self.returnError("Error fetching \(type.toString()): no ID present", errorCode: 123, notification: nil, callback: callback)
     }
     
-    
+    print("USING INCLUDE: \(include)")
     var urlStr = "\(type.toString() )s/\(id)"
     if let include = include { urlStr = "\(urlStr)?include=\(include)" }
     

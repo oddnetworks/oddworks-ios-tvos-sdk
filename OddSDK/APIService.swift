@@ -256,7 +256,7 @@ public class APIService: NSObject, OddHTTPRequestService {
       domain = altDomain!
     }
     
-    OddLogger.warn("REQUESTING: \(domain)\(url)")
+    OddLogger.debug("REQUESTING: \(domain)\(url)")
     
     let request = NSMutableURLRequest(url: URL(string: domain + url)!)
     let session = URLSession.shared
@@ -295,9 +295,9 @@ public class APIService: NSObject, OddHTTPRequestService {
       }
     #endif  
    
-    OddLogger.warn("URL: \(domain)\(url)")
+    OddLogger.debug("URL: \(domain)\(url)")
     request.allHTTPHeaderFields?.forEach({ (header) in
-      OddLogger.warn("HEADER: \(header)")
+      OddLogger.debug("HEADER: \(header)")
     })
     
     let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error -> Void in

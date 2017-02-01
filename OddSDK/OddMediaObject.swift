@@ -518,6 +518,22 @@ import UIKit
     }
     return nil
   }
+    
+    /// Convenience method to determine if an object has a 
+    /// relationship node with the given name
+    public func hasRelationship(withName name: String) -> Bool {
+        return self.relationshipNodeWithName(name) != nil
+    }
+    
+    public func validRelationships(withNames names: [String]) -> Set<String> {
+        var result: Set<String> = []
+        names.forEach { (name) in
+            if self.hasRelationship(withName: name) {
+                result.insert(name)
+            }
+        }
+        return result
+    }
   
   public func numberOfItemsInRelationshipNodeWithName(_ name: String) -> Int {
     guard let node = relationshipNodeWithName(name) else { return 0 }

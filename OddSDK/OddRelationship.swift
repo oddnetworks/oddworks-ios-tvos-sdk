@@ -79,6 +79,12 @@ public struct OddRelationshipNode {
     let types = self.allTypes
     var allObjects: Array<OddMediaObject> = []
     var allErrors: Array<NSError> = []
+    
+    if types.isEmpty {
+        let error = NSError(domain: "Odd", code: 122, userInfo: ["error": "No relationship types found. (Empty Relationship)"])
+        callback(allObjects, [error])
+    }
+    
     for (i, type) in types.enumerated() {
       guard let ids = idsOfType(type) else { break }
     
