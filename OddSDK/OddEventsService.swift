@@ -173,7 +173,7 @@ public enum OddMetricAction: String {
       OddLogger.info("PARAMS SENT IN METRIC POST: \(params)")
       
       // THIS NEEDS TO BE CONFIGURABLE
-      let eventsURL = "https://events-crtv.oddnetworks.com/"
+      let eventsURL = "https://analytics.oddworks.io/events"
       
       let data = [ "data" : params ]
       
