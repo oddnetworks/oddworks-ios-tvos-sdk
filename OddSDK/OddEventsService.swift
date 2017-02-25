@@ -38,6 +38,9 @@ public enum OddMetricAction: String {
   
   private var _sessionId: String = ""
   public var videoSessionId: String = ""
+    
+  public var eventsURL = "https://events-crtv.oddnetworks.com/"
+
   
   override init() {
     super.init()
@@ -172,12 +175,10 @@ public enum OddMetricAction: String {
       
       OddLogger.info("PARAMS SENT IN METRIC POST: \(params)")
       
-      // THIS NEEDS TO BE CONFIGURABLE
-      let eventsURL = "https://events-crtv.oddnetworks.com/"
-      
+        
       let data = [ "data" : params ]
       
-      self.deliveryService.post(data as [String : AnyObject]?, url: "events", altDomain: eventsURL) { (response, error) -> () in
+      self.deliveryService.post(data as [String : AnyObject]?, url: "events", altDomain: self.eventsURL) { (response, error) -> () in
         if let e = error {
           OddLogger.error("<<Metric post with type '\(stat.actionString)' failed with error: \(e.localizedDescription)>>")
           callback?(nil, error)
