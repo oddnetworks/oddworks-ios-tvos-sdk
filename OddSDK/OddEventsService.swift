@@ -9,11 +9,13 @@
 import UIKit
 
 public struct OddMediaPlayerInfo {
-  var playerType: String?
-  var elapsed: Int?
-  var duration: Int?
-  var videoSessionId: String?
-  var errorMessage: String?
+  public var playerType: String?
+  public var elapsed: Int?
+  public var duration: Int?
+  public var videoSessionId: String?
+  public var errorMessage: String?
+    
+  public init() {}
 }
 
 public enum OddMetricAction: String {

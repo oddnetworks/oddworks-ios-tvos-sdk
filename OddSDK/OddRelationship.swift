@@ -85,7 +85,7 @@ public struct OddRelationshipNode {
         callback(allObjects, [error])
     }
     
-    for (i, type) in types.enumerated() {
+    for (_, type) in types.enumerated() {
       guard let ids = idsOfType(type) else { break }
     
       let includeParam: String? = type == .collection ? "entities": nil
