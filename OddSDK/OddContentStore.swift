@@ -350,7 +350,6 @@ enum OddFeatureType {
         if errors != nil {
           localErrors.append(contentsOf: errors!)
         }
-        
         callback(objects, localErrors.isEmpty ? nil : localErrors)
       })
     }
@@ -358,7 +357,6 @@ enum OddFeatureType {
     if self.mediaObjects.isEmpty {
       doFetch(ids: ids)
     } else {
-      
       
       for id: String in ids {
         var match = false
@@ -478,7 +476,7 @@ enum OddFeatureType {
       self.returnError("Error fetching \(type.toString()): no ID present", errorCode: 123, notification: nil, callback: callback)
     }
     
-    print("USING INCLUDE: \(include)")
+//    print("USING INCLUDE: \(include)")
     var urlStr = "\(type.toString() )s/\(id)"
     if let include = include { urlStr = "\(urlStr)?include=\(include)" }
     

@@ -87,22 +87,23 @@ public struct OddRelationshipNode {
     
     for (_, type) in types.enumerated() {
       guard let ids = idsOfType(type) else { break }
-    
       let includeParam: String? = type == .collection ? "entities": nil
       OddContentStore.sharedStore.objectsOfType(type, ids: ids, include: includeParam, callback: { (objects, errors) in
         if errors != nil {
           OddLogger.error("Error loading: \(ids)")
           errors?.forEach({allErrors.append($0)})
         }
+     
         allObjects.append(contentsOf: objects)
         
         if allErrors.count + allObjects.count == self.allIds?.count {
-//            print("Types: \(i + 1) Objects: \(allObjects.count)")
           var sortedResults: Array<OddMediaObject> = []
           self.allIds?.forEach({ (id) in
+            var matched = false
             allObjects.forEach({ (obj) in
-              if obj.id == id {
+              if obj.id == id && !matched {
                 sortedResults.append(obj)
+                matched = true
               }
             })
           })
