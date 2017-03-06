@@ -56,6 +56,9 @@ import Foundation
   // The notification posted by the 'OddContentStore' when a search request is made to the API server
   public static let OddStartedSearchNotification = Notification.Name("OddStartedSearchNotification")
   
+// The notification posted by the 'OddContentStore' when a search request is complete
+  public static let OddEndedSearchNotification = Notification.Name("OddEndedSearchNotification")
+  
   // The notification posted by the 'OddContentStore' when a watchlist fetch request is made to the API server
   public static let OddStartedWatchlistFetchNotification = Notification.Name("OddStartedWatchlistFetchNotification")
   

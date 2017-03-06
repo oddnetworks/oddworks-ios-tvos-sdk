@@ -522,7 +522,8 @@ import UIKit
     /// Convenience method to determine if an object has a 
     /// relationship node with the given name
     public func hasRelationship(withName name: String) -> Bool {
-        return self.relationshipNodeWithName(name) != nil
+        guard let relationship = self.relationshipNodeWithName(name) else { return false }
+        return relationship.numberOfRelationships > 0
     }
     
     public func validRelationships(withNames names: [String]) -> Set<String> {
@@ -550,6 +551,10 @@ import UIKit
       return
     }
     
+//    if node.numberOfRelationships == 0 {
+//        callback(Array<OddMediaObject>(), nil)
+//    }
+//    
     node.getAllObjects { (objects, errors) in
       callback(objects, errors)
     }

@@ -15,7 +15,7 @@ public struct OddMediaPlayerInfo {
   public var videoSessionId: String?
   public var errorMessage: String?
     
-  public init() {}
+public init() {}
 }
 
 public enum OddMetricAction: String {
