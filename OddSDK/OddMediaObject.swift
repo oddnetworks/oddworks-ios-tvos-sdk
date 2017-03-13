@@ -551,10 +551,6 @@ import UIKit
       return
     }
     
-//    if node.numberOfRelationships == 0 {
-//        callback(Array<OddMediaObject>(), nil)
-//    }
-//    
     node.getAllObjects { (objects, errors) in
       callback(objects, errors)
     }
