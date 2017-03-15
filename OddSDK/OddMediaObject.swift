@@ -467,6 +467,11 @@ import UIKit
           }
         })
         task.resume()
+      } else {
+        callback(nil)
+        if self.id != nil {
+            OddLogger.error("No thumbnail path for object: \(self.id!)")
+        }
       }
     }
   }
