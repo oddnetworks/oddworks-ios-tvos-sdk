@@ -225,6 +225,15 @@ import UIKit
       return OddMediaObjectType.fromString(self.contentTypeString)
     }
   }
+    
+    public override var description: String {
+        get {
+            let aTitle: String = title == nil ? "untitled" : title!
+            let aType: String = mediaObjectType == nil ? "unknown" : mediaObjectType!.toString()
+            let aId: String = id == nil ? "unknown" : id!
+            return "\(aType) - \(aTitle) : \(aId)"
+        }
+    }
   
   /// A string denoting the type of cell to use when displaying this objects information.
   ///
