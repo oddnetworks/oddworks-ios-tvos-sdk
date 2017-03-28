@@ -28,7 +28,7 @@ class AuthenticationCredentials: NSObject, NSCoding {
   var entitlementCredentials: jsonObject? = nil
   
   override var description : String {
-    return "URL: \(url)\n User Code: \(userCode)\n Device Token: \(deviceToken)\n State: \(state.rawValue)\n Access Token: \(accessToken)\n Creds: \(entitlementCredentials)"
+    return "URL: \(String(describing: url))\n User Code: \(String(describing: userCode))\n Device Token: \(String(describing: deviceToken))\n State: \(state.rawValue)\n Access Token: \(String(describing: accessToken))\n Creds: \(String(describing: entitlementCredentials))"
   }
   
   class func emptyCredentials() -> AuthenticationCredentials {

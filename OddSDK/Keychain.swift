@@ -58,7 +58,7 @@ struct Keychain {
   static func stringForAccount(_ account: String) -> String? {
     if let data = dataForAccount(account) {
       return NSString(data: data,
-        encoding: String.Encoding.utf8.rawValue) as? String
+        encoding: String.Encoding.utf8.rawValue) as String?
     } else {
       return nil
     }

@@ -270,7 +270,7 @@ public class APIService: NSObject, OddHTTPRequestService {
       } catch let error as NSError {
         err = error
         request.httpBody = nil
-        print("error attaching params: \(err?.localizedDescription)")
+        print("error attaching params: \(String(describing: err?.localizedDescription))")
       }
     }
     
