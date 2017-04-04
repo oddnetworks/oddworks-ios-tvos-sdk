@@ -15,7 +15,13 @@ public struct OddMediaPlayerInfo {
   public var videoSessionId: String?
   public var errorMessage: String?
     
-public init() {}
+    public init(playerType: String?, elapsed: Int?, duration: Int?, videoSessionId: String?, errorMessage: String? ) {
+        self.playerType = playerType
+        self.elapsed = elapsed
+        self.duration = duration
+        self.videoSessionId = videoSessionId
+        self.errorMessage = errorMessage
+    }
 }
 
 public enum OddMetricAction: String {
