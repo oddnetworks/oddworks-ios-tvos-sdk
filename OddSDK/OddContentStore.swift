@@ -647,7 +647,7 @@ enum OddFeatureType {
                             guard let resultObject = self.buildObjectFromJson(result, ofType: mediaObjectType) else { break }
                             
                             //              self.mediaObjects.insert(resultObject)
-                            self.replaceMediaObject(withObject: resultObject)
+//                            self.replaceMediaObject(withObject: resultObject)
                             
                             switch resultObject {
                             case is OddVideo :
@@ -712,7 +712,7 @@ enum OddFeatureType {
         return result
     }
     
-    func replaceMediaObject(withObject object: OddMediaObject) {
+    public func replaceMediaObject(withObject object: OddMediaObject) {
         let existing = self.mediaObjects.filter { (existingObject) -> Bool in
             return existingObject.id == object.id
         }

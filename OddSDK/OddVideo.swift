@@ -138,6 +138,7 @@ import UIKit
           self.position = position
           self.complete = complete
           
+            OddContentStore.sharedStore.replaceMediaObject(withObject: self)
           //OddContentStore.sharedStore.mediaObjects.remove(self)
           onResult(true, nil)
         } else {
