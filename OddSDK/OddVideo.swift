@@ -129,6 +129,8 @@ import UIKit
       ]
     ]
     
+    OddLogger.info("###### Posting Video Position: \(position) - \(self.id!)")
+    
     OddContentStore.sharedStore.API.post(params as [String : AnyObject]?, url: "videos/\(theId)/progress", altDomain: nil) { (response, error) -> () in
       if error != nil {
         let error = OddContentStore.sharedStore.buildError("Error posting video play progress", errorCode: 112, notification: nil)
@@ -140,6 +142,7 @@ import UIKit
           
             OddContentStore.sharedStore.replaceMediaObject(withObject: self)
           //OddContentStore.sharedStore.mediaObjects.remove(self)
+            OddLogger.info("Updated Postion on video: \(self)")
           onResult(true, nil)
         } else {
           let error = OddContentStore.sharedStore.buildError("Incorrect server response for post video progress", errorCode: 121, notification: nil)

@@ -257,7 +257,9 @@ public class APIService: NSObject, OddHTTPRequestService {
     }
     
     OddLogger.debug("REQUESTING: \(domain)\(url)")
-    
+
+    URLCache.shared.removeAllCachedResponses()
+
     let request = NSMutableURLRequest(url: URL(string: domain + url)!)
     let session = URLSession.shared
     request.httpMethod = type

@@ -646,9 +646,6 @@ enum OddFeatureType {
                                 let mediaObjectType = OddMediaObjectType.fromString( typeStr ) else { continue }
                             guard let resultObject = self.buildObjectFromJson(result, ofType: mediaObjectType) else { break }
                             
-                            //              self.mediaObjects.insert(resultObject)
-//                            self.replaceMediaObject(withObject: resultObject)
-                            
                             switch resultObject {
                             case is OddVideo :
                                 videoResults.append(resultObject as! OddVideo)
@@ -713,14 +710,23 @@ enum OddFeatureType {
     }
     
     public func replaceMediaObject(withObject object: OddMediaObject) {
+        OddLogger.debug("=============================================================")
+        OddLogger.debug("START MediaObjects Count: \(self.mediaObjects.count)")
         let existing = self.mediaObjects.filter { (existingObject) -> Bool in
             return existingObject.id == object.id
         }
         if existing.first != nil {
+            let oType = existing.first!.mediaObjectType == nil ? "unknown type" : existing.first!.mediaObjectType!.toString()
+            OddLogger.debug("Removing \(oType) \(existing.first!.title!) - \(existing.first!.id!)")
             self.mediaObjects.remove(existing.first!)
         }
         
+        let oType = object.mediaObjectType == nil ? "unknown type" : object.mediaObjectType!.toString()
+        OddLogger.debug("Adding \(oType) \(object.title!) - \(object.id!)")
+        
         self.mediaObjects.insert(object)
+        
+        OddLogger.debug("END MediaObjects Count: \(self.mediaObjects.count)")
     }
     
 }
