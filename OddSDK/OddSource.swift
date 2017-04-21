@@ -27,6 +27,10 @@ public struct OddSource {
   
   /// An optional value with the maximum bitrate for the stream
   public var maxBitrate: Int?
+    
+  public var sourceType: String?
+    
+  public var broadcasting: Bool = true
   
   public static func sourceFromJson(_ json: jsonObject) -> OddSource? {
     guard let url       = json["url"] as? String,
@@ -34,13 +38,15 @@ public struct OddSource {
         return nil
     }
     
-    let mimeType  = json["mimeType"] as? String
-    let container = json["container"] as? String
-    let width     = json["width"] as? Int
-    let height    = json["height"] as? Int
-    let maxBitrate = json["maxBitrate"] as? Int
+    let mimeType        = json["mimeType"] as? String
+    let container       = json["container"] as? String
+    let width           = json["width"] as? Int
+    let height          = json["height"] as? Int
+    let maxBitrate      = json["maxBitrate"] as? Int
+    let sourceType      = json["sourceType"] as? String
+    let broadcasting    = json["broadcasting"] as! Bool
     
     
-    return OddSource(url: url, container: container, mimeType: mimeType, width: width, height: height, label: label, maxBitrate: maxBitrate)
+    return OddSource(url: url, container: container, mimeType: mimeType, width: width, height: height, label: label, maxBitrate: maxBitrate, sourceType: sourceType, broadcasting: broadcasting)
   }
 }

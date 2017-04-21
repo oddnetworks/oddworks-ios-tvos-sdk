@@ -175,10 +175,16 @@ import UIKit
   public var urlString: String? {
     get {
 //      guard let source = sources?[0] else { return nil }
-      guard let sourceUrl = bestSourceURL()  else { return nil }
+      guard let sourceUrl = bestSource()?.url  else { return nil }
       return sourceUrl
     }
   }
+
+    public var optimalSource: OddSource? {
+        get {
+            return bestSource()
+        }
+    }
   
   /// A URL string to load this media object via API
   public var link: String?
@@ -723,7 +729,8 @@ import UIKit
     }
   }
   
-  func bestSourceURL() -> String? {
+//  func bestSourceURL() -> String? {
+  func bestSource() -> OddSource? {
     
     func bestBitrateSource(fromSources sources: [OddSource]) -> OddSource? {
       if sources.isEmpty { return nil }
@@ -747,8 +754,7 @@ import UIKit
     
     if sources.count == 1 {
       guard let source = sources.first else { return nil }
-        let url = source.url
-      return url
+      return source
     }
     
     let hlsSources = sources.filter {$0.container?.uppercased() == "M2TS"}
@@ -756,10 +762,10 @@ import UIKit
     
     if !hlsSources.isEmpty {
       guard let result = bestBitrateSource(fromSources: hlsSources) else { return nil }
-      return result.url
+      return result
     } else if !mp4Sources.isEmpty {
       guard let result = bestBitrateSource(fromSources: mp4Sources) else { return nil }
-      return result.url
+      return result
     }
     return nil
   }

@@ -152,4 +152,8 @@ import UIKit
     }
 
   }
+    
+    public func canPlay() -> Bool {
+        return !(self.optimalSource?.sourceType == "linear" && self.optimalSource?.broadcasting == false)
+    }
 }
