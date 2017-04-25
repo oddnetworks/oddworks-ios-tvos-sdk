@@ -35,6 +35,8 @@
 		130AA71B1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
 		130AA71C1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
 		130AA71D1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */; };
+		132081C01EAF9ABD00F258E6 /* OddActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132081BF1EAF9ABD00F258E6 /* OddActivityViewController.swift */; };
+		132081C11EAF9C8600F258E6 /* OddActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132081BF1EAF9ABD00F258E6 /* OddActivityViewController.swift */; };
 		1328908A1DC133D400F31614 /* OddViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132890891DC133D400F31614 /* OddViewer.swift */; };
 		1328908F1DC1343000F31614 /* OddViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132890891DC133D400F31614 /* OddViewer.swift */; };
 		132890901DC1343500F31614 /* OddViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132890891DC133D400F31614 /* OddViewer.swift */; };
@@ -169,6 +171,7 @@
 
 /* Begin PBXFileReference section */
 		130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddGateKeeper.swift; sourceTree = "<group>"; };
+		132081BF1EAF9ABD00F258E6 /* OddActivityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddActivityViewController.swift; sourceTree = "<group>"; };
 		132890891DC133D400F31614 /* OddViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddViewer.swift; sourceTree = "<group>"; };
 		134386601C3D574C0042CCC8 /* OddLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddLogger.swift; sourceTree = "<group>"; };
 		134797791C51424800876D39 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
@@ -325,6 +328,7 @@
 			isa = PBXGroup;
 			children = (
 				135E68841C2460BA00A0A602 /* OddContentStore.swift */,
+				132081BF1EAF9ABD00F258E6 /* OddActivityViewController.swift */,
 				135E68851C2460BA00A0A602 /* OddEvent.swift */,
 				135E68861C2460BA00A0A602 /* OddArticle.swift */,
 				135E68871C2460BA00A0A602 /* OddConfig.swift */,
@@ -700,6 +704,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				132081C01EAF9ABD00F258E6 /* OddActivityViewController.swift in Sources */,
 				135E68B81C24611800A0A602 /* Array+Bounds.swift in Sources */,
 				135E68AF1C24611800A0A602 /* CMTimeExtension.swift in Sources */,
 				1347977A1C51424800876D39 /* Keychain.swift in Sources */,
@@ -750,6 +755,7 @@
 				1347977B1C51424800876D39 /* Keychain.swift in Sources */,
 				134386621C3D574C0042CCC8 /* OddLogger.swift in Sources */,
 				1382F1A71D906586009F0344 /* OddSource.swift in Sources */,
+				132081C11EAF9C8600F258E6 /* OddActivityViewController.swift in Sources */,
 				13BA17E41D525AC7001733C1 /* OddImage.swift in Sources */,
 				138733751D5CF8B00014B6E0 /* UIApplication+TopVC.swift in Sources */,
 				13B9F4FF1C3AD35500AC04B1 /* UIViewController+TitleImage.swift in Sources */,

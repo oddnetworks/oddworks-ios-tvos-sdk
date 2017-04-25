@@ -85,7 +85,6 @@ public class OddLogger: NSObject {
     DispatchQueue.main.async {
         topVC.present(alert, animated: true, completion: { /*print("presented alert")*/ })
     }
-    
   }
   
   
