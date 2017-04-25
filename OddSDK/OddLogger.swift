@@ -74,12 +74,12 @@ public class OddLogger: NSObject {
   
     
   // grabs the topmost viewController and presents an alert dialog to the user
-  public static func showAlert(withTitle title: String, message: String, kind: OddLogLevel? = nil) {
+    public static func showAlert(withTitle title: String, message: String, kind: OddLogLevel? = nil, onOK: (()->Void)?) {
     let decoratedTitle = kind != nil ? "\(kind!.glyph()) \(title)" : title
     guard let topVC = UIApplication.topViewController() else { return }
     let alert = UIAlertController(title: decoratedTitle, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action) in
-        
+        onOK?()
     })
     alert.addAction(okAction)
     DispatchQueue.main.async {
@@ -91,7 +91,7 @@ public class OddLogger: NSObject {
   
   //ERRORS
   public static func showErrorAlert(error: String) {
-    OddLogger.showAlert(withTitle: "Error", message: error, kind: .error)
+    OddLogger.showAlert(withTitle: "Error", message: error, kind: .error, onOK: nil)
   }
   
   public static func logAndDisplayError(error: String) {
@@ -101,7 +101,7 @@ public class OddLogger: NSObject {
 
   //WARNINGS
   public static func showWarningAlert(warning: String) {
-    OddLogger.showAlert(withTitle: "Warning", message: warning, kind: .warn)
+    OddLogger.showAlert(withTitle: "Warning", message: warning, kind: .warn, onOK: nil)
   }
   
   public static func logAndDisplayWarning(warning: String) {
@@ -111,7 +111,7 @@ public class OddLogger: NSObject {
   
   //INFO
   public static func showInfoAlert(info: String) {
-    OddLogger.showAlert(withTitle: "Information", message: info, kind: .info)
+    OddLogger.showAlert(withTitle: "Information", message: info, kind: .info, onOK: nil)
   }
   
   public static func logAndDisplayInfo(info: String) {
@@ -121,7 +121,7 @@ public class OddLogger: NSObject {
   
   //DEBUG
   public static func showDebugAlert(debug: String) {
-    OddLogger.showAlert(withTitle: "Debug", message: debug, kind: .debug)
+    OddLogger.showAlert(withTitle: "Debug", message: debug, kind: .debug, onOK: nil)
   }
   
   public static func logAndDisplayDebug(debug: String) {
