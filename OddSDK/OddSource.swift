@@ -30,7 +30,7 @@ public struct OddSource {
     
   public var sourceType: String?
     
-  public var broadcasting: Bool = true
+  public var broadcasting: Bool? = true
   
   public static func sourceFromJson(_ json: jsonObject) -> OddSource? {
     guard let url       = json["url"] as? String,
@@ -44,7 +44,7 @@ public struct OddSource {
     let height          = json["height"] as? Int
     let maxBitrate      = json["maxBitrate"] as? Int
     let sourceType      = json["sourceType"] as? String
-    let broadcasting    = json["broadcasting"] as! Bool
+    let broadcasting    = json["broadcasting"] as? Bool
     
     
     return OddSource(url: url, container: container, mimeType: mimeType, width: width, height: height, label: label, maxBitrate: maxBitrate, sourceType: sourceType, broadcasting: broadcasting)

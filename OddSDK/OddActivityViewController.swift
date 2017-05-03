@@ -55,7 +55,9 @@ private class ActivityView: UIView {
         activityIndicatorView.startAnimating()
         
         messageLabel.text = message
-        messageLabel.font = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
+        // this might need a rework?
+        let font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.caption1)
+        messageLabel.font = UIFont.boldSystemFont(ofSize: font.pointSize)
         messageLabel.textColor = UIColor.white
         messageLabel.textAlignment = .center
         messageLabel.shadowColor = UIColor.black
