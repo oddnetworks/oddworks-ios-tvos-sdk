@@ -846,5 +846,17 @@ import UIKit
         }
     }
 
-  
+    public func releaseDateToLocalTimeString() -> String {
+        guard let releaseDate = self.releaseDate else { return "Not set" }
+        print("RELEASED: \(releaseDate)")
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        if let date = dateFormatter.date(from:releaseDate) {
+            dateFormatter.dateFormat = "MMM d, yyyy h:mm a"
+            let prefix = date > Date() ? "Airs: " : "Released: "
+            return "\(prefix) \(dateFormatter.string(from:date))"
+        } else {
+            return "Not set"
+        }
+    }
 }
