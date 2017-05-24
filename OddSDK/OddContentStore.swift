@@ -72,7 +72,7 @@ public typealias jsonArray = Array<jsonObject>
 ///
 /// For example featured content would be displayed on the first
 /// screen visible when the app launches
-@objc public class OddContentStore: NSObject {
+@objc open class OddContentStore: NSObject {
   
   /// A generic method to locate an `OddMediaObject` of a given type from the
   /// stored objects
@@ -84,7 +84,7 @@ public typealias jsonArray = Array<jsonObject>
   ///    storedMediaObjectWithId( "999", OddVideo() )
   /// ```
   /// - returns: the media object found or nil
-  func storedMediaObjectWithId<T>(idToFind: String?, mediaType: T) -> T? {
+  func storedMediaObjectWithId<T>(_ idToFind: String?, mediaType: T) -> T? {
     if let id = idToFind {
       return mediaObjects.filter({ (mediaObject) -> Bool in
         return mediaObject.id == id && mediaObject is T
@@ -104,7 +104,7 @@ public typealias jsonArray = Array<jsonObject>
   ///    storedMediaObjectsWithId( ["777", "888", "999"], OddVideo() )
   /// ```
   /// - returns: an `Array` of the media objects found or nil
-  func storedMediaObjectsWithIds<T>(idsToFind: Array<String>?, mediaType: T) -> Array<T>? {
+  func storedMediaObjectsWithIds<T>(_ idsToFind: Array<String>?, mediaType: T) -> Array<T>? {
     var collections: Array<T> = Array()
     idsToFind?.forEach({ (id) -> () in
       if let foundObject = storedMediaObjectWithId( id, mediaType: mediaType ) {
@@ -118,23 +118,23 @@ public typealias jsonArray = Array<jsonObject>
   /// A singleton instance of the `OddContentStore`
   /// in order to keep only one instance of the content library loaded all 
   /// access to the media objects should be made through this singleton instance
-  static public let sharedStore = OddContentStore()
+  static open let sharedStore = OddContentStore()
   
   /// The master collection of `OddMediaObject`s
   /// any object loaded from the server is stored in this `Set`
-  public var mediaObjects: Set<OddMediaObject> = Set()
+  open var mediaObjects: Set<OddMediaObject> = Set()
   
   /// A `singleton` instance of our API client used to communicate with the server
   /// and parse responses and/or errors
   /// publicly accessible via the SDK. Client applications will need to set the
   /// `authToken` instance variable on `API` before using the SDK
-  public var API = APIService.sharedService
+  open var API = APIService.sharedService
   
   /// The the client app organization. A string identifying the app in metric logs
 //  public var organizationId = "organizationID_not_configured"
   
   /// The applications configurable settings as loaded from the server
-  public var config: OddConfig?
+  open var config: OddConfig?
   
   /// Temporary object to hold to json response data during the parsing process
   var responseData: jsonObject?
@@ -148,7 +148,7 @@ public typealias jsonArray = Array<jsonObject>
   var featuredPromotionId: String?
   
   /// The featured `OddPromotion` object to be displayed by client applications
-  public var featuredPromotion: OddPromotion? {
+  open var featuredPromotion: OddPromotion? {
     get {
       return storedMediaObjectWithId( featuredPromotionId, mediaType: OddPromotion() )
     }
@@ -161,7 +161,7 @@ public typealias jsonArray = Array<jsonObject>
   var featuredMediaObjectId: String?
   
   /// The featured `OddMediaObject` to be displayed by client applications
-  public var featuredMediaObject: OddMediaObject? {
+  open var featuredMediaObject: OddMediaObject? {
     get {
       return storedMediaObjectWithId( featuredMediaObjectId, mediaType: OddMediaObject() )
     }
@@ -174,7 +174,7 @@ public typealias jsonArray = Array<jsonObject>
   var featuredCollectionIds: Array<String>?
   
   /// The featured `OddMediaCollections` to be displayed by client applications
-  public var featuredCollections: Array<OddMediaObjectCollection>? {
+  open var featuredCollections: Array<OddMediaObjectCollection>? {
     get {
       return storedMediaObjectsWithIds(featuredCollectionIds, mediaType: OddMediaObjectCollection() )
     }
@@ -182,7 +182,7 @@ public typealias jsonArray = Array<jsonObject>
   
   /// Determines whether objects in the object store can expire based
   /// on a cache time to live set via HTTP header from server responses
-  public var useCacheTTL: Bool = true
+  open var useCacheTTL: Bool = true
   /// when fetched
 
   #if os(iOS)
@@ -192,7 +192,7 @@ public typealias jsonArray = Array<jsonObject>
   var articleIds: Array<String>?
   
   // The `Array` of `OddArticles` stored in the media objects store
-  public var articles: Array<OddArticle>? {
+  open var articles: Array<OddArticle>? {
     get {
       return storedMediaObjectsWithIds(articleIds, mediaType: OddArticle() )
     }
@@ -204,7 +204,7 @@ public typealias jsonArray = Array<jsonObject>
   var eventIds: Array<String>?
   
   // The `Array` of `OddEvents` stored in the media objects store
-  public var events: Array<OddEvent>? {
+  open var events: Array<OddEvent>? {
     get {
       return storedMediaObjectsWithIds(eventIds, mediaType: OddEvent() )
     }
@@ -216,7 +216,7 @@ public typealias jsonArray = Array<jsonObject>
   var externalIds: Array<String>?
   
   // The `Array` of `OddExternals` stored in the media objects store
-  public var externals: Array<OddExternal>? {
+  open var externals: Array<OddExternal>? {
     get {
       return storedMediaObjectsWithIds(externalIds, mediaType: OddExternal() )
     }
@@ -228,7 +228,7 @@ public typealias jsonArray = Array<jsonObject>
   var menuItemIds: Array<String>?
   
     // The `Array` of `OddMediabjects` in the menu stored in the media objects store
-  public var menuItems: Array<OddMediaObject>? {
+  open var menuItems: Array<OddMediaObject>? {
     return storedMediaObjectsWithIds(menuItemIds, mediaType: OddMediaObject())
   }
   
@@ -243,7 +243,7 @@ public typealias jsonArray = Array<jsonObject>
   var homeMenu: OddMenu = OddMenu()
   #endif
   
-  var imageCache = NSCache()
+  var imageCache = NSCache<AnyObject, AnyObject>()
   
 
   /// Determines which view should be fetched via API.
@@ -269,7 +269,7 @@ public typealias jsonArray = Array<jsonObject>
   /// initial load of the `OddConfig`, the home view and any related media objects
   var initialDataLoadComplete = false
   
-  func showVersionInfo(beta beta: Bool = false) {
+  func showVersionInfo(beta: Bool = false) {
     
     var platform = "iOS"
     #if tvOS
@@ -288,7 +288,7 @@ public typealias jsonArray = Array<jsonObject>
   /// OddContentStore instance will contain an instance of OddConfig. If the loading of the
   /// config is successful this method will call `fetchViewInfo()` to begin loading the home 
   /// view and associated objects
-  public func initialize() {
+  open func initialize() {
     #if BETA
       showVersionInfo(beta: true)
     #else
@@ -303,7 +303,7 @@ public typealias jsonArray = Array<jsonObject>
     }
   }
   
-  public func resetStore() {
+  open func resetStore() {
     // yes we could do the following:
     // OddContentStore.sharedStore = OddContentStore()
     // but that would require changing our singleton instance to a var
@@ -333,12 +333,12 @@ public typealias jsonArray = Array<jsonObject>
   ///
   /// Callback will be executed with the config instance or nil
   /// depending on the success of the loading call
-  func fetchConfig( callback: (OddConfig?) -> Void ) {
+  func fetchConfig( _ callback: @escaping (OddConfig?) -> Void ) {
     OddLogger.info("FETCHING CONFIG")
     API.get( nil, url: "config") { ( response, error ) -> () in
       if let e = error {
         OddLogger.error("Error fetching config: \(e.localizedDescription)")
-        NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddErrorFetchingConfigNotification, object: self, userInfo: nil)
+        NotificationCenter.default.post(name: OddConstants.OddErrorFetchingConfigNotification, object: self, userInfo: nil)
         callback(nil)
       } else {
         if let json = response as? Dictionary<String, AnyObject> {
@@ -382,12 +382,12 @@ public typealias jsonArray = Array<jsonObject>
       self.API.get( nil, url: "views/\(viewId)?include=4") { (response, error) -> () in
         if error != nil {
           OddLogger.error("Error fetching view: \(viewId)")
-          NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddErrorFetchingHomeViewNotification, object: self, userInfo: nil)
+          NotificationCenter.default.post(name: OddConstants.OddErrorFetchingHomeViewNotification, object: self, userInfo: nil)
         } else {
           OddLogger.info("Fetched View Info building object graph...")
           if let json = response as? jsonObject,
-            data = json["data"] as? jsonObject,
-            included = json["included"] as? Array<jsonObject> {
+            let data = json["data"] as? jsonObject,
+            let included = json["included"] as? Array<jsonObject> {
 //              OddLogger.info("JSON: \(json)")
 //                              OddLogger.info("VIEW DATA: \(data)")
               self.responseData = data
@@ -414,18 +414,18 @@ public typealias jsonArray = Array<jsonObject>
   ///
   /// Note: Currently this is not backed completely by server data. Requires
   /// further server side implementation
-  func loadMenuView( callback: (Bool) -> () ) {
+  func loadMenuView( _ callback: @escaping (Bool) -> () ) {
     #if os(iOS)
     if let viewId = self.config?.menuViewId {
       API.get(nil, url: "views/\(viewId)?include=2") { (response, error) -> () in
         if error != nil {
           OddLogger.error("Error fetching menu view: \(viewId)")
-          NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddErrorFetchingMenuViewNotification, object: self, userInfo: nil)
+          NotificationCenter.default.post(name: OddConstants.OddErrorFetchingMenuViewNotification, object: self, userInfo: nil)
         } else {
           OddLogger.info("Fetched Menu View Info building object graph...")
           if let json = response as? jsonObject,
-            data = json["data"] as? jsonObject,
-            included = json["included"] as? Array<jsonObject> {
+            let data = json["data"] as? jsonObject,
+            let included = json["included"] as? Array<jsonObject> {
               OddLogger.info("menu data: \(data)")
               self.responseData = data
               self.included = included
@@ -478,7 +478,7 @@ public typealias jsonArray = Array<jsonObject>
     }
     
     initialDataLoadComplete = true
-    NSNotificationCenter.defaultCenter().postNotification( NSNotification(name: OddConstants.OddContentStoreCompletedInitialLoadNotification, object: self) )
+    NotificationCenter.default.post( Notification(name: OddConstants.OddContentStoreCompletedInitialLoadNotification, object: self) )
     OddLogger.info( "\( self.mediaObjectInfo() )")
   }
   
@@ -487,17 +487,17 @@ public typealias jsonArray = Array<jsonObject>
   /// Upon success an OddFeaturedMediaObjectLoadedNotification is posted
   ///
   /// - parameter json: `jsonObject` a `jsonObject` containing the data to be parsed
-  func buildFeaturedMediaObject(json: jsonObject) {
+  func buildFeaturedMediaObject(_ json: jsonObject) {
     if let featuredMediaObject = json["featuredMedia"] as? jsonObject {
       if let data = featuredMediaObject["data"] as? jsonObject {
         if let itemId = data["id"] as? String,
-          itemType = data["type"] as? String {
+          let itemType = data["type"] as? String {
             if let newObjectJson = findJsonObjectOfType(itemType, id: itemId) {
               let result = objectFromJson(newObjectJson)
               if let object = result.object {
                 self.featuredMediaObjectId = itemId
                 self.mediaObjects.insert(object)
-                NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedMediaObjectLoadedNotification, object: self ) )
+                NotificationCenter.default.post(Notification(name: OddConstants.OddFeaturedMediaObjectLoadedNotification, object: self ) )
               }
             } // newObjectJson
         } // itemId
@@ -534,16 +534,16 @@ public typealias jsonArray = Array<jsonObject>
   ///
   /// Note: The server may return the featuredCollections as either an array of collections
   /// or a single collection. We handle both
-  func buildFeaturedCollections(json: jsonObject) {
+  func buildFeaturedCollections(_ json: jsonObject) {
     
-    func buildObjects(data: jsonObject) {
+    func buildObjects(_ data: jsonObject) {
       if let itemId = data["id"] as? String,
-        itemType = data["type"] as? String {
+        let itemType = data["type"] as? String {
           if let newObjectJson = findJsonObjectOfType(itemType, id: itemId) {
             let result = objectFromJson(newObjectJson)
             
             if let mediaObjectCollection = result.object as? OddMediaObjectCollection,
-              id = mediaObjectCollection.id {
+              let id = mediaObjectCollection.id {
                 self.featuredCollectionIds?.append(id)
                 self.mediaObjects.insert(mediaObjectCollection)
             }
@@ -565,8 +565,8 @@ public typealias jsonArray = Array<jsonObject>
       
     } // featured collections
     
-    NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedCollectionsLoadedNotification, object: self ) )
-    OddLogger.info("Created \(self.featuredCollectionIds?.count) featured collections")
+    NotificationCenter.default.post(Notification(name: OddConstants.OddFeaturedCollectionsLoadedNotification, object: self ) )
+    OddLogger.info("Created \(String(describing: self.featuredCollectionIds?.count)) featured collections")
   }
   
   /// Builds the `featuredPromotion` for the current view
@@ -574,19 +574,19 @@ public typealias jsonArray = Array<jsonObject>
   /// Upon success, posts an OddFeaturedPromotionLoadedNotification
   ///
   /// - parameter json: `jsonObject` a `jsonObject` containing the data to be parsed
-  func buildFeaturedPromotion(json: jsonObject) {
+  func buildFeaturedPromotion(_ json: jsonObject) {
     if let featuredPromo = json["promotion"] as? jsonObject,
-      data = featuredPromo["data"] as? jsonObject,
-      promoId = data["id"] as? String {
+      let data = featuredPromo["data"] as? jsonObject,
+      let promoId = data["id"] as? String {
         if let promoJson = findJsonObjectOfType("promotion", id: promoId) {
           let newPromo = OddPromotion.promotionFromJson(promoJson)
-          if let meta = featuredPromo["meta"], promoTimer = meta["displayDuration"] as? Double {
+          if let meta = featuredPromo["meta"], let promoTimer = meta["displayDuration"] as? Double {
             newPromo.timer = promoTimer
           }
         
           self.mediaObjects.insert(newPromo)
           self.featuredPromotionId = promoId
-          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddFeaturedPromotionLoadedNotification, object: self ) )
+          NotificationCenter.default.post(Notification(name: OddConstants.OddFeaturedPromotionLoadedNotification, object: self ) )
         }
     } else {
       self.featuredPromotionId = nil
@@ -600,12 +600,12 @@ public typealias jsonArray = Array<jsonObject>
   /// Upon completion, an OddIncludedMediaItemsLoadedNotification is posted
   ///
   /// - parameter json: `jsonObject` a `jsonObject` containing the data to be parsed
-  func buildIncludedMediaObjects(json: Array<jsonObject>) {
+  func buildIncludedMediaObjects(_ json: Array<jsonObject>) {
 
     json.forEach { (includedMediaObject) -> () in
       buildObjectFromJson(includedMediaObject)
     }
-    NSNotificationCenter.defaultCenter().postNotification( NSNotification(name: OddConstants.OddIncludedMediaItemsLoadedNotification, object: self) )
+    NotificationCenter.default.post( Notification(name: OddConstants.OddIncludedMediaItemsLoadedNotification, object: self) )
   }
   
   #if os(iOS)
@@ -616,7 +616,7 @@ public typealias jsonArray = Array<jsonObject>
   /// Server needs to provide these as specific types in order to 
   /// add support for this in our `objectFromJson()` method
   /// Currently only suppored for iOS apps. No tvOS support
-  func buildIncludedMenuMediaObjects(json: Array<jsonObject>) {
+  func buildIncludedMenuMediaObjects(_ json: Array<jsonObject>) {
     self.eventIds = Array()
     self.articleIds = Array()
     self.menuItemIds = Array()
@@ -627,17 +627,17 @@ public typealias jsonArray = Array<jsonObject>
       buildObjectFromJson(includedMediaObject)
     }
     
-    OddLogger.info("Built \(self.eventIds?.count) events")
-    OddLogger.info("Built \(self.articleIds?.count) articles")
-    OddLogger.info("Built \(self.menuItemIds?.count) Menu Items")
-    OddLogger.info("Built \(self.externalIds?.count) externals")
+    OddLogger.info("Built \(String(describing: self.eventIds?.count)) events")
+    OddLogger.info("Built \(String(describing: self.articleIds?.count)) articles")
+    OddLogger.info("Built \(String(describing: self.menuItemIds?.count)) Menu Items")
+    OddLogger.info("Built \(String(describing: self.externalIds?.count)) externals")
   }
   #endif
   
   //MARK: Menu
   #if os(iOS)
   // this will be moved to menuItem.swift once menu is in the API data
-  func buildDefaultMenu(callback: (Bool) -> () ) {
+  func buildDefaultMenu(_ callback: (Bool) -> () ) {
     self.homeMenu = OddMenu()
     let search = OddMenuItem(title: "Search", type: .Search, objectId: nil)
     let home = OddMenuItem(title: "Home", type: .Home, objectId: nil)
@@ -655,14 +655,14 @@ public typealias jsonArray = Array<jsonObject>
   ///
   /// Note: A work in progress. Needs additional server side support
   /// Currently only suppored for iOS apps. No tvOS support
-  func buildMenu(json: jsonObject, callback: (Bool) -> Void ) {
+  func buildMenu(_ json: jsonObject, callback: (Bool) -> Void ) {
     if let included = self.included {
       buildIncludedMenuMediaObjects(included)
     }
     
     
     //USED
-    if let relationships = json["relationships"] as? jsonObject, items = relationships["items"] as? jsonObject, data = items["data"] as? Array<jsonObject> {
+    if let relationships = json["relationships"] as? jsonObject, let items = relationships["items"] as? jsonObject, let data = items["data"] as? Array<jsonObject> {
       for item in data {
         if let id = item["id"] as? String {
           self.menuItemIds?.append(id)
@@ -673,7 +673,7 @@ public typealias jsonArray = Array<jsonObject>
     
     //OLD CODE
     self.homeMenu = OddMenu()
-    buildMenuItems(json)
+    let _ = buildMenuItems(json)
 
     let search = OddMenuItem(title: "Search", type: .Search, objectId: nil)
     let home = OddMenuItem(title: "Home", type: .Home, objectId: nil)
@@ -693,11 +693,11 @@ public typealias jsonArray = Array<jsonObject>
   ///
   /// Note: A work in progress. Needs additional server side support
   /// Currently only suppored for iOS apps. No tvOS support
-  func buildMenuItems(json: jsonObject) -> Array<OddMenuItem> {
+  func buildMenuItems(_ json: jsonObject) -> Array<OddMenuItem> {
     var itemArray: Array<OddMenuItem> = []
-    if let relationships = json["relationships"] as? jsonObject, items = relationships["items"] as? jsonObject, data = items["data"] as? Array<jsonObject> {
+    if let relationships = json["relationships"] as? jsonObject, let items = relationships["items"] as? jsonObject, let data = items["data"] as? Array<jsonObject> {
       for item in data {
-        if let id = item["id"] as? String, type = item["type"] as? String {
+        if let id = item["id"] as? String, let type = item["type"] as? String {
           //NO, need to search included
           if type != "view" {
             if let object = self.findJsonObjectOfType(type, id: id) {
@@ -725,16 +725,16 @@ public typealias jsonArray = Array<jsonObject>
   /// Note: Currently only builds `OddVideo` and `OddMediaObjectCollection` objects
   /// 
   /// See also: `buildObjectFromJson( json: jsonObject )`
-  func objectFromJson( json: jsonObject ) -> ( object: OddMediaObject?, type: OddMediaObjectType? ) {
+  func objectFromJson( _ json: jsonObject ) -> ( object: OddMediaObject?, type: OddMediaObjectType? ) {
     var mediaObject: AnyObject?
   
     guard let type = json["type"] as? String,
       let mediaObjectType = OddMediaObjectType.fromString(type) else { return (nil, nil) }
     
       switch mediaObjectType {
-      case .LiveStream, .Video:
+      case .liveStream, .video:
         mediaObject = OddVideo.videoFromJson(json)
-      case .Collection :
+      case .collection :
         mediaObject = OddMediaObjectCollection.mediaCollectionFromJson( json )
       default :
         break
@@ -743,7 +743,7 @@ public typealias jsonArray = Array<jsonObject>
     if let mediaObject = mediaObject as? OddMediaObject {
       if mediaObject.cacheTime == nil {
         if let response = self.responseData,
-          globalCacheTime = response["cacheTime"] as? Int {
+          let globalCacheTime = response["cacheTime"] as? Int {
             mediaObject.cacheTime = globalCacheTime
         }
       }
@@ -765,7 +765,7 @@ public typealias jsonArray = Array<jsonObject>
   /// - parameter json: `jsonObject` a `jsonObject` containing the data to be parsed
   ///
   /// See also: `objectFromJson( json: jsonObject ) -> ( object: AnyObject?, type: String? )`
-  func buildObjectFromJson( json: jsonObject ) {
+  func buildObjectFromJson( _ json: jsonObject ) {
     if let type = json["type"] as? String {
 //      guard let mediaObjectType = OddMediaObjectType(rawValue: type) else { return }
       guard let mediaObjectType = OddMediaObjectType.fromString(type) else { return }
@@ -783,17 +783,17 @@ public typealias jsonArray = Array<jsonObject>
         }
       #else
       switch mediaObjectType {
-      case .Video, .LiveStream :
+      case .video, .liveStream :
         mediaObject = OddVideo.videoFromJson(json)
-      case .Promotion :
+      case .promotion :
         mediaObject = OddPromotion.promotionFromJson(json)
-      case .Collection :
+      case .collection :
         mediaObject = OddMediaObjectCollection.mediaCollectionFromJson(json)
-      case .Article :
+      case .article :
         mediaObject = OddArticle.articleFromJson( json )
-      case .Event :
+      case .event :
         mediaObject = OddEvent.eventFromJson( json)
-      case .External :
+      case .external :
         mediaObject = OddExternal.externalFromJson( json)
       }
       #endif
@@ -801,7 +801,7 @@ public typealias jsonArray = Array<jsonObject>
       if let mediaObject = mediaObject {
         if mediaObject.cacheTime == nil {
           if let response = self.responseData,
-            globalCacheTime = response["cacheTime"] as? Int {
+            let globalCacheTime = response["cacheTime"] as? Int {
               mediaObject.cacheTime = globalCacheTime
           }
         }
@@ -822,11 +822,11 @@ public typealias jsonArray = Array<jsonObject>
   /// - parameter id: The id of the item to find
   ///
   /// - returns: jsonObject? The media object found or nil if none is found
-  func findJsonObjectOfType(type: String, id: String) -> jsonObject? {
+  func findJsonObjectOfType(_ type: String, id: String) -> jsonObject? {
     if let included = self.included {
       for include: jsonObject in included {
         if let type = include["type"] as? String,
-          anId = include["id"] as? String {
+          let anId = include["id"] as? String {
             if type == type && anId == id {
               return include
             }
@@ -848,7 +848,7 @@ public typealias jsonArray = Array<jsonObject>
   /// Note: Objects are first looked for in the local cache (`mediaObjects`) if no matching object is
   /// found in the cache the server will be polled for a matching object. If no objects
   /// are found an empty `array` is returned
-  public func objectsOfType( type: OddMediaObjectType, ids : Array<String>, callback: (Array<OddMediaObject>) ->Void )  {
+  open func objectsOfType( _ type: OddMediaObjectType, ids : Array<String>, callback: @escaping (Array<OddMediaObject>) ->Void )  {
     
     if self.mediaObjects.isEmpty {
       fetchObjectsOfType(type, ids: ids, callback: { (objects) -> () in
@@ -900,20 +900,20 @@ public typealias jsonArray = Array<jsonObject>
   /// 
   /// See also: `fetchObjectsOfType ( type: String, ids: Array<String>, callback: ( Array<AnyObject> ) -> Void )`
   /// to fetch multiple objects of a given type
-  public func fetchObjectType( type: OddMediaObjectType, id: String, callback: ( OddMediaObject? ) -> Void ) {
+  open func fetchObjectType( _ type: OddMediaObjectType, id: String, callback: @escaping ( OddMediaObject? ) -> Void ) {
     API.get(nil , url: "\(type.toString() )s/\(id)") { (response, error) -> () in
       if error != nil {
         OddLogger.error("Error fetching \(type): \(id)")
         callback(nil)
       } else {
         if let json = response as? jsonObject,
-          data = json["data"] as? jsonObject {
+          let data = json["data"] as? jsonObject {
             switch type {
-            case .Video:
+            case .video:
               let video = OddVideo.videoFromJson(data)
               self.mediaObjects.insert(video)
               callback(video)
-            case .Collection:
+            case .collection:
               let collection = OddMediaObjectCollection.mediaCollectionFromJson(data)
               self.mediaObjects.insert(collection)
               callback(collection)
@@ -934,14 +934,14 @@ public typealias jsonArray = Array<jsonObject>
   /// - parameter callback: `( Array<OddMediaObject> ) -> Void` a callback executed once the search is complete
   /// The array passed to `callback` will either contain the entities matching the query or be empty
   /// if no entities were found
-  public func fetchObjectsWithQuery ( type: OddMediaObjectType, query: String, callback: ( Array<OddMediaObject> ) -> () ) {
+  open func fetchObjectsWithQuery ( _ type: OddMediaObjectType, query: String, callback: @escaping ( Array<OddMediaObject> ) -> () ) {
     API.get(nil, url: query) { (response, error) -> () in
       if error != nil {
         OddLogger.error("Error fetching objects with query")
         callback([])
       } else {
         guard let json = response as? jsonObject,
-          data = json["data"] as? jsonArray else { callback([]); return }
+          let data = json["data"] as? jsonArray else { callback([]); return }
         var mediaObjects: Array<OddMediaObject> = []
         for jsonObject in data {
           mediaObjects.append(type.toObject(jsonObject))
@@ -960,7 +960,7 @@ public typealias jsonArray = Array<jsonObject>
   /// - parameter callback: `( Array<OddMediaObject> ) -> Void` a callback executed once the search is complete
   /// The array passed to `callback` will either contain the entities matching the query or be empty
   /// if no entities wer found
-  public func fetchObjectsOfType ( type: OddMediaObjectType, ids: Array<String>, callback: ( Array<OddMediaObject> ) -> () ) {
+  open func fetchObjectsOfType ( _ type: OddMediaObjectType, ids: Array<String>, callback: @escaping ( Array<OddMediaObject> ) -> () ) {
     var responseArray: Array<OddMediaObject> = Array()
     
     if ids.isEmpty { callback(responseArray) }
@@ -995,7 +995,7 @@ public typealias jsonArray = Array<jsonObject>
   ///
   /// See also: `objectsOfType( type: String, ids : Array<String>, callback: (Array<AnyObject>) ->Void )`
   /// to search the cache and the Server
-  public func mediaObjectWithId(id: String) -> OddMediaObject? {
+  open func mediaObjectWithId(_ id: String) -> OddMediaObject? {
     
     if featuredMediaObject?.id == id { return featuredMediaObject }
 
@@ -1016,7 +1016,7 @@ public typealias jsonArray = Array<jsonObject>
   ///
   /// See also: `objectsOfType( type: String, ids : Array<String>, callback: (Array<AnyObject>) ->Void )`
   /// to search the cache and the Server
-  public func mediaObjectsWithIds(ids: Array<String>) -> Array<OddMediaObject>? {
+  open func mediaObjectsWithIds(_ ids: Array<String>) -> Array<OddMediaObject>? {
     var objects = Array<OddMediaObject>()
     ids.forEach { (id) -> () in
       if let obj = mediaObjectWithId(id) {
@@ -1026,15 +1026,15 @@ public typealias jsonArray = Array<jsonObject>
     return objects.count > 0 ? objects : nil
   }
   
-  public func searchForTerm(term: String, onResults: ( videos: Array<OddVideo>?, collections: Array<OddMediaObjectCollection>? ) -> Void ) {
-    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-      NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddStartedSearchNotification, object: nil))
+  open func searchForTerm(_ term: String, onResults: @escaping ( _ videos: Array<OddVideo>?, _ collections: Array<OddMediaObjectCollection>? ) -> Void ) {
+    DispatchQueue.main.async(execute: { () -> Void in
+      NotificationCenter.default.post(Notification(name: OddConstants.OddStartedSearchNotification, object: nil))
     })
     
     API.get( nil, url: "search?term=\(term)") { ( response, error ) -> () in
       if let _ = error {
         print("Error fetching search results")
-        onResults (videos: nil, collections: nil)
+        onResults (nil, nil)
       } else {
         if let json = response as? jsonObject {
           if let data = json["data"] as? Array<jsonObject> {
@@ -1046,12 +1046,12 @@ public typealias jsonArray = Array<jsonObject>
               let resultObject = self.objectFromJson(result)
               
               switch resultObject.type {
-              case .Some(.Video) :
+              case .some(.video) :
                 if let video = resultObject.object as? OddVideo {
                   self.mediaObjects.insert(video)
                   videoResults.append(video)
                 }
-              case .Some(.Collection) :
+              case .some(.collection) :
                 if let collection = resultObject.object as? OddMediaObjectCollection {
                   self.mediaObjects.insert(collection)
                   collectionResults.append(collection)
@@ -1061,7 +1061,7 @@ public typealias jsonArray = Array<jsonObject>
               }
             }
             OddLogger.info("Found \(videoResults.count) videos and \(collectionResults.count)")
-            onResults(videos: videoResults, collections: collectionResults)
+            onResults(videoResults, collectionResults)
           }
         }
       }
@@ -1079,7 +1079,7 @@ public typealias jsonArray = Array<jsonObject>
   ///     print( "\( mediaObjectInfo() )" )
   /// ```
   /// displays the `mediaStore` info to the console
-  public func mediaObjectInfo() -> String {
+  open func mediaObjectInfo() -> String {
     let videos = self.mediaObjects.filter { (obj) -> Bool in
       return obj is OddVideo
     }

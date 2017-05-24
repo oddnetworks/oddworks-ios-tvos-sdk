@@ -24,7 +24,7 @@ struct AdServiceConfiguration {
   var siteSectionId: String?
 //  var adManagerUrl: String?
   
-  mutating func configureWithJSON(json : jsonObject) {
+  mutating func configureWithJSON(_ json : jsonObject) {
     if let provider = json["provider"] as? String {
       self.provider       =  AdProvider(rawValue: provider)
       self.url            = json["url"] as? String
@@ -35,7 +35,7 @@ struct AdServiceConfiguration {
       self.siteSectionId  = json["siteSectionId"] as? String
 //      self.adManagerUrl   = json["adManagerUrl"] as? String
     } else {
-      self.provider = .None
+      self.provider = .none
     }
   }
 }
@@ -57,28 +57,28 @@ struct AnalyticsConfiguration {
       StatConfig(action: .VideoError, actionString: "video:error", enabled: true, interval: nil)
   ]
   
-  mutating func configureWithJSON(metrics: jsonObject) {
+  mutating func configureWithJSON(_ metrics: jsonObject) {
     enabledStats.removeAll()
     //appInit
-    if let videoPlay = metrics["appInit"] as? Dictionary<String, AnyObject>, actionString = videoPlay["action"] as? String, enabled = videoPlay["enabled"] as? Bool {
+    if let videoPlay = metrics["appInit"] as? Dictionary<String, AnyObject>, let actionString = videoPlay["action"] as? String, let enabled = videoPlay["enabled"] as? Bool {
       let appInitStat = StatConfig(action: .AppInit, actionString: actionString, enabled: enabled, interval: nil)
       enabledStats.append(appInitStat)
     }
     
     //viewLoad
-    if let viewLoad = metrics["viewLoad"] as? Dictionary<String, AnyObject>, actionString = viewLoad["action"] as? String, enabled = viewLoad["enabled"] as? Bool {
+    if let viewLoad = metrics["viewLoad"] as? Dictionary<String, AnyObject>, let actionString = viewLoad["action"] as? String, let enabled = viewLoad["enabled"] as? Bool {
       let viewLoadStat = StatConfig(action: .ViewLoad, actionString: actionString, enabled: enabled, interval: nil)
       enabledStats.append(viewLoadStat)
     }
     
     //videoPlay
-    if let videoPlay = metrics["videoPlay"] as? Dictionary<String, AnyObject>, actionString = videoPlay["action"] as? String, enabled = videoPlay["enabled"] as? Bool {
+    if let videoPlay = metrics["videoPlay"] as? Dictionary<String, AnyObject>, let actionString = videoPlay["action"] as? String, let enabled = videoPlay["enabled"] as? Bool {
       let videoPlayStat = StatConfig(action: .VideoPlay, actionString: actionString, enabled: enabled, interval: nil)
       enabledStats.append(videoPlayStat)
     }
     
     //videoPlaying
-    if let videoPlaying = metrics["videoPlaying"] as? Dictionary<String, AnyObject>, actionString = videoPlaying["action"] as? String, enabled = videoPlaying["enabled"] as? Bool, interval = videoPlaying["interval"] as? Double  {
+    if let videoPlaying = metrics["videoPlaying"] as? Dictionary<String, AnyObject>, let actionString = videoPlaying["action"] as? String, let enabled = videoPlaying["enabled"] as? Bool, let interval = videoPlaying["interval"] as? Double  {
       //given in milliseconds, timer takes seconds
       let convertedInterval = interval / 1000
       let videoPlayingStat = StatConfig(action: .VideoPlaying, actionString: actionString, enabled: enabled, interval: convertedInterval)
@@ -86,19 +86,19 @@ struct AnalyticsConfiguration {
     }
     
     //videoStop
-    if let videoStop = metrics["videoStop"] as? Dictionary<String, AnyObject>, actionString = videoStop["action"] as? String, enabled = videoStop["enabled"] as? Bool {
+    if let videoStop = metrics["videoStop"] as? Dictionary<String, AnyObject>, let actionString = videoStop["action"] as? String, let enabled = videoStop["enabled"] as? Bool {
       let videoStopStat = StatConfig(action: .VideoStop, actionString: actionString, enabled: enabled, interval: nil)
       enabledStats.append(videoStopStat)
     }
     
     //videoError
-    if let videoError = metrics["videoError"] as? Dictionary<String, AnyObject>, actionString = videoError["action"] as? String, enabled = videoError["enabled"] as? Bool {
+    if let videoError = metrics["videoError"] as? Dictionary<String, AnyObject>, let actionString = videoError["action"] as? String, let enabled = videoError["enabled"] as? Bool {
       let videoErrorStat = StatConfig(action: .VideoError, actionString: actionString, enabled: enabled, interval: nil)
       enabledStats.append(videoErrorStat)
     }
   }
   
-  func findEnabled(action: OddMetricAction) -> StatConfig? {
+  func findEnabled(_ action: OddMetricAction) -> StatConfig? {
     var relevantStat: StatConfig?
     enabledStats.forEach({ (stat: StatConfig) in
       if stat.action == action && stat.enabled == true {
@@ -109,7 +109,7 @@ struct AnalyticsConfiguration {
   }
 }
 
-@objc public class OddConfig: NSObject {
+@objc open class OddConfig: NSObject {
   var homeViewId: String?
   var splashViewId: String?
   var menuViewId: String?
@@ -117,9 +117,9 @@ struct AnalyticsConfiguration {
   var adManager = AdServiceConfiguration()
   var requiresAuthentication: Bool = false
   
-  class func configFromJson( json : Dictionary<String, AnyObject> ) -> OddConfig? {
+  class func configFromJson( _ json : Dictionary<String, AnyObject> ) -> OddConfig? {
     let newConfig = OddConfig()
-    if let data = json["data"] as? Dictionary<String, AnyObject>, attribs = data["attributes"] as? Dictionary<String, AnyObject>, views = attribs["views"] as? Dictionary<String, AnyObject> {
+    if let data = json["data"] as? Dictionary<String, AnyObject>, let attribs = data["attributes"] as? Dictionary<String, AnyObject>, let views = attribs["views"] as? Dictionary<String, AnyObject> {
       newConfig.homeViewId = views["homepage"] as? String
       newConfig.splashViewId = views["splash"] as? String
       newConfig.menuViewId = views["menu"] as? String

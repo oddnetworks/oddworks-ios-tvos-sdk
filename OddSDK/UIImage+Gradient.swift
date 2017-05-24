@@ -11,8 +11,8 @@ import AVFoundation
 
 
 class ImageViewWithGradient: UIImageView {
-  var edgeColor: UIColor = .clearColor()
-  var centerColor: UIColor = .blackColor()
+  var edgeColor: UIColor = .clear
+  var centerColor: UIColor = .black
   
   let myGradientLayer: CAGradientLayer = CAGradientLayer()
   
@@ -26,7 +26,7 @@ class ImageViewWithGradient: UIImageView {
     self.setup()
   }
   
-  class func initWithFrame(frame: CGRect, edgeColor: UIColor, centerColor: UIColor) -> ImageViewWithGradient {
+  class func initWithFrame(_ frame: CGRect, edgeColor: UIColor, centerColor: UIColor) -> ImageViewWithGradient {
     let ivg = ImageViewWithGradient(frame: frame)
     ivg.edgeColor = edgeColor
     ivg.centerColor = centerColor
@@ -37,13 +37,13 @@ class ImageViewWithGradient: UIImageView {
   func setup() {
     myGradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
     myGradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
-    let colors: [CGColorRef] = [
-      edgeColor.CGColor,
-      centerColor.CGColor,
-      edgeColor.CGColor
+    let colors: [CGColor] = [
+      edgeColor.cgColor,
+      centerColor.cgColor,
+      edgeColor.cgColor
     ]
     myGradientLayer.colors = colors
-    myGradientLayer.opaque = false
+    myGradientLayer.isOpaque = false
     myGradientLayer.locations = [0.0, 0.5, 1.0]
     self.layer.addSublayer(myGradientLayer)
   }

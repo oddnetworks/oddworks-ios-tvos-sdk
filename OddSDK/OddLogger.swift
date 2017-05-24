@@ -28,17 +28,17 @@ import UIKit
   }
 }
 
-public class OddLogger: NSObject {
+open class OddLogger: NSObject {
   
-  public static var tag : String = ""
+  open static var tag : String = ""
   
-  public static var logLevel: OddLogLevel = .error
+  open static var logLevel: OddLogLevel = .error
   
-  private static func formattedTag() -> String {
+  fileprivate static func formattedTag() -> String {
     return self.tag.isEmpty ? "" : "\(self.tag): "
   }
   
-  private static func log( message: String) {
+  fileprivate static func log( _ message: String) {
     if tag.isEmpty {
       print("\(logLevel.glyph()) \(message)")
     } else {
@@ -47,67 +47,67 @@ public class OddLogger: NSObject {
     
   }
   
-  public static func info(_ message: String) {
+  open static func info(_ message: String) {
     if OddLogger.logLevel.atLeast(.info)   {
       log(message)
     }
   }
   
-  public static func warn(_ message: String) {
+  open static func warn(_ message: String) {
     if OddLogger.logLevel.atLeast(.warn)  {
       log(message)
     }
   }
   
-  public static func error(_ message: String) {
+  open static func error(_ message: String) {
     log(message)
   }
   
   // grabs the topmost viewController and presents an alert dialog to the user
-  public static func showAlert(withTitle title: String, message: String, kind: OddLogLevel? = nil) {
+  open static func showAlert(withTitle title: String, message: String, kind: OddLogLevel? = nil) {
     let decoratedTitle = kind != nil ? "\(kind!.glyph()) \(title)" : title
     guard let topVC = UIApplication.topViewController() else { return }
-    let alert = UIAlertController(title: decoratedTitle, message: message, preferredStyle: .Alert)
-    let okAction = UIAlertAction(title: "OK", style: .Default, handler: { (action) in
+    let alert = UIAlertController(title: decoratedTitle, message: message, preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action) in
       alert.removeFromParentViewController()
 //      topVC.dismissViewControllerAnimated(true, completion: {
 //        
 //      })
     })
     alert.addAction(okAction)
-    dispatch_async(dispatch_get_main_queue()) { 
-      topVC.presentViewController(alert, animated: true, completion: { print("done") })  
+    DispatchQueue.main.async { 
+      topVC.present(alert, animated: true, completion: { print("done") })  
     }
     
   }
   
   
   //ERRORS
-  public static func showErrorAlert(error: String) {
+  open static func showErrorAlert(_ error: String) {
     OddLogger.showAlert(withTitle: "Error", message: error, kind: .error)
   }
   
-  public static func logAndDisplayError(error: String) {
+  open static func logAndDisplayError(_ error: String) {
     OddLogger.error(error)
     OddLogger.showErrorAlert(error)
   }
   
   //WARNINGS
-  public static func showWarningAlert(warning: String) {
+  open static func showWarningAlert(_ warning: String) {
     OddLogger.showAlert(withTitle: "Warning", message: warning, kind: .warn)
   }
   
-  public static func logAndDisplayWarning(warning: String) {
+  open static func logAndDisplayWarning(_ warning: String) {
     OddLogger.error(warning)
     OddLogger.showWarningAlert(warning)
   }
   
   //INFO
-  public static func showInfoAlert(info: String) {
+  open static func showInfoAlert(_ info: String) {
     OddLogger.showAlert(withTitle: "Information", message: info, kind: .info)
   }
   
-  public static func logAndDisplayInfo(info: String) {
+  open static func logAndDisplayInfo(_ info: String) {
     OddLogger.info(info)
     OddLogger.showInfoAlert(info)
   }

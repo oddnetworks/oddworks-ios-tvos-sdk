@@ -24,7 +24,7 @@ import UIKit
   ///
   /// - parameter cell: The cell to be configured. Cell will be of the
   /// type set in `cellReuseIdentifier`
-  func configureCell(cell: UITableViewCell)
+  func configureCell(_ cell: UITableViewCell)
   
   /// Optional method to allow the media item to initiate an action
   /// upon being selected from a table view.
@@ -33,7 +33,7 @@ import UIKit
   /// `UITableViewController` that contains the cell. Typically this
   /// is a UINavigationController. This is provided to allow the media
   /// item to push a new view controller on the stack if desired
-  optional func performActionForSelection(vc: UIViewController)
+  @objc optional func performActionForSelection(_ vc: UIViewController)
 }
 
 /// The known types of `OddMediaObject`s
@@ -53,17 +53,17 @@ import UIKit
 // for interoperability with ObjC this must be
 // an Int type with a helper to convert from string
 @objc public enum OddMediaObjectType: Int {
-  case Video
-  case LiveStream
-  case Collection
-  case Promotion
+  case video
+  case liveStream
+  case collection
+  case promotion
   #if os(iOS)
-  case Article
-  case Event
-  case External
+  case article
+  case event
+  case external
   #endif
   
-  static func fromString(str: String) -> OddMediaObjectType? {
+  static func fromString(_ str: String) -> OddMediaObjectType? {
     #if os(tvOS)
       switch str {
       case "video": return .Video
@@ -74,13 +74,13 @@ import UIKit
       }
     #else
       switch str {
-      case "video": return .Video
-      case "liveStream": return .LiveStream
-      case "collection": return .Collection
-      case "promotion": return .Promotion
-      case "article": return .Article
-      case "event": return .Event
-      case "external": return .External
+      case "video": return .video
+      case "liveStream": return .liveStream
+      case "collection": return .collection
+      case "promotion": return .promotion
+      case "article": return .article
+      case "event": return .event
+      case "external": return .external
       default: return nil
       }
     #endif
@@ -96,19 +96,19 @@ import UIKit
       }
     #else
       switch self {
-      case .Video: return "video"
-      case .LiveStream: return "liveStream"
-      case .Collection: return "collection"
-      case .Promotion: return "promotion"
-      case .Article: return "article"
-      case .Event: return "event"
-      case .External: return "external"
+      case .video: return "video"
+      case .liveStream: return "liveStream"
+      case .collection: return "collection"
+      case .promotion: return "promotion"
+      case .article: return "article"
+      case .event: return "event"
+      case .external: return "external"
       }
     #endif
     
   }
   
-  func toObject(data: jsonObject) -> OddMediaObject {
+  func toObject(_ data: jsonObject) -> OddMediaObject {
     #if os(tvOS)
       switch self {
       case .Video: return OddVideo.videoFromJson(data)
@@ -118,13 +118,13 @@ import UIKit
       }
     #else
       switch self {
-      case .Video: return OddVideo.videoFromJson(data)
-      case .LiveStream: return OddVideo.videoFromJson(data)
-      case .Collection: return OddMediaObjectCollection.mediaCollectionFromJson(data)
-      case .Promotion: return OddPromotion.promotionFromJson(data)
-      case .Article: return OddArticle.articleFromJson(data)
-      case .Event: return OddEvent.eventFromJson(data)
-      case .External: return OddExternal.externalFromJson(data)
+      case .video: return OddVideo.videoFromJson(data)
+      case .liveStream: return OddVideo.videoFromJson(data)
+      case .collection: return OddMediaObjectCollection.mediaCollectionFromJson(data)
+      case .promotion: return OddPromotion.promotionFromJson(data)
+      case .article: return OddArticle.articleFromJson(data)
+      case .event: return OddEvent.eventFromJson(data)
+      case .external: return OddExternal.externalFromJson(data)
       }
     #endif
   }
@@ -133,47 +133,47 @@ import UIKit
 /// The root object class for all media object types
 ///
 /// Provides instance variables for common fields
-@objc public class OddMediaObject: NSObject, NSCoding, DynamicMediaObject {
+@objc open class OddMediaObject: NSObject, NSCoding, DynamicMediaObject {
   
   /// The id of the media object in the database
-  public var id: String?
+  open var id: String?
   
   /// The id of the `OddMediaObject` to report to certain advertising platforms
-  public var assetId: String?
+  open var assetId: String?
   
   /// Is the user able to access this content (i.e. authorization/entitlement)
   ///
   /// Note, content is publicly accessible by default. Client applications must
   /// implement methods to check for authorization and set accordingly
-  public var accessible: Bool = true
+  open var accessible: Bool = true
   
   /// The content rating of the asset for parental control, etc
-  public var contentRating: String?
+  open var contentRating: String?
   
   /// Information about the media object. This field is known as description on the server
   /// NSObject reserves the description keyword
-  public var notes: String?
+  open var notes: String?
   
   /// The title of the media object
-  public var title: String?
+  open var title: String?
   
   /// The subtitle for the media object
-  public var subtitle: String?
+  open var subtitle: String?
   
   /// The duration of the assets play time. Typically for `OddVideo` types
-  public var duration: Int?
+  open var duration: Int?
   
   /// The URL string to load the asset from the content provider
-  public var urlString: String?
+  open var urlString: String?
   
   /// A URL string to load this media object via API
-  public var link: String?
+  open var link: String?
   
   /// A URL string to a thumbnail image to be used in conjunction with the media object
-  public var thumbnailLink: String?
+  open var thumbnailLink: String?
   
   /// A customizable URL string that enables formatting on the thumbnailLink
-  public var formattedThumbnailLink: String?
+  open var formattedThumbnailLink: String?
   
   /// The thumbnail image asset for the media object.
   ///
@@ -182,16 +182,16 @@ import UIKit
   var _thumbnail: UIImage?
   
   /// The date the content was released
-  public var releaseDate: NSDate? // convert to date object
+  open var releaseDate: Date? // convert to date object
   
   /// The date the media object was downloaded to the device
-  public var downloadDate: NSDate?
+  open var downloadDate: Date?
   
   /// A placeholder string for the title
-  public var defaultTitle = "OddNetworks Media Object"
+  open var defaultTitle = "OddNetworks Media Object"
   
   /// A placeholder string for the media objects notes
-  public var defaultSubtitle = "Another media object from OddNetworks"
+  open var defaultSubtitle = "Another media object from OddNetworks"
   
   /// A string denoting the type of object.
   ///
@@ -221,20 +221,20 @@ import UIKit
   /// section are not accessible directly via this API. It is the
   /// application developers responsibitly to parse this additional
   /// data
-  public var meta : Dictionary<String, AnyObject?>?
+  open var meta : Dictionary<String, AnyObject?>?
   
   /// How long to cache this object for. Based on
   /// HTTP header data.
-  public var cacheTime: Int? = nil
+  open var cacheTime: Int? = nil
   
   /// When was this object last updated from the server
-  public var lastUpdate: NSDate = NSDate()
+  open var lastUpdate: Date = Date()
   
-  public var cacheHasExpired: Bool {
+  open var cacheHasExpired: Bool {
     get {
       guard let ttl = cacheTime else { return false }
-      let expireTime = lastUpdate.dateByAddingTimeInterval( NSTimeInterval(ttl) )
-      return expireTime.timeIntervalSinceNow.isSignMinus
+      let expireTime = lastUpdate.addingTimeInterval( TimeInterval(ttl) )
+      return (expireTime.timeIntervalSinceNow.sign == .minus)
     }
   }
   
@@ -246,39 +246,39 @@ import UIKit
     super.init()
   }
   
-  public func encodeWithCoder(coder: NSCoder) {
-    coder.encodeObject(self.id, forKey: "id")
-    coder.encodeObject(self.title, forKey: "title")
-    coder.encodeObject(self.notes, forKey: "notes")
-    coder.encodeObject(self.assetId, forKey: "assetId")
-    coder.encodeObject(self.thumbnailLink, forKey: "thumbnailLink")
-    coder.encodeObject(self.urlString, forKey: "urlString")
-    coder.encodeObject(self.duration, forKey: "duration")
-    coder.encodeObject(self.subtitle, forKey: "subtitle")
-    coder.encodeObject(self.downloadDate, forKey: "downloadDate")
+  open func encode(with coder: NSCoder) {
+    coder.encode(self.id, forKey: "id")
+    coder.encode(self.title, forKey: "title")
+    coder.encode(self.notes, forKey: "notes")
+    coder.encode(self.assetId, forKey: "assetId")
+    coder.encode(self.thumbnailLink, forKey: "thumbnailLink")
+    coder.encode(self.urlString, forKey: "urlString")
+    coder.encode(self.duration, forKey: "duration")
+    coder.encode(self.subtitle, forKey: "subtitle")
+    coder.encode(self.downloadDate, forKey: "downloadDate")
   }
   
   // Method for saving Media Objects
   required convenience public init?(coder decoder: NSCoder) {
     self.init()
-    self.id = decoder.decodeObjectForKey("id") as? String
-    self.title = decoder.decodeObjectForKey("title") as? String
-    self.notes = decoder.decodeObjectForKey("notes") as? String
-    self.assetId = decoder.decodeObjectForKey("assetId") as? String
-    self.thumbnailLink = decoder.decodeObjectForKey("thumbnailLink") as? String
-    self.urlString = decoder.decodeObjectForKey("urlString") as? String
-    self.duration = decoder.decodeObjectForKey("duration") as? Int
-    self.subtitle = decoder.decodeObjectForKey("subtitle") as? String
-    self.downloadDate = decoder.decodeObjectForKey("downloadDate") as? NSDate
+    self.id = decoder.decodeObject(forKey: "id") as? String
+    self.title = decoder.decodeObject(forKey: "title") as? String
+    self.notes = decoder.decodeObject(forKey: "notes") as? String
+    self.assetId = decoder.decodeObject(forKey: "assetId") as? String
+    self.thumbnailLink = decoder.decodeObject(forKey: "thumbnailLink") as? String
+    self.urlString = decoder.decodeObject(forKey: "urlString") as? String
+    self.duration = decoder.decodeObject(forKey: "duration") as? Int
+    self.subtitle = decoder.decodeObject(forKey: "subtitle") as? String
+    self.downloadDate = decoder.decodeObject(forKey: "downloadDate") as? Date
   }
   
   
   
-  func configureWithJson(json: jsonObject) {
+  func configureWithJson(_ json: jsonObject) {
     self.id = json["id"] as? String
 //print("CREATED: \(self.id)")
     if let links = json["links"] as? jsonObject,
-      selfLink = links["self"] as? String {
+      let selfLink = links["self"] as? String {
         self.link = selfLink
     }
     
@@ -294,7 +294,7 @@ import UIKit
       if let images = attribs["images"] as? jsonObject {
         self.thumbnailLink = images["aspect16x9"] as? String
       }
-      if let ads = attribs["ads"] as? jsonObject, id = ads["assetId"] as? String {
+      if let ads = attribs["ads"] as? jsonObject, let id = ads["assetId"] as? String {
         self.assetId = id
       }
     }
@@ -304,16 +304,16 @@ import UIKit
 //    print("Entitled: \(self.meta?["entitled"] as! Bool) - \(OddGateKeeper.sharedKeeper.authenticationCredentials.state) \(self.title)")
     
     self.cacheTime = json["cacheTime"] as? Int
-    self.lastUpdate = NSDate()
+    self.lastUpdate = Date()
   }
   
   /// Helper method to return the media objects duration as an `NSTimeInterval`
   ///
   /// returns: An `NSTimeInterval` representation of the objects duration
-  func durationAsTimeInterval() -> NSTimeInterval {
+  func durationAsTimeInterval() -> TimeInterval {
     var interval : Double = 0
     if self.duration != nil {
-      interval = NSTimeInterval(self.duration! / 1000)
+      interval = TimeInterval(self.duration! / 1000)
     }
     return interval
   }
@@ -322,10 +322,10 @@ import UIKit
   /// Helper method to provide the media objects duration as a `String`
   ///
   /// returns: A `String` representation of the objects duration
-  public func durationAsTimeString() -> String {
+  open func durationAsTimeString() -> String {
     var interval : Double = 0
     if self.duration != nil {
-      interval = NSTimeInterval(self.duration! / 1000)
+      interval = TimeInterval(self.duration! / 1000)
     }
     return interval.stringFromTimeInterval()
   }
@@ -339,7 +339,7 @@ import UIKit
   /// callback closure is executed with the image as a parameter
   ///
   /// parameter callback: A closure taking a `UIImage` as a parameter to be executed when the image is loaded
-  public func thumbnail(callback: (UIImage?) -> Void  ) {
+  open func thumbnail(_ callback: @escaping (UIImage?) -> Void  ) {
     let storedThumbnail = getThumbnail()
     if let thumbnail = storedThumbnail {
       callback(thumbnail)
@@ -353,27 +353,27 @@ import UIKit
         path = formattedPath
       }
       if let path = path {
-        let request = NSMutableURLRequest(URL: NSURL(string: path)!)
+        let request = NSMutableURLRequest(url: URL(string: path)!)
 // some optimization of this may be possible by configuring the maximum number of connections
 // for your session. Your mileage may vary. Uncomment the next 3 lines and comment line 340 out
 // to adjust number of connections used per sesssion
 //        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
 //        config.HTTPMaximumConnectionsPerHost = 1
 //        let session = NSURLSession(configuration: config)
-        let session = NSURLSession.sharedSession()
-        request.HTTPMethod = "GET"
+        let session = URLSession.shared
+        request.httpMethod = "GET"
         
-        let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
+        let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error -> Void in
           
-          if let e = error {
-            if e.code < -999 {
-              NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddImageLoadDidFail, object: e) )
+          if let e = error as? URLError {
+            if e.code == .notConnectedToInternet {
+              NotificationCenter.default.post(Notification(name: OddConstants.OddImageLoadDidFail, object: e) )
             }
             callback(nil)
             return
           }
           
-          if let res = response as? NSHTTPURLResponse {
+          if let res = response as? HTTPURLResponse {
             if res.statusCode == 200 {
               if let imageData = data {
                 if let image = UIImage(data: imageData) {
@@ -395,7 +395,7 @@ import UIKit
   
   /// Convenience method to retun all keys in the
   /// mediaObjects meta dictionary
-  public func metaKeys() -> Set<String>? {
+  open func metaKeys() -> Set<String>? {
     var result = Set<String>()
     if let meta = meta {
       meta.keys.forEach({ (key) -> () in
@@ -408,7 +408,7 @@ import UIKit
   
   /// Convenience method to return a given keys value
   /// or nil if it is not found
-  public func valueForMetaKey(key: String) -> AnyObject? {
+  open func valueForMetaKey(_ key: String) -> AnyObject? {
     if let keys = metaKeys() {
       if keys.contains(key) {
         return self.meta![key]!
@@ -426,7 +426,7 @@ import UIKit
   /// Subclasses should override to provide more specific information on their type
   ///
   /// - parameter cell: a `UITableViewCell` to be configured
-  func configureCell(cell : UITableViewCell) {
+  func configureCell(_ cell : UITableViewCell) {
     cell.textLabel?.text = self.title
     cell.detailTextLabel?.text = self.notes
   }
@@ -440,19 +440,19 @@ import UIKit
   /// - parameter tableView: The `UITableView` that will display the header
   ///
   /// - returns: An optional `UIView` to be used as the header view
-  func viewForTableViewHeader(tableView: UITableView) -> UIView? {
+  func viewForTableViewHeader(_ tableView: UITableView) -> UIView? {
     return nil
   }
   
-  func setThumbnail(image: UIImage) {
+  func setThumbnail(_ image: UIImage) {
     if let url = self.thumbnailLink {
-      OddContentStore.sharedStore.imageCache.setObject(image, forKey: url)
+      OddContentStore.sharedStore.imageCache.setObject(image, forKey: url as NSString)
     }
   }
   
   func getThumbnail() -> UIImage? {
     if let url = self.thumbnailLink {
-      return OddContentStore.sharedStore.imageCache.objectForKey(url) as? UIImage
+      return OddContentStore.sharedStore.imageCache.object(forKey: url as NSString) as? UIImage
     }
     return nil
   }

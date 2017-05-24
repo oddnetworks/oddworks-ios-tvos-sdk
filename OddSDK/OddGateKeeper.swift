@@ -28,7 +28,7 @@ class AuthenticationCredentials: NSObject, NSCoding {
   var entitlementCredentials: jsonObject? = nil
   
   override var description : String {
-    return "URL: \(url)\n User Code: \(userCode)\n Device Token: \(deviceToken)\n State: \(state.rawValue)\n Access Token: \(accessToken)\n Creds: \(entitlementCredentials)"
+    return "URL: \(String(describing: url))\n User Code: \(String(describing: userCode))\n Device Token: \(String(describing: deviceToken))\n State: \(state.rawValue)\n Access Token: \(String(describing: accessToken))\n Creds: \(String(describing: entitlementCredentials))"
   }
   
   class func emptyCredentials() -> AuthenticationCredentials {
@@ -43,8 +43,8 @@ class AuthenticationCredentials: NSObject, NSCoding {
   }
   
   class func activeCredentials() -> AuthenticationCredentials {
-    if let credentialData: NSData = Keychain.dataForAccount(OddConstants.kAuthenticationCredentialsAccountName) {
-      guard let creds: AuthenticationCredentials = NSKeyedUnarchiver.unarchiveObjectWithData( credentialData ) as? AuthenticationCredentials else {
+    if let credentialData: Data = Keychain.dataForAccount(OddConstants.kAuthenticationCredentialsAccountName) {
+      guard let creds: AuthenticationCredentials = NSKeyedUnarchiver.unarchiveObject( with: credentialData ) as? AuthenticationCredentials else {
         return AuthenticationCredentials.emptyCredentials()
       }
       return creds
@@ -86,13 +86,13 @@ class AuthenticationCredentials: NSObject, NSCoding {
   //  }
   
   required convenience init?(coder decoder: NSCoder) {
-    guard let url = decoder.decodeObjectForKey(OddConstants.kAuthenticationCredentialsURLKey) as? String?,
-      let userCode = decoder.decodeObjectForKey(OddConstants.kAuthenticationCredentialsUserCodeKey) as? String?,
-      let deviceToken = decoder.decodeObjectForKey(OddConstants.kAuthenticationCredentialsDeviceTokenKey) as? String?,
-      let stateString = decoder.decodeObjectForKey(OddConstants.kAuthenticationCredentialsStateKey) as? String,
+    guard let url = decoder.decodeObject(forKey: OddConstants.kAuthenticationCredentialsURLKey) as? String?,
+      let userCode = decoder.decodeObject(forKey: OddConstants.kAuthenticationCredentialsUserCodeKey) as? String?,
+      let deviceToken = decoder.decodeObject(forKey: OddConstants.kAuthenticationCredentialsDeviceTokenKey) as? String?,
+      let stateString = decoder.decodeObject(forKey: OddConstants.kAuthenticationCredentialsStateKey) as? String,
       let state: AuthenticationStatus = AuthenticationStatus( rawValue: stateString ),
-      let accessToken = decoder.decodeObjectForKey(OddConstants.kAuthenticationCredentialsAccessTokenKey) as? String?,
-      let entitlementCredentials = decoder.decodeObjectForKey(OddConstants.kAuthenticationCredentialsEntitlementCredentialsKey) as? jsonObject else { return nil }
+      let accessToken = decoder.decodeObject(forKey: OddConstants.kAuthenticationCredentialsAccessTokenKey) as? String?,
+      let entitlementCredentials = decoder.decodeObject(forKey: OddConstants.kAuthenticationCredentialsEntitlementCredentialsKey) as? jsonObject else { return nil }
     
     self.init(
       url: url,
@@ -104,21 +104,21 @@ class AuthenticationCredentials: NSObject, NSCoding {
     )
   }
   
-  func encodeWithCoder(coder: NSCoder) {
-    coder.encodeObject(self.url, forKey: OddConstants.kAuthenticationCredentialsURLKey)
-    coder.encodeObject(self.userCode, forKey: OddConstants.kAuthenticationCredentialsUserCodeKey)
-    coder.encodeObject(self.deviceToken, forKey: OddConstants.kAuthenticationCredentialsDeviceTokenKey)
-    coder.encodeObject(self.state.rawValue, forKey: OddConstants.kAuthenticationCredentialsStateKey)
-    coder.encodeObject(self.entitlementCredentials, forKey: OddConstants.kAuthenticationCredentialsEntitlementCredentialsKey)
-    coder.encodeObject(self.accessToken, forKey: OddConstants.kAuthenticationCredentialsAccessTokenKey)
+  func encode(with coder: NSCoder) {
+    coder.encode(self.url, forKey: OddConstants.kAuthenticationCredentialsURLKey)
+    coder.encode(self.userCode, forKey: OddConstants.kAuthenticationCredentialsUserCodeKey)
+    coder.encode(self.deviceToken, forKey: OddConstants.kAuthenticationCredentialsDeviceTokenKey)
+    coder.encode(self.state.rawValue, forKey: OddConstants.kAuthenticationCredentialsStateKey)
+    coder.encode(self.entitlementCredentials, forKey: OddConstants.kAuthenticationCredentialsEntitlementCredentialsKey)
+    coder.encode(self.accessToken, forKey: OddConstants.kAuthenticationCredentialsAccessTokenKey)
   }
   
   func save() {
-    let encodedcredentials = NSKeyedArchiver.archivedDataWithRootObject(self)
+    let encodedcredentials = NSKeyedArchiver.archivedData(withRootObject: self)
     Keychain.setData(encodedcredentials, forAccount: OddConstants.kAuthenticationCredentialsAccountName, synchronizable: true, background: false)
   }
   
-  func updateAuthenticationCredentials(url url: String?, userCode: String?, deviceToken: String?, state: AuthenticationStatus?, accessToken: String?, entitlementCredentials: jsonObject?) {
+  func updateAuthenticationCredentials(url: String?, userCode: String?, deviceToken: String?, state: AuthenticationStatus?, accessToken: String?, entitlementCredentials: jsonObject?) {
     
     if let url = url {
       self.url = url
@@ -150,12 +150,12 @@ class AuthenticationCredentials: NSObject, NSCoding {
 }
 
 
-public class OddGateKeeper: NSObject {
+open class OddGateKeeper: NSObject {
   
   /// A singleton instance of the `GateKeeper` class
   /// All access to the users authentication credentials should be made
   /// through this singleton instance
-  static public let sharedKeeper = OddGateKeeper()
+  static open let sharedKeeper = OddGateKeeper()
   
   // The current user/device `AuthenticationCredentials`
   lazy var authenticationCredentials = AuthenticationCredentials.activeCredentials()
@@ -165,7 +165,7 @@ public class OddGateKeeper: NSObject {
   /// When a user attempts to link a device they are directed to a web site in order
   /// to connect their device to their account on the clients platform. The SDK will
   /// poll the API for updates in the user/devices Authentication state.
-  var authAttemptTimeDelta: NSTimeInterval = 5  // check for Authentication every 5 seconds
+  var authAttemptTimeDelta: TimeInterval = 5  // check for Authentication every 5 seconds
   
   /// Number of times the server will be contacted to check for Authentication status changes.
   /// This number multiplied by `authAttemptTimeDelta` will determine how long the SDK will
@@ -176,7 +176,7 @@ public class OddGateKeeper: NSObject {
   var authAttemptCount = 0
   
   /// A timer to trigger Authentication state change checks
-  var pollingTimer: NSTimer?
+  var pollingTimer: Timer?
   
   /// The device token for this user/device
   var deviceToken: String?
@@ -184,43 +184,55 @@ public class OddGateKeeper: NSObject {
   var userMeta: jsonObject?
   
   // custome http headers to be added to all requests to the login/authorization server 
-  public var customUserHeaders: Dictionary<String, String> = Dictionary()
+  open var customUserHeaders: Dictionary<String, String> = Dictionary()
   
   /// The user/device Authentication Status
-  public var authenticationStatus: AuthenticationStatus {
+  open var authenticationStatus: AuthenticationStatus {
     get {
       return self.authenticationCredentials.state
     }
   }
   
-  // fetches the user authorization info from oddworks.
-  public func fetchAuthenticationConfig( callback: (url: String?, userCode: String?, deviceToken: String?, error: NSError?) -> Void ) {
-    OddContentStore.sharedStore.API.post(nil, url: "auth/device/code") { (res, err) -> () in
-      if let e = err {
-        OddLogger.error("Error fetching auth config: \(e)")
-        callback(url: nil, userCode: nil, deviceToken: nil, error: e)
-      } else {
-        if let json = res as? Dictionary<String, AnyObject> {
-//          OddLogger.info("Auth Config: \(json)")
-          if let data = json["data"] as? Dictionary<String, AnyObject> {
-            if let url: String? = data["attributes"]?["verification_url"] as? String,
-              let deviceToken: String? = data["attributes"]?["device_code"] as? String,
-              let userCode: String? = data["attributes"]?["user_code"] as? String {
-              
-              self.authenticationCredentials.updateAuthenticationCredentials( url: url,
-                                                                              userCode: userCode,
-                                                                              deviceToken: deviceToken,
-                                                                              state: .Initialized,
-                                                                              accessToken: nil,
-                                                                              entitlementCredentials: nil )
-              
-              callback(url: url, userCode: userCode, deviceToken: deviceToken, error: nil)
+    // fetches the user authorization info from oddworks.
+    public func fetchAuthenticationConfig( _ callback: @escaping (_ url: String?, _ userCode: String?, _ deviceToken: String?, _ error: NSError?) -> Void ) {
+        OddContentStore.sharedStore.API.post(nil, url: "auth/device/code") { (res, err) -> () in
+            if let e = err {
+                OddLogger.error("Error fetching auth config: \(e)")
+                callback(nil, nil, nil, e)
+            } else {
+                if let json = res as? Dictionary<String, AnyObject> {
+                    //          OddLogger.info("Auth Config: \(json)")
+                    
+                    // old swift
+                    //          if let data = json["data"] as? Dictionary<String, AnyObject> {
+                    //            if let url: String? = data["attributes"]?["verification_url"] as? String,
+                    //              let deviceToken: String? = data["attributes"]?["device_code"] as? String,
+                    //              let userCode: String? = data["attributes"]?["user_code"] as? String {
+                    
+                    guard let data = json["data"] as? jsonObject,
+                        let attribs = data["attributes"] as? jsonObject,
+                        let url = attribs["verification_url"] as? String,
+                        let deviceToken = attribs["device_code"] as? String,
+                        let userCode = attribs["user_code"] as? String else {
+                            let error = NSError(domain: "Odd", code: 100, userInfo: ["error" : "Unable to decode response"])
+                            callback(nil, nil, nil, error)
+                            return
+                    }
+                    
+                    self.authenticationCredentials.updateAuthenticationCredentials( url: url,
+                                                                                    userCode: userCode,
+                                                                                    deviceToken: deviceToken,
+                                                                                    state: .Initialized,
+                                                                                    accessToken: nil,
+                                                                                    entitlementCredentials: nil )
+                    
+                    callback(url, userCode, deviceToken, nil)
+                }
             }
-          }
         }
-      }
     }
-  }
+    
+  
   
   public func blowAwayCredentials() {
     self.authenticationCredentials.updateAuthenticationCredentials( url: nil,
@@ -233,7 +245,7 @@ public class OddGateKeeper: NSObject {
   }
   
   // checks that a user has completed the authorization process
-  public func fetchAuthenticationToken() {
+  open func fetchAuthenticationToken() {
     print("checking for Authentication")
     
     guard let deviceToken = self.authenticationCredentials.deviceToken else { return }
@@ -242,7 +254,7 @@ public class OddGateKeeper: NSObject {
     
     let currentAuthenticationState = self.authenticationStatus
     
-    OddContentStore.sharedStore.API.post(["type":"authorized_user","attributes":["device_code":"\(deviceToken)"]], url:"auth/device/token") { (res, err) -> () in
+    OddContentStore.sharedStore.API.post(["type":"authorized_user" as AnyObject,"attributes":["device_code":"\(deviceToken)"] as AnyObject], url:"auth/device/token") { (res, err) -> () in
       if let error = err {
 //        response = res {
         print("Error:\(error.localizedDescription)")
@@ -250,7 +262,7 @@ public class OddGateKeeper: NSObject {
         if error.code == 401 {
           self.blowAwayCredentials()
         } else {
-          NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddAuthenticationErrorCheckingStateNotification, object: self.authenticationCredentials, userInfo: nil)
+          NotificationCenter.default.post(name: OddConstants.OddAuthenticationErrorCheckingStateNotification, object: self.authenticationCredentials, userInfo: nil)
         }
       } else {
         guard let json = res as? jsonObject,
@@ -274,7 +286,7 @@ public class OddGateKeeper: NSObject {
          print("Auth status changed")
          */
         if currentAuthenticationState != .Authorized {
-          NSNotificationCenter.defaultCenter().postNotificationName(OddConstants.OddAuthenticationStateChangedNotification, object: self.authenticationCredentials, userInfo: nil)
+          NotificationCenter.default.post(name: OddConstants.OddAuthenticationStateChangedNotification, object: self.authenticationCredentials, userInfo: nil)
         }
         self.pollingTimer?.invalidate()
       }
@@ -292,24 +304,24 @@ public class OddGateKeeper: NSObject {
     }
   }
   
-  public func pollForAuthentication() {
+  open func pollForAuthentication() {
     print("Starting polling timer")
     authAttemptCount = 0
     pollingTimer?.invalidate()
     // timer must be configured on the main thread or it will not fire
-    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-      self.pollingTimer = NSTimer.scheduledTimerWithTimeInterval(self.authAttemptTimeDelta, target: self, selector: #selector(OddGateKeeper.checkForAuthentication), userInfo: nil, repeats: true)
+    DispatchQueue.main.async(execute: { () -> Void in
+      self.pollingTimer = Timer.scheduledTimer(timeInterval: self.authAttemptTimeDelta, target: self, selector: #selector(OddGateKeeper.checkForAuthentication), userInfo: nil, repeats: true)
     })
     print("Timer started")
   }
   
-  public func userIsAuthenticated() -> Bool {
+  open func userIsAuthenticated() -> Bool {
     return OddGateKeeper.sharedKeeper.authenticationStatus == .Authorized
   }
   
   /// Convenience method to retun all keys in the
   /// entitlements credentials dictionary
-  public func entitlementKeys() -> Set<String>? {
+  open func entitlementKeys() -> Set<String>? {
     var result = Set<String>()
     if let meta = OddGateKeeper.sharedKeeper.authenticationCredentials.entitlementCredentials {
       meta.keys.forEach({ (key) -> () in
@@ -322,7 +334,7 @@ public class OddGateKeeper: NSObject {
   
   /// Convenience method to return a given keys value
   /// or nil if it is not found
-  public func valueForEntitlementKey(key: String) -> AnyObject? {
+  open func valueForEntitlementKey(_ key: String) -> AnyObject? {
     if let keys = entitlementKeys() {
       if keys.contains(key) {
         return OddGateKeeper.sharedKeeper.authenticationCredentials.entitlementCredentials![key]!
@@ -331,12 +343,12 @@ public class OddGateKeeper: NSObject {
     return nil
   }
   
-  public func entitlementCredentials() -> jsonObject? {
+  open func entitlementCredentials() -> jsonObject? {
     guard let creds = OddGateKeeper.sharedKeeper.authenticationCredentials.entitlementCredentials else { return nil }
     return creds
   }
   
-  public func updateEntitlementCredentials(creds: jsonObject) {
+  open func updateEntitlementCredentials(_ creds: jsonObject) {
     self.authenticationCredentials.updateAuthenticationCredentials( url: nil,
                                                                     userCode: nil,
                                                                     deviceToken: nil,
@@ -350,28 +362,28 @@ public class OddGateKeeper: NSObject {
   // MARK: - Login
   typealias JSONCallback = ( (jsonObject?, NSError?) -> Void)
   
-  private func get(params: [ String : String ]?, url: String, callback: JSONCallback) {
-    self.request("GET", params: params, url: url, callback: callback)
+  fileprivate func get(_ params: [ String : String ]?, url: String, callback: @escaping JSONCallback) {
+    self.request("GET", params: params as jsonObject?, url: url, callback: callback)
   }
   
-  private func post(params: [ String : AnyObject ]?, url: String, callback: JSONCallback) {
+  fileprivate func post(_ params: [ String : AnyObject ]?, url: String, callback: @escaping JSONCallback) {
     self.request("POST", params: params, url: url, callback: callback)
   }
   
-  private func request(type: String, params: [ String : AnyObject ]?, url: String, callback: JSONCallback) {
-    let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-    let session = NSURLSession.sharedSession()
-    request.HTTPMethod = type
+  fileprivate func request(_ type: String, params: [ String : AnyObject ]?, url: String, callback: @escaping JSONCallback) {
+    let request = NSMutableURLRequest(url: URL(string: url)!)
+    let session = URLSession.shared
+    request.httpMethod = type
     
     let err: NSError?
     
     if let parameters = params {
       do {
-        request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(parameters, options: [])
+        request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
       } catch let error as NSError {
         err = error
-        request.HTTPBody = nil
-        OddLogger.error("Error attaching HTTP request params: \(err?.localizedDescription)")
+        request.httpBody = nil
+        OddLogger.error("Error attaching HTTP request params: \(String(describing: err?.localizedDescription))")
       }
     }
     
@@ -388,17 +400,17 @@ public class OddGateKeeper: NSObject {
     
     // custom headers...
     
-    let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
+    let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error -> Void in
       
-      if let e = error {
-        if e.code < -999 { // NSURLError.NotConnectedToInternet.rawValue {
-          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: OddConstants.OddConnectionOfflineNotification, object: e) )
+      if let e = error as? URLError {
+        if e.code == .notConnectedToInternet {
+          NotificationCenter.default.post(Notification(name: OddConstants.OddConnectionOfflineNotification, object: e) )
         }
-        callback(nil, e)
+        callback(nil, e as NSError?)
         return
       }
       
-      if let res = response as! NSHTTPURLResponse! {
+      if let res = response as! HTTPURLResponse! {
         
         if res.statusCode != 200 {
           if res.statusCode == 401 {
@@ -413,7 +425,7 @@ public class OddGateKeeper: NSObject {
       
       if error == nil {
         do {
-          let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as? jsonObject
+          let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? jsonObject
           callback(json, nil)
           return
         } catch {
@@ -438,7 +450,7 @@ public class OddGateKeeper: NSObject {
   
   // the server should return 200 with a payload of any credentials required for metrics, etc
 //  public func loginWithURL(url: String, email: String, password: String, callback: (Bool, NSError?) -> Void) {
-  public func loginWithURL(url: String, params: [ String : AnyObject ]?, callback: (Bool, NSError?) -> Void) {
+  open func loginWithURL(_ url: String, params: [ String : AnyObject ]?, callback: @escaping (Bool, NSError?) -> Void) {
   
     self.post(params, url: url) { (response, error) in
       if error != nil {
@@ -451,7 +463,7 @@ public class OddGateKeeper: NSObject {
         if success {
           print("LOGIN SUCCESS")
           self.userMeta = meta
-          OddLogger.info("Received Login Meta: \(self.userMeta)");
+          OddLogger.info("Received Login Meta: \(String(describing: self.userMeta))");
 //          self.updateLoginCredentialsWithEmail(email, password: password)
         } else {
           if let title = meta["lead"] as? String,
@@ -466,9 +478,9 @@ public class OddGateKeeper: NSObject {
     }
   }
   
-  func updateLoginCredentialsWithEmail(email: String, password: String) {
+  func updateLoginCredentialsWithEmail(_ email: String, password: String) {
     print("Saving login info")
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     defaults.setValue(email, forKey: OddConstants.kOddLoginName)
     defaults.setValue(password, forKey: OddConstants.kOddLoginPassword)
     defaults.synchronize()
@@ -477,7 +489,7 @@ public class OddGateKeeper: NSObject {
   // prior to creating a subscription on the clients servers we request verification that 
   // it is possible to create a subscription using these credentials. No subscription should
   // be created. This is called prior to contacting Apple to process payment for a subscription
-  public func validateSubscription(url: String, params: [ String : AnyObject ]?, callback: (Bool, jsonObject?, NSError?) -> Void ) {
+  open func validateSubscription(_ url: String, params: [ String : AnyObject ]?, callback: @escaping (Bool, jsonObject?, NSError?) -> Void ) {
     
     self.post(params, url: url) { (response, error) in
       if error != nil {
@@ -494,11 +506,11 @@ public class OddGateKeeper: NSObject {
   
   // after Apple has taken payment and created a subscription this method is used to create a subscription
   // on the clients servers
-  public func createSubscription(url: String, params: [ String : AnyObject ]?, callback: (Bool, jsonObject?, NSError?) -> Void ) {
+  open func createSubscription(_ url: String, params: [ String : AnyObject ]?, callback: @escaping (Bool, jsonObject?, NSError?) -> Void ) {
     
     guard let params = params,
-      let receiptURL = NSBundle.mainBundle().appStoreReceiptURL,
-      let receiptData = NSData(contentsOfURL: receiptURL)?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0)) else {
+      let receiptURL = Bundle.main.appStoreReceiptURL,
+      let receiptData = (try? Data(contentsOf: receiptURL))?.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0)) else {
       OddLogger.error("Unable to retrieve app store receipt (Subscribe)")
       callback (false, nil, nil)
       return
@@ -506,7 +518,7 @@ public class OddGateKeeper: NSObject {
     
     var fullParams = params
     
-    fullParams["receiptId"] = receiptData
+    fullParams["receiptId"] = receiptData as AnyObject
     
     print("FULL PARAMS subscribe: \(fullParams)")
     
@@ -523,10 +535,10 @@ public class OddGateKeeper: NSObject {
     }
   }
   
-  public func restoreSubscription(url: String, params: [String : AnyObject]?, callback: (Bool, jsonObject?, NSError?) -> Void) {
+  open func restoreSubscription(_ url: String, params: [String : AnyObject]?, callback: @escaping (Bool, jsonObject?, NSError?) -> Void) {
     guard let params = params,
-      let receiptURL = NSBundle.mainBundle().appStoreReceiptURL,
-      let receiptData = NSData(contentsOfURL: receiptURL)?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0)) else {
+      let receiptURL = Bundle.main.appStoreReceiptURL,
+      let receiptData = (try? Data(contentsOf: receiptURL))?.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0)) else {
         OddLogger.error("Unable to retrieve app store receipt (Restore)")
         callback (false, nil, nil)
         return
@@ -534,7 +546,7 @@ public class OddGateKeeper: NSObject {
     
     var fullParams = params
     
-    fullParams["receiptId"] = receiptData
+    fullParams["receiptId"] = receiptData as AnyObject
     
     print("FULL PARAMS restore: \(fullParams)")
     

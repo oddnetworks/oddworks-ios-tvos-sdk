@@ -26,21 +26,21 @@ struct OddMenuItem {
   func tableViewCellReuseIdentifier() -> String {
     var reuseIdentifier: String
     switch type {
-    case .Some(.Video):                 reuseIdentifier = "textLabelMenuCell"
-    case .Some(.VideoCollection):       reuseIdentifier = "textLabelMenuCell"
-    case .Some(.Search):                reuseIdentifier = "searchMenuCell"
-    case .Some(.Home):                  reuseIdentifier = "textLabelMenuCell"
-    case .Some(.MediaObjectCollection): reuseIdentifier = "textLabelMenuCell"
-    case .Some(.External):              reuseIdentifier = "textLabelMenuCell"
+    case .some(.Video):                 reuseIdentifier = "textLabelMenuCell"
+    case .some(.VideoCollection):       reuseIdentifier = "textLabelMenuCell"
+    case .some(.Search):                reuseIdentifier = "searchMenuCell"
+    case .some(.Home):                  reuseIdentifier = "textLabelMenuCell"
+    case .some(.MediaObjectCollection): reuseIdentifier = "textLabelMenuCell"
+    case .some(.External):              reuseIdentifier = "textLabelMenuCell"
     default:                            reuseIdentifier = "textLabelMenuCell"
     }
     
     return reuseIdentifier
   }
   
-  mutating func menuItemFromJson(json: jsonObject) {
+  mutating func menuItemFromJson(_ json: jsonObject) {
 //   print("MENU OBJECT JSON \(json)")
-    if let type = json["type"] as? String, id = json["id"] as? String, attributes = json["attributes"] as? jsonObject {
+    if let type = json["type"] as? String, let id = json["id"] as? String, let attributes = json["attributes"] as? jsonObject {
       self.objectId = id
       self.type = OddMenuItemType(rawValue: type)
       self.title = attributes["title"] as? String
@@ -52,10 +52,10 @@ struct OddMenuItemCollection {
   var title: String?
   var menuItems: Array<OddMenuItem>?
   
-  static func buildCollectionForVideoCollection(videoCollections: Array<OddMediaObjectCollection>, collectionTitle: String) -> OddMenuItemCollection? {
+  static func buildCollectionForVideoCollection(_ videoCollections: Array<OddMediaObjectCollection>, collectionTitle: String) -> OddMenuItemCollection? {
     var newCollections = OddMenuItemCollection(title: collectionTitle, menuItems: [] )
     videoCollections.forEach({ (videoCollection) -> Void in
-      if let title = videoCollection.title, id = videoCollection.id {
+      if let title = videoCollection.title, let id = videoCollection.id {
         let newMenuItem = OddMenuItem(title: title, type: .VideoCollection, objectId: id )
         newCollections.menuItems!.append(newMenuItem)
       }
@@ -73,7 +73,7 @@ struct OddMenuItemCollection {
 struct OddMenu {
   var menuItemCollections = Array<OddMenuItemCollection>()
   
-  func menuItemCollectionAtIndex(index: UInt) -> OddMenuItemCollection? {
+  func menuItemCollectionAtIndex(_ index: UInt) -> OddMenuItemCollection? {
 
     do {
       return try menuItemCollections.lookup(index)
@@ -82,7 +82,7 @@ struct OddMenu {
     }
   }
   
-  func menuItemForIndexPath(indexPath: NSIndexPath) -> OddMenuItem? {
+  func menuItemForIndexPath(_ indexPath: IndexPath) -> OddMenuItem? {
     let collectionIndex = indexPath.section
     let itemIndex = indexPath.row
     

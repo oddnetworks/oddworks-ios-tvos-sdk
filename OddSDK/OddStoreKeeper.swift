@@ -14,65 +14,65 @@ import StoreKit
 // returns the products price in the correct currency format for the users locale
 public extension SKProduct {
   func formattedPrice() -> String? {
-    let formatter = NSNumberFormatter()
-    formatter.numberStyle = .CurrencyStyle
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .currency
     formatter.locale = self.priceLocale
-    return formatter.stringFromNumber(self.price)
+    return formatter.string(from: self.price)
   }
 }
 
 public protocol StoreKeeperDelegate {
-  func processStoreProducts(products: Array<SKProduct>, invalidProducts: Array<String>? )
+  func processStoreProducts(_ products: Array<SKProduct>, invalidProducts: Array<String>? )
 }
 
 @objc public protocol StoreKeeperTransactionDelegate {
-  optional func showPurchaseInProgress(deferred deferred: Bool)
-  optional func showPurchaseCompleted(transaction: SKPaymentTransaction)
-  optional func showPurchaseFailed(transaction: SKPaymentTransaction)
-  optional func showPurchaseRestored(transaction: SKPaymentTransaction)
+  @objc optional func showPurchaseInProgress(deferred: Bool)
+  @objc optional func showPurchaseCompleted(_ transaction: SKPaymentTransaction)
+  @objc optional func showPurchaseFailed(_ transaction: SKPaymentTransaction)
+  @objc optional func showPurchaseRestored(_ transaction: SKPaymentTransaction)
   
 }
 
 @objc public protocol StoreKeeperRestorePurchasesDelegate {
   func showRestoreCompleted()
-  func showRestoreFailedWithError(error: String)
-  optional func finalizePurchaseRestoration()
+  func showRestoreFailedWithError(_ error: String)
+  @objc optional func finalizePurchaseRestoration()
 }
 
-public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver, SKRequestDelegate {
+open class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver, SKRequestDelegate {
   
-  static public let defaultStore = OddStoreKeeper()
+  static open let defaultStore = OddStoreKeeper()
   
   var prefixId: String {
     get {
-      guard let bundleName = NSBundle.mainBundle().bundleIdentifier else { return "unknownBundleId." }
+      guard let bundleName = Bundle.main.bundleIdentifier else { return "unknownBundleId." }
       return "\(bundleName)."
     }
   }
   
-  static public var productIdentifiers: Set<String> = Set()
-  private var products: Array<SKProduct> = Array()
-  private var productsRequest: SKProductsRequest?
-  private var restoreRequest: SKReceiptRefreshRequest?
+  static open var productIdentifiers: Set<String> = Set()
+  fileprivate var products: Array<SKProduct> = Array()
+  fileprivate var productsRequest: SKProductsRequest?
+  fileprivate var restoreRequest: SKReceiptRefreshRequest?
   
-  public var delegate: StoreKeeperDelegate?
-  public var transactionDelegate: StoreKeeperTransactionDelegate?
-  public var restoreDelegate: StoreKeeperRestorePurchasesDelegate?
+  open var delegate: StoreKeeperDelegate?
+  open var transactionDelegate: StoreKeeperTransactionDelegate?
+  open var restoreDelegate: StoreKeeperRestorePurchasesDelegate?
   
   // MARK: - Class Methods
-  static public func canMakePayments() -> Bool {
+  static open func canMakePayments() -> Bool {
     return SKPaymentQueue.canMakePayments()
   }
   
   // MARK: - Products
   
   func fetchProductIdentifiers() {
-    guard let url = NSBundle.mainBundle().URLForResource("iap_product_ids", withExtension: "plist"),
-      let idArray = NSArray(contentsOfURL: url) as? Array<String> else { return }
+    guard let url = Bundle.main.url(forResource: "iap_product_ids", withExtension: "plist"),
+      let idArray = NSArray(contentsOf: url) as? Array<String> else { return }
     OddStoreKeeper.productIdentifiers = Set(idArray.map { "\(prefixId)\($0)" } )
   }
   
-  public func validateProductIdentifiers() {
+  open func validateProductIdentifiers() {
     self.fetchProductIdentifiers()
     self.productsRequest = SKProductsRequest(productIdentifiers: OddStoreKeeper.productIdentifiers)
     
@@ -82,7 +82,7 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   
   //MARK: - SKProductsRequestDelegate
   
-  public func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
+  open func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
     self.products = response.products
     
     response.invalidProductIdentifiers.forEach { (invalid) in
@@ -103,19 +103,18 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   
   // MARK: - SKRequestDelegate
   
-  public func request(request: SKRequest, didFailWithError error: NSError) {
-    OddLogger.error("Store Request Error: \(error.localizedDescription)")
-    //FIXME:  add alert for error !!
+  open func request(_ request: SKRequest, didFailWithError error: Error) {
+    OddLogger.logAndDisplayError("Store Request Error: \(error.localizedDescription)")
   }
   
-  func logRequest(request: SKRequest) {
+  func logRequest(_ request: SKRequest) {
     guard let req = request as? SKReceiptRefreshRequest else { return }
     
-    OddLogger.info("Refresh Receipt: \(req.receiptProperties)")
+    OddLogger.info("Refresh Receipt: \(String(describing: req.receiptProperties))")
   }
   
   // currently only called when we restore a receipt
-  public func requestDidFinish(request: SKRequest) {
+  open func requestDidFinish(_ request: SKRequest) {
     guard request is SKReceiptRefreshRequest else { return }
     
 //    logRequest(request)
@@ -125,14 +124,14 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   
   // MARK: - Payments
   
-  public func makePaymentForProduct(product: SKProduct) {
-    SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+  open func makePaymentForProduct(_ product: SKProduct) {
+    SKPaymentQueue.default().add(self)
     let payment = SKMutablePayment(product: product)
-    SKPaymentQueue.defaultQueue().addPayment(payment)
+    SKPaymentQueue.default().add(payment)
   }
   
   //
-  public func restorePurchase() {
+  open func restorePurchase() {
 //    request = [[SKReceiptRefreshRequest alloc] init];
     self.restoreRequest = SKReceiptRefreshRequest()
     self.restoreRequest?.delegate = self;
@@ -141,30 +140,30 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
 //    SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
   }
   
-  public func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
+  open func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
     OddLogger.info("Restore Purchases Finished")
     self.restoreDelegate?.showRestoreCompleted()
   }
   
-  public func paymentQueue(queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: NSError) {
+  open func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
     OddLogger.error("Restore Purchases failed with error: \(error.localizedDescription)")
     self.restoreDelegate?.showRestoreFailedWithError(error.localizedDescription)
   }
   
   // MARK: - SKPaymentTransactionObserver
   
-  public func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+  open func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
     transactions.forEach { (transaction) in
       switch transaction.transactionState {
-      case .Purchasing:
+      case .purchasing:
         self.showTransactionInProgress(deferred: false)
-      case .Deferred:
+      case .deferred:
         self.showTransactionInProgress(deferred: true)
-      case .Failed:
+      case .failed:
         self.failedTransaction(transaction)
-      case .Purchased:
+      case .purchased:
         self.completeTransaction(transaction)
-      case .Restored:
+      case .restored:
         self.restoreTransaction(transaction)
       }
     }
@@ -172,7 +171,7 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
   
   // MARK: - Transaction Helpers
   
-  func showTransactionInProgress(deferred deferred: Bool) {
+  func showTransactionInProgress(deferred: Bool) {
     if deferred {
       OddLogger.info("StoreKeeper deferred transaction in progress")
       self.transactionDelegate?.showPurchaseInProgress?(deferred: true)
@@ -182,28 +181,28 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
     }
   }
   
-  func failedTransaction(transaction: SKPaymentTransaction) {
+  func failedTransaction(_ transaction: SKPaymentTransaction) {
     OddLogger.error("StoreKeeper transaction \(transaction.transactionIdentifier!) failed: \(transaction.error!)")
     self.transactionDelegate?.showPurchaseFailed?(transaction)
     self.productsRequest = nil
   }
   
-  func completeTransaction(transaction: SKPaymentTransaction) {
+  func completeTransaction(_ transaction: SKPaymentTransaction) {
     OddLogger.info("StoreKeeper transaction complete: \(transaction.transactionIdentifier!)")
     self.transactionDelegate?.showPurchaseCompleted?(transaction)
     self.productsRequest = nil
   }
 
   // not currently used.
-  func restoreTransaction(transaction: SKPaymentTransaction) {
+  func restoreTransaction(_ transaction: SKPaymentTransaction) {
     OddLogger.info("StoreKeeper transaction restoration complete (Apple): \(transaction.transactionIdentifier!)")
     
     switch transaction.transactionState {
-    case .Deferred: print("DEFERED")
-    case .Failed: print("FAILED")
-    case .Purchased: print("PURCHASED")
-    case .Purchasing: print("PURCHASING")
-    case .Restored: print("RESTORED")
+    case .deferred: print("DEFERED")
+    case .failed: print("FAILED")
+    case .purchased: print("PURCHASED")
+    case .purchasing: print("PURCHASING")
+    case .restored: print("RESTORED")
     }
     
     self.restoreDelegate?.finalizePurchaseRestoration?()
@@ -211,12 +210,12 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
     self.productsRequest = nil
   }
   
-  public func finishTransaction(transaction: SKPaymentTransaction) {
-    SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+  open func finishTransaction(_ transaction: SKPaymentTransaction) {
+    SKPaymentQueue.default().finishTransaction(transaction)
     self.reset()
   }
   
-  public func reset() {
+  open func reset() {
     self.delegate = nil
     self.transactionDelegate = nil
     self.restoreDelegate = nil

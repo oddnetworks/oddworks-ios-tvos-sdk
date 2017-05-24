@@ -459,6 +459,7 @@
 					};
 					135E68681C245FFE00A0A602 = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0830;
 					};
 					135E68D41C24654D00A0A602 = {
 						CreatedOnToolsVersion = 7.2;
@@ -881,6 +882,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -902,6 +904,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.oddnetworks.OddSDK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

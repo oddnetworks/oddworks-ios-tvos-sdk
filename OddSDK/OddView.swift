@@ -15,7 +15,7 @@ class OddView: NSObject {
   var featuredVideoCollections : Array<OddMediaObjectCollection>?
   var generatedVideoCollections: Array<OddMediaObjectCollection>?
   
-  class func oddViewFromJson(json : Dictionary<String, AnyObject>) -> OddView {
+  class func oddViewFromJson(_ json : Dictionary<String, AnyObject>) -> OddView {
     let newOddView = OddView()
     
     

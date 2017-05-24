@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc public class OddPromotion: OddMediaObject {
+@objc open class OddPromotion: OddMediaObject {
   
   var timer: Double = 3.0
   var imageLink_16x9: String?
@@ -19,11 +19,11 @@ import UIKit
   
   override var contentTypeString: String { return "promotion" }
   
-  class func promotionFromJson( json: jsonObject) -> OddPromotion {
+  class func promotionFromJson( _ json: jsonObject) -> OddPromotion {
     let newPromo = OddPromotion()
     newPromo.configureWithJson(json)
     
-    if let attribs = json["attributes"] as? jsonObject, images = attribs["images"] as? jsonObject  {
+    if let attribs = json["attributes"] as? jsonObject, let images = attribs["images"] as? jsonObject  {
       newPromo.imageLink_16x9 = images["aspect16x9"] as? String
       newPromo.imageLink_1x1 = images["aspect1x1"] as? String
       newPromo.imageLink_2x3 = images["aspect2x3"] as? String

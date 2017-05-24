@@ -9,10 +9,10 @@
 import UIKit
 
 /// An `OddMediaObject` subclass representing a video asset
-@objc public class OddVideo: OddMediaObject {
+@objc open class OddVideo: OddMediaObject {
   
   /// Read only variable to provide the asset type
-  override public var contentTypeString: String { return "video" }
+  override open var contentTypeString: String { return "video" }
   
   /// `UITableViewCell` type to be used when displaying video assets
   override var cellReuseIdentifier: String { return "VideoInfoCell" }
@@ -28,7 +28,7 @@ import UIKit
   /// based players
   /// 
   /// This value will be set by the API and should only be read by client apps
-  public var playerType: String? { get { return _playerType } }
+  open var playerType: String? { get { return _playerType } }
   
   
   /// The private backing for playerType to enable readonly access
@@ -36,27 +36,27 @@ import UIKit
   var _playerType: String?
   
   /// Used by Ooyala based video players
-  public var pCode: String?
+  open var pCode: String?
   
   /// Used by Ooyala based video players
-  public var embedCode: String?
+  open var embedCode: String?
   
   /// Used by Ooyala based video players
-  public var domain: String?
+  open var domain: String?
   
   /// Used by web based video players
-  public var playerUrlString: String?
+  open var playerUrlString: String?
 
   /// The URL for the videos closed captioning track if
   /// provided as a separate asset
-  public var closedCaptionsUrlString: String?
+  open var closedCaptionsUrlString: String?
   
   /// Configures an `OddVideo` from a json object
   ///
   /// - parameter json: A `jsonObject` containing information pertaining to the video asset
   ///
   /// - returns: A configured `OddVideo`
-  class func videoFromJson(json: jsonObject) -> OddVideo {
+  class func videoFromJson(_ json: jsonObject) -> OddVideo {
     let newVideo = OddVideo()
     newVideo.configureWithJson(json)
 
@@ -72,7 +72,7 @@ import UIKit
   ///
   /// Note: Should not be called directly. Doing so may result in an object not
   /// fully configured
-  override func configureWithJson(json: jsonObject) {
+  override func configureWithJson(_ json: jsonObject) {
     super.configureWithJson(json)
     addAdditionalMetaData(json)
   }
@@ -84,9 +84,9 @@ import UIKit
   ///
   /// Note: Should not be called directly. Doing so may result in an object not
   /// fully configured
-  func addAdditionalMetaData(json: jsonObject) {
+  func addAdditionalMetaData(_ json: jsonObject) {
     if let attributes = json["attributes"] as? jsonObject,
-      player = attributes["player"] as? jsonObject {
+      let player = attributes["player"] as? jsonObject {
         self._playerType = player["type"] as? String
         self.pCode = player["pCode"] as? String
         self.embedCode = player["embedCode"] as? String
