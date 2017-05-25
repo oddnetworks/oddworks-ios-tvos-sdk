@@ -154,7 +154,7 @@ public struct OddMetricService {
         if let e = error {
           OddLogger.error("<<Metric post with type '\(stat.actionString)' failed with error: \(e.localizedDescription)>>")
         } else {
-          OddLogger.info("<<Metric Post Successful: '\(stat.actionString)'>>")
+          OddLogger.debug("<<Metric Post Successful: '\(stat.actionString)'>>")
         }
       }
     }

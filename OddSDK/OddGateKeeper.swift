@@ -259,7 +259,7 @@ open class OddGateKeeper: NSObject {
 //        response = res {
         print("Error:\(error.localizedDescription)")
         if error.code != 404 {
-            OddLogger.logAndDisplayError("Unable to authorize user. Error code: \(error.code)")
+            OddLogger.logAndDisplayError(error: "Unable to authorize user. Error code: \(error.code)")
         }
         if error.code == 401 {
           self.blowAwayCredentials()
@@ -418,7 +418,7 @@ open class OddGateKeeper: NSObject {
           if res.statusCode == 401 {
             self.blowAwayCredentials()
           }
-          OddLogger.logAndDisplayError("Error, server responded with: \(res.statusCode)" )
+          OddLogger.logAndDisplayError(error: "Error, server responded with: \(res.statusCode)" )
           let e = NSError(domain: "ODD", code: res.statusCode, userInfo: [ "statusCode": res.statusCode, "message" : "unable to complete http request" ])
           callback(nil, e)
           return
@@ -470,8 +470,8 @@ open class OddGateKeeper: NSObject {
         } else {
           if let title = meta["lead"] as? String,
             let message = meta["message"] as? String{
-            print("ERROR: \(title): \(message)")
-            OddLogger.showAlert(withTitle: title, message: message, kind: .error)
+            let errorMessage = "\(title): \(message)"
+            OddLogger.logAndDisplayError(error: errorMessage)
           }
         }
         OddLogger.info("Login User Result: \(success)")

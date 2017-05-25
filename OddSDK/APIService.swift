@@ -273,7 +273,7 @@ open class APIService: NSObject {
         }
         
         if res.statusCode == 201 {
-          OddLogger.info("Server responded with \(res.statusCode). Object created.")
+          OddLogger.debug("Server responded with \(res.statusCode). Object created.")
           callback(nil, nil)
           return
         }

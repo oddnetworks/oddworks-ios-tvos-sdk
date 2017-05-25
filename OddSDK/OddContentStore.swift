@@ -278,9 +278,9 @@ public typealias jsonArray = Array<jsonObject>
     
     let betaString = beta ? " BETA" : ""
       
-    OddLogger.error("### OddSDK\(betaString) ###")
+    OddLogger.info("### OddSDK\(betaString) ###")
     if beta {
-      OddLogger.error("### Not for production Applications ###")
+      OddLogger.info("### Not for production Applications ###")
     }
   }
   
@@ -362,7 +362,7 @@ public typealias jsonArray = Array<jsonObject>
   func fetchViewInfo(){
     #if os(iOS)
     loadMenuView { (complete) -> () in
-      OddLogger.info("Menu view load completed? \(complete)")
+      OddLogger.debug("Menu view load completed? \(complete)")
       self.loadHomeView()
     }
     #else
