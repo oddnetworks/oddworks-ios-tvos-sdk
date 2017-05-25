@@ -279,7 +279,10 @@ open class APIService: NSObject {
         }
         
         if res.statusCode != 200 {
-          OddLogger.error("Error, server responded with: \(res.statusCode)" )
+            // if this is a 404 when polling for device linking its normal
+            if res.statusCode != 404 && url != "auth/device/token" {
+                OddLogger.error("Error, server responded with: \(res.statusCode)" )
+            }
           var errorMessage = "No data returned"
           if let localData = data {
             errorMessage = self.parseError(localData)

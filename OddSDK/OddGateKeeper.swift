@@ -258,7 +258,9 @@ open class OddGateKeeper: NSObject {
       if let error = err {
 //        response = res {
         print("Error:\(error.localizedDescription)")
-        OddLogger.logAndDisplayError("Unable to authorize user. Error code: \(error.code)")
+        if error.code != 404 {
+            OddLogger.logAndDisplayError("Unable to authorize user. Error code: \(error.code)")
+        }
         if error.code == 401 {
           self.blowAwayCredentials()
         } else {
