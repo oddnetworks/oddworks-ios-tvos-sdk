@@ -192,6 +192,12 @@ open class OddGateKeeper: NSObject {
       return self.authenticationCredentials.state
     }
   }
+    
+    public var userCode: String? {
+        get {
+            return self.authenticationCredentials.userCode
+        }
+    }
   
     // fetches the user authorization info from oddworks.
     public func fetchAuthenticationConfig( _ callback: @escaping (_ url: String?, _ userCode: String?, _ deviceToken: String?, _ error: NSError?) -> Void ) {

@@ -426,7 +426,7 @@ public typealias jsonArray = Array<jsonObject>
           if let json = response as? jsonObject,
             let data = json["data"] as? jsonObject,
             let included = json["included"] as? Array<jsonObject> {
-              OddLogger.info("menu data: \(data)")
+              OddLogger.debug("menu data: \(data)")
               self.responseData = data
               self.included = included
               self.buildMenu(data) { (complete) in
