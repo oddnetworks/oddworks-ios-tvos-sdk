@@ -48,7 +48,7 @@ private class ActivityView: UIView {
         self.yOffset = yOffset
         
         backgroundColor = UIColor(white: 0.0, alpha: 0.5)
-        
+
         boundingBoxView.backgroundColor = boundingBoxBackgroundColor
         boundingBoxView.layer.cornerRadius = 12.0
         

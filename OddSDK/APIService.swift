@@ -222,7 +222,7 @@ open class APIService: NSObject {
     if OddGateKeeper.sharedKeeper.authenticationCredentials.state == .Authorized {
       if let token = OddGateKeeper.sharedKeeper.authenticationCredentials.accessToken {
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        print("AUTHED JWT: \(token)")
+        OddLogger.debug("AUTHED JWT: \(token)")
       }
     }
     

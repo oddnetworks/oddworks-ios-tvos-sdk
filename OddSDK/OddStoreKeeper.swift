@@ -1,3 +1,4 @@
+
 //
 //  OddStoreKeeper.swift
 //  OddSDK
@@ -27,9 +28,9 @@ public protocol StoreKeeperDelegate {
 
 @objc public protocol StoreKeeperTransactionDelegate {
   @objc optional func showPurchaseInProgress(deferred: Bool)
-  @objc optional func showPurchaseCompleted(_ transaction: SKPaymentTransaction)
-  @objc optional func showPurchaseFailed(_ transaction: SKPaymentTransaction)
-  @objc optional func showPurchaseRestored(_ transaction: SKPaymentTransaction)
+  @objc optional func showPurchaseCompleted(withTransaction  transaction: SKPaymentTransaction)
+  @objc optional func showPurchaseFailed(withTransaction  transaction: SKPaymentTransaction)
+  @objc optional func showPurchaseRestored(withTransaction  transaction: SKPaymentTransaction)
   
 }
 
@@ -183,13 +184,13 @@ open class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTransac
   
   func failedTransaction(_ transaction: SKPaymentTransaction) {
     OddLogger.error("StoreKeeper transaction \(transaction.transactionIdentifier!) failed: \(transaction.error!)")
-    self.transactionDelegate?.showPurchaseFailed?(transaction)
+    self.transactionDelegate?.showPurchaseFailed?(withTransaction: transaction)
     self.productsRequest = nil
   }
   
   func completeTransaction(_ transaction: SKPaymentTransaction) {
     OddLogger.info("StoreKeeper transaction complete: \(transaction.transactionIdentifier!)")
-    self.transactionDelegate?.showPurchaseCompleted?(transaction)
+    self.transactionDelegate?.showPurchaseCompleted?(withTransaction: transaction)
     self.productsRequest = nil
   }
 

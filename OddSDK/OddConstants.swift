@@ -80,4 +80,10 @@ import Foundation
     
     // The notification posted upon successfully updating the viewers watchlist
     public static let OddWatchlistUpdated = Notification.Name("OddWatchlistUpdated")
+    
+    // The notification posted when a user elects to log out
+    public static let OddUserLoggedOut = Notification.Name("OddUserLoggedOut")
+    
+    // The notification posted when OddStoreKeeper encounters an error that results in canceling an IAP process
+    public static let OddStoreKeeperUnrecoverableError = Notification.Name("OddStoreKeeperUnrecoverableError")
 }
