@@ -97,6 +97,8 @@
 		135E68B61C24611800A0A602 /* UIApplication+TopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */; };
 		135E68B71C24611800A0A602 /* NSURL+query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AC1C24611800A0A602 /* NSURL+query.swift */; };
 		135E68B81C24611800A0A602 /* Array+Bounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68AD1C24611800A0A602 /* Array+Bounds.swift */; };
+		13A524881EDDAFDD00B56353 /* OddActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A524871EDDAFDD00B56353 /* OddActivityViewController.swift */; };
+		13A524891EDDAFDD00B56353 /* OddActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A524871EDDAFDD00B56353 /* OddActivityViewController.swift */; };
 		13B9F4E51C3AD32B00AC04B1 /* OddSDKtvOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 13B9F4E41C3AD32B00AC04B1 /* OddSDKtvOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13B9F4EB1C3AD34B00AC04B1 /* OddContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68841C2460BA00A0A602 /* OddContentStore.swift */; };
 		13B9F4EC1C3AD34B00AC04B1 /* OddConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E68871C2460BA00A0A602 /* OddConfig.swift */; };
@@ -174,6 +176,7 @@
 		135E68AB1C24611800A0A602 /* UIApplication+TopVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+TopVC.swift"; sourceTree = "<group>"; };
 		135E68AC1C24611800A0A602 /* NSURL+query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+query.swift"; sourceTree = "<group>"; };
 		135E68AD1C24611800A0A602 /* Array+Bounds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Bounds.swift"; sourceTree = "<group>"; };
+		13A524871EDDAFDD00B56353 /* OddActivityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddActivityViewController.swift; sourceTree = "<group>"; };
 		13B4D73E1C8A1A040067590B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		13B9F4E21C3AD32B00AC04B1 /* OddSDKtvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OddSDKtvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B9F4E41C3AD32B00AC04B1 /* OddSDKtvOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OddSDKtvOS.h; sourceTree = "<group>"; };
@@ -304,6 +307,7 @@
 				13C1DFA21C2876000091BCBA /* OddConstants.swift */,
 				134386601C3D574C0042CCC8 /* OddLogger.swift */,
 				135E68791C24608200A0A602 /* OddView.swift */,
+				13A524871EDDAFDD00B56353 /* OddActivityViewController.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -652,6 +656,7 @@
 				130A4CED1CDBC4950047F553 /* OddStoreKeeper.swift in Sources */,
 				135E68B51C24611800A0A602 /* Double+Time.swift in Sources */,
 				135E68B61C24611800A0A602 /* UIApplication+TopVC.swift in Sources */,
+				13A524881EDDAFDD00B56353 /* OddActivityViewController.swift in Sources */,
 				135E68B31C24611800A0A602 /* UIImage+Gradient.swift in Sources */,
 				135E68911C2460BA00A0A602 /* OddContentStore.swift in Sources */,
 				135E68B11C24611800A0A602 /* NSDate+String.swift in Sources */,
@@ -684,6 +689,7 @@
 				13B9F4EF1C3AD34B00AC04B1 /* OddMediaObjectCollection.swift in Sources */,
 				13B9F4EE1C3AD34B00AC04B1 /* OddVideo.swift in Sources */,
 				13B9F4FB1C3AD35500AC04B1 /* String+NSDate.swift in Sources */,
+				13A524891EDDAFDD00B56353 /* OddActivityViewController.swift in Sources */,
 				130AA71C1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */,
 				13B9F4FA1C3AD35500AC04B1 /* CMTimeExtension.swift in Sources */,
 				13B9F4ED1C3AD34B00AC04B1 /* OddPromotion.swift in Sources */,
