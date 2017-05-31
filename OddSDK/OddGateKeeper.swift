@@ -514,19 +514,20 @@ open class OddGateKeeper: NSObject {
   
   // after Apple has taken payment and created a subscription this method is used to create a subscription
   // on the clients servers
-  open func createSubscription(_ url: String, params: [ String : AnyObject ]?, callback: @escaping (Bool, jsonObject?, NSError?) -> Void ) {
-    
-    guard let params = params,
-      let receiptURL = Bundle.main.appStoreReceiptURL,
-      let receiptData = (try? Data(contentsOf: receiptURL))?.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0)) else {
-      OddLogger.error("Unable to retrieve app store receipt (Subscribe)")
-      callback (false, nil, nil)
-      return
-    }
+  open func createSubscription(_ url: String, params: [ String : AnyObject ], callback: @escaping (Bool, jsonObject?, NSError?) -> Void ) {
     
     var fullParams = params
+    if params["level"] as? String != "free" {
+        guard let receiptURL = Bundle.main.appStoreReceiptURL,
+          let receiptData = (try? Data(contentsOf: receiptURL))?.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0)) else {
+          OddLogger.error("Unable to retrieve app store receipt (Subscribe)")
+          callback (false, nil, nil)
+          return
+        }
     
-    fullParams["receiptId"] = receiptData as AnyObject
+        fullParams["receiptId"] = receiptData as AnyObject
+    }
+    
     
     print("FULL PARAMS subscribe: \(fullParams)")
     
