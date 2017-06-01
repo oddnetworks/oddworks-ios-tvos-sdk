@@ -326,6 +326,15 @@ public class APIService: NSObject, OddHTTPRequestService {
           let cache = maxAge.replacingOccurrences(of: "max-age=", with: "")
           cacheTime = Int(cache)
         }
+        
+        if res.statusCode == 500 {
+            self.parseData(data, callback: { (json, error) in
+                OddLogger.info("Data: \(String(describing: json))")
+            })
+            
+            OddLogger.info("Response: \(res)")
+            OddLogger.info("Error: \(String(describing: error))")
+        }
 
         if res.statusCode == 401 { // unauthorized
           print("Error server responded with 401: Unauthorized to \(url) with \(self.authToken)")
