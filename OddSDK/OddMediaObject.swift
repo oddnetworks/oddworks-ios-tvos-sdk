@@ -66,10 +66,10 @@ import UIKit
   static func fromString(_ str: String) -> OddMediaObjectType? {
     #if os(tvOS)
       switch str {
-      case "video": return .Video
-      case "liveStream": return .LiveStream
-      case "collection": return .Collection
-      case "promotion": return .Promotion
+      case "video": return .video
+      case "liveStream": return .liveStream
+      case "collection": return .collection
+      case "promotion": return .promotion
       default: return nil
       }
     #else
@@ -89,10 +89,10 @@ import UIKit
   func toString() -> String {
     #if os(tvOS)
       switch self {
-      case .Video: return "video"
-      case .LiveStream: return "liveStream"
-      case .Collection: return "collection"
-      case .Promotion: return "promotion"
+      case .video: return "video"
+      case .liveStream: return "liveStream"
+      case .collection: return "collection"
+      case .promotion: return "promotion"
       }
     #else
       switch self {
@@ -111,10 +111,10 @@ import UIKit
   func toObject(_ data: jsonObject) -> OddMediaObject {
     #if os(tvOS)
       switch self {
-      case .Video: return OddVideo.videoFromJson(data)
-      case .LiveStream: return OddVideo.videoFromJson(data)
-      case .Collection: return OddMediaObjectCollection.mediaCollectionFromJson(data)
-      case .Promotion: return OddPromotion.promotionFromJson(data)
+      case .video: return OddVideo.videoFromJson(data)
+      case .liveStream: return OddVideo.videoFromJson(data)
+      case .collection: return OddMediaObjectCollection.mediaCollectionFromJson(data)
+      case .promotion: return OddPromotion.promotionFromJson(data)
       }
     #else
       switch self {

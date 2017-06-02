@@ -774,11 +774,11 @@ public typealias jsonArray = Array<jsonObject>
       
       #if os(tvOS)
         switch mediaObjectType {
-        case .Video, .LiveStream :
+        case .video, .liveStream :
           mediaObject = OddVideo.videoFromJson(json)
-        case .Promotion :
+        case .promotion :
           mediaObject = OddPromotion.promotionFromJson(json)
-        case .Collection :
+        case .collection :
           mediaObject = OddMediaObjectCollection.mediaCollectionFromJson(json)
         }
       #else
