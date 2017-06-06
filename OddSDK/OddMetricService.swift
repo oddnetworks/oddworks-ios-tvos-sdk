@@ -149,7 +149,7 @@ public struct OddMetricService {
       }
       
 //      OddLogger.info("PARAMS SENT IN METRIC POST: \(params)")
-      
+      OddLogger.info("PARAMS: \(params)")
       APIService.sharedService.post(params as jsonObject?, url: "events") { (response, error) -> () in
         if let e = error {
           OddLogger.error("<<Metric post with type '\(stat.actionString)' failed with error: \(e.localizedDescription)>>")

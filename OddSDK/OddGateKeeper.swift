@@ -424,7 +424,7 @@ open class OddGateKeeper: NSObject {
           if res.statusCode == 401 {
             self.blowAwayCredentials()
           }
-          OddLogger.logAndDisplayError(error: "Error, server responded with: \(res.statusCode)" )
+          OddLogger.error("Error, server responded with: \(res.statusCode)" )
           let e = NSError(domain: "ODD", code: res.statusCode, userInfo: [ "statusCode": res.statusCode, "message" : "unable to complete http request" ])
           callback(nil, e)
           return

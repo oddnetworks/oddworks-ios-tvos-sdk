@@ -99,7 +99,7 @@ open class APIService: NSObject {
   var baseURL: String {
     get {
       switch serverMode {
-      case .staging: return "https://device-staging.oddworks.io"
+      case .staging: return "https://staging.device.oddworks.io"
       case .beta: return "https://beta.oddworks.io"
       case .local: return "http://127.0.0.1:8000"
       default: return "https://device.oddworks.io"
