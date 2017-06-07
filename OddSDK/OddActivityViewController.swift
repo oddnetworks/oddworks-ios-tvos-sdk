@@ -12,7 +12,7 @@ import UIKit
 
 public class OddActivityViewController: UIViewController {
     
-//    private let activityView = ActivityView()
+    //    private let activityView = ActivityView()
     
     public init(message: String, backgroundColor: UIColor, yOffset: CGFloat = 0) {
         super.init(nibName: nil, bundle: nil)
@@ -36,6 +36,15 @@ public class OddActivityViewController: UIViewController {
 }
 
 private class ActivityView: UIView {
+    
+    #if os(iOS)
+    let boxHeight: CGFloat = 160
+    let boxWidth: CGFloat = 160
+    #elseif os(tvOS)
+    let boxHeight: CGFloat = 320
+    let boxWidth: CGFloat = 320
+    #endif
+    
     
     let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     let boundingBoxView = UIView(frame: CGRect.zero)
@@ -78,15 +87,15 @@ private class ActivityView: UIView {
         
         frame = CGRect(x: 0, y: self.yOffset, width: self.frame.width, height: self.frame.height)
         
-        boundingBoxView.frame.size.width = 160.0
-        boundingBoxView.frame.size.height = 160.0
+        boundingBoxView.frame.size.width = self.boxWidth
+        boundingBoxView.frame.size.height = self.boxHeight
         boundingBoxView.frame.origin.x = ceil((bounds.width / 2.0) - (boundingBoxView.frame.width / 2.0))
         boundingBoxView.frame.origin.y = ceil((bounds.height / 2.0) - (boundingBoxView.frame.height / 2.0))
         
         activityIndicatorView.frame.origin.x = ceil((bounds.width / 2.0) - (activityIndicatorView.frame.width / 2.0))
         activityIndicatorView.frame.origin.y = ceil((bounds.height / 2.0) - (activityIndicatorView.frame.height / 2.0))
         
-        let messageLabelSize = messageLabel.sizeThatFits(CGSize(width: 160.0 - 20.0 * 2.0, height: CGFloat.greatestFiniteMagnitude))
+        let messageLabelSize = messageLabel.sizeThatFits(CGSize(width: self.boxWidth - 20.0 * 2.0, height: CGFloat.greatestFiniteMagnitude))
         messageLabel.frame.size.width = messageLabelSize.width
         messageLabel.frame.size.height = messageLabelSize.height
         messageLabel.frame.origin.x = ceil((bounds.width / 2.0) - (messageLabel.frame.width / 2.0))
