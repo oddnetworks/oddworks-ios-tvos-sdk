@@ -496,7 +496,8 @@ public typealias jsonArray = Array<jsonObject>
               let result = objectFromJson(newObjectJson)
               if let object = result.object {
                 self.featuredMediaObjectId = itemId
-                self.mediaObjects.insert(object)
+//                self.mediaObjects.insert(object)
+                self.replaceMediaObject(withObject: object)
                 NotificationCenter.default.post(Notification(name: OddConstants.OddFeaturedMediaObjectLoadedNotification, object: self ) )
               }
             } // newObjectJson
@@ -545,7 +546,8 @@ public typealias jsonArray = Array<jsonObject>
             if let mediaObjectCollection = result.object as? OddMediaObjectCollection,
               let id = mediaObjectCollection.id {
                 self.featuredCollectionIds?.append(id)
-                self.mediaObjects.insert(mediaObjectCollection)
+//                self.mediaObjects.insert(mediaObjectCollection)
+                self.replaceMediaObject(withObject: mediaObjectCollection)
             }
           }
       }
@@ -584,7 +586,8 @@ public typealias jsonArray = Array<jsonObject>
             newPromo.timer = promoTimer
           }
         
-          self.mediaObjects.insert(newPromo)
+//          self.mediaObjects.insert(newPromo)
+            self.replaceMediaObject(withObject: newPromo)
           self.featuredPromotionId = promoId
           NotificationCenter.default.post(Notification(name: OddConstants.OddFeaturedPromotionLoadedNotification, object: self ) )
         }
@@ -805,7 +808,8 @@ public typealias jsonArray = Array<jsonObject>
               mediaObject.cacheTime = globalCacheTime
           }
         }
-        self.mediaObjects.insert(mediaObject)
+//        self.mediaObjects.insert(mediaObject)
+        self.replaceMediaObject(withObject: mediaObject)
       }
       
       
@@ -911,11 +915,13 @@ public typealias jsonArray = Array<jsonObject>
             switch type {
             case .video:
               let video = OddVideo.videoFromJson(data)
-              self.mediaObjects.insert(video)
+//              self.mediaObjects.insert(video)
+                              self.replaceMediaObject(withObject: video)
               callback(video)
             case .collection:
               let collection = OddMediaObjectCollection.mediaCollectionFromJson(data)
-              self.mediaObjects.insert(collection)
+//              self.mediaObjects.insert(collection)
+              self.replaceMediaObject(withObject: collection)
               callback(collection)
             default:
               break
@@ -1048,12 +1054,14 @@ public typealias jsonArray = Array<jsonObject>
               switch resultObject.type {
               case .some(.video) :
                 if let video = resultObject.object as? OddVideo {
-                  self.mediaObjects.insert(video)
+//                  self.mediaObjects.insert(video)
+                self.replaceMediaObject(withObject: video)
                   videoResults.append(video)
                 }
               case .some(.collection) :
                 if let collection = resultObject.object as? OddMediaObjectCollection {
-                  self.mediaObjects.insert(collection)
+//                  self.mediaObjects.insert(collection)
+                self.replaceMediaObject(withObject: collection)
                   collectionResults.append(collection)
                 }
               default:
@@ -1114,4 +1122,23 @@ public typealias jsonArray = Array<jsonObject>
     return result
   }
   
+    public func replaceMediaObject(withObject object: OddMediaObject) {
+        OddLogger.debug("=============================================================")
+        OddLogger.debug("START MediaObjects Count: \(self.mediaObjects.count)")
+        let existing = self.mediaObjects.filter { (existingObject) -> Bool in
+            return existingObject.id == object.id
+        }
+        if existing.first != nil {
+//            let oType = existing.first!.mediaObjectType == nil ? "unknown type" : existing.first!.mediaObjectType!.toString()
+            OddLogger.debug("Removing \(existing.first!.title!) - \(existing.first!.id!)")
+            self.mediaObjects.remove(existing.first!)
+        }
+        
+//        let oType = object.mediaObjectType == nil ? "unknown type" : object.mediaObjectType!.toString()
+        OddLogger.debug("Adding \(object.title!) - \(object.id!)")
+        
+        self.mediaObjects.insert(object)
+        
+        OddLogger.debug("END MediaObjects Count: \(self.mediaObjects.count)")
+    }
 }

@@ -207,7 +207,7 @@ open class OddGateKeeper: NSObject {
                 callback(nil, nil, nil, e)
             } else {
                 if let json = res as? Dictionary<String, AnyObject> {
-                    //          OddLogger.info("Auth Config: \(json)")
+                              OddLogger.info("Auth Config: \(json)")
                     
                     // old swift
                     //          if let data = json["data"] as? Dictionary<String, AnyObject> {
