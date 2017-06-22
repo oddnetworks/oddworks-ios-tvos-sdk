@@ -105,8 +105,9 @@ open class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTransac
   // MARK: - SKRequestDelegate
   
   open func request(_ request: SKRequest, didFailWithError error: Error) {
-    OddLogger.logAndDisplayError(error: "Store Request Error: \(error.localizedDescription)")
-    NotificationCenter.default.post(name: OddConstants.OddStoreKeeperUnrecoverableError, object: nil)
+//    OddLogger.logAndDisplayError(error: "Store Request Error: \(error.localizedDescription)")
+    let errorMessage = "Store Request Error: \(error.localizedDescription)"
+    NotificationCenter.default.post(name: OddConstants.OddStoreKeeperUnrecoverableError, object: ["error": errorMessage])
   }
   
   func logRequest(_ request: SKRequest) {
