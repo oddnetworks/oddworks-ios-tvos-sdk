@@ -157,6 +157,8 @@
 		13BA17E41D525AC7001733C1 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BA17E21D525AC7001733C1 /* OddImage.swift */; };
 		13BA17E51D539403001733C1 /* OddImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BA17E21D525AC7001733C1 /* OddImage.swift */; };
 		13C1DFA31C2876000091BCBA /* OddConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C1DFA21C2876000091BCBA /* OddConstants.swift */; };
+		13D7AA921F20EA31000DA8C2 /* OddVastService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D7AA911F20EA31000DA8C2 /* OddVastService.swift */; };
+		13D7AA931F20EA31000DA8C2 /* OddVastService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D7AA911F20EA31000DA8C2 /* OddVastService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -222,6 +224,7 @@
 		13B9F4E61C3AD32B00AC04B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		13BA17E21D525AC7001733C1 /* OddImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddImage.swift; sourceTree = "<group>"; };
 		13C1DFA21C2876000091BCBA /* OddConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddConstants.swift; sourceTree = "<group>"; };
+		13D7AA911F20EA31000DA8C2 /* OddVastService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddVastService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -373,6 +376,7 @@
 				134797791C51424800876D39 /* Keychain.swift */,
 				130AA71A1C4EDFA8009784E8 /* OddGateKeeper.swift */,
 				1363E4031DE39FB800207C21 /* OddEventsService.swift */,
+				13D7AA911F20EA31000DA8C2 /* OddVastService.swift */,
 				135E687B1C24608200A0A602 /* APIService.swift */,
 			);
 			name = Services;
@@ -733,6 +737,7 @@
 				135E68911C2460BA00A0A602 /* OddContentStore.swift in Sources */,
 				135E68B11C24611800A0A602 /* NSDate+String.swift in Sources */,
 				130AA71B1C4EDFA8009784E8 /* OddGateKeeper.swift in Sources */,
+				13D7AA921F20EA31000DA8C2 /* OddVastService.swift in Sources */,
 				135E68B41C24611800A0A602 /* UIViewController+TitleImage.swift in Sources */,
 				1363E4041DE39FB800207C21 /* OddEventsService.swift in Sources */,
 			);
@@ -754,6 +759,7 @@
 				13A5BA4D1CD9265500DF4A7F /* OddRelationship.swift in Sources */,
 				1347977B1C51424800876D39 /* Keychain.swift in Sources */,
 				134386621C3D574C0042CCC8 /* OddLogger.swift in Sources */,
+				13D7AA931F20EA31000DA8C2 /* OddVastService.swift in Sources */,
 				1382F1A71D906586009F0344 /* OddSource.swift in Sources */,
 				132081C11EAF9C8600F258E6 /* OddActivityViewController.swift in Sources */,
 				13BA17E41D525AC7001733C1 /* OddImage.swift in Sources */,
