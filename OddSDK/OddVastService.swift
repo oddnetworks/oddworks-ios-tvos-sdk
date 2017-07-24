@@ -33,7 +33,7 @@ enum VastVersion: String {
     case v2_0 = "2.0"
 }
 
-struct MediaFile {
+public struct MediaFile {
     var id: String?
     var delivery: String?
     var width: Int?
@@ -42,7 +42,7 @@ struct MediaFile {
     var bitrate: Int?
     var scalable: Bool?
     var maintainAspectRatio: Bool?
-    var uri: String?
+    public var uri: String?
 }
 
 struct VideoClicks {
@@ -50,11 +50,11 @@ struct VideoClicks {
     var uri: String?
 }
 
-struct TrackingEvent {
-    var event: String?
+public struct TrackingEvent {
+    public var event: String?
     var uri: String?
     
-    func ping() {
+    public func ping() {
         guard let uri = self.uri,
             let url = URL(string: uri) else { return }
         
@@ -210,7 +210,7 @@ struct Ad {
 
 }
 
-struct Vast {
+public struct Vast {
     var version: VastVersion?
     var ads: [Ad] = []
     
@@ -221,7 +221,7 @@ struct Vast {
         return adsWithMediaFiles.first
     }
     
-    func firstBestAdMp4() -> (mp4: MediaFile?, trackingEvents: [TrackingEvent]) {
+    public func firstBestAdMp4() -> (mp4: MediaFile?, trackingEvents: [TrackingEvent]) {
         
         guard let ad = self.firstAdWithMediaFiles(),
             let creative = ad.firstCreativeContainingMediaFiles,
@@ -238,7 +238,7 @@ struct Vast {
 }
 
 
-class OddVastService: NSObject, XMLParserDelegate {
+public class OddVastService: NSObject, XMLParserDelegate {
     var vast: Vast? = nil
     
     var currentBranch: String = ""
@@ -255,7 +255,7 @@ class OddVastService: NSObject, XMLParserDelegate {
     
     var readBuffer = [String: String]()
 
-    init(url: URL, onComplete: ((Vast?) -> ())?) {
+    public init(url: URL, onComplete: ((Vast?) -> ())?) {
         
         func parseAndCallback(withData data: Data) {
             DispatchQueue.global().async(execute: {
@@ -304,15 +304,15 @@ class OddVastService: NSObject, XMLParserDelegate {
     
     // MARK: - XMLParserDelegate
     
-    func parserDidStartDocument(_ parser: XMLParser) {
+    public func parserDidStartDocument(_ parser: XMLParser) {
         OddLogger.info("Begin Parse")
     }
     
-    func parserDidEndDocument(_ parser: XMLParser) {
+    public func parserDidEndDocument(_ parser: XMLParser) {
         OddLogger.info("End Parse")
     }
     
-    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+    public func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         self.currentBranch = elementName
         
         switch elementName {
@@ -328,7 +328,7 @@ class OddVastService: NSObject, XMLParserDelegate {
         }
     }
     
-    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    public func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         switch elementName {
         case "MediaFiles": self.currentLinear.mediaFiles = self.currentMediaFiles
         case "TrackingEvents": self.currentLinear.trackingEvents = self.currentTrackingEvents
@@ -344,7 +344,7 @@ class OddVastService: NSObject, XMLParserDelegate {
         OddLogger.info("CurrentCreative: \(self.currentCreative.info())")
     }
     
-    func parser(_ parser: XMLParser, foundCharacters string: String) {
+    public func parser(_ parser: XMLParser, foundCharacters string: String) {
         OddLogger.info("Found: \(string) for branch: \(self.currentBranch)")
         
         let cleanString = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -359,7 +359,7 @@ class OddVastService: NSObject, XMLParserDelegate {
         print("### INLINE: \(self.currentInLine)")
     }
     
-    func parser(_ parser: XMLParser, foundCDATA CDATABlock: Data) {
+    public func parser(_ parser: XMLParser, foundCDATA CDATABlock: Data) {
         let string = String(data: CDATABlock, encoding: .utf8)
         let cleanString = string?.trimmingCharacters(in: .whitespacesAndNewlines)
         OddLogger.info("FOUND CDATA: \(String(describing: cleanString))")
@@ -378,7 +378,7 @@ class OddVastService: NSObject, XMLParserDelegate {
         }
     }
     
-    func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+    public func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
         OddLogger.error(parseError.localizedDescription)
     }
     //MARK: - Vast parsing
