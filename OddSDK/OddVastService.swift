@@ -278,7 +278,7 @@ public class OddVastService: NSObject, XMLParserDelegate {
         result = result.replacingOccurrences(of: "[description_url]", with: description)
         result = result.replacingOccurrences(of: "[timestamp]", with: timeString)
         
-        print("completeURI: \(result)")
+        OddLogger.debug("VAST completeURI: \(result)")
         
         return result
     }
