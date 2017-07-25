@@ -62,11 +62,11 @@ public struct TrackingEvent {
         
         let task = URLSession.shared.dataTask( with: request as URLRequest, completionHandler: { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
-                print("Status code: \(httpResponse.statusCode) for \(self.event!)")
+                OddLogger.debug("VAST Tracking Event Status code: \(httpResponse.statusCode) for \(self.event!)")
                 return
             }
             
-            OddLogger.info("No Response for Tracking Event")
+            OddLogger.warn("No Response for Tracking Event")
         })
         
         task.resume()
@@ -254,6 +254,34 @@ public class OddVastService: NSObject, XMLParserDelegate {
     var currentTrackingEvents: [TrackingEvent] = Array<TrackingEvent>()
     
     var readBuffer = [String: String]()
+    
+    // inserts any paramters into uri as required
+    public static func completeURI(_ uri: String, mediaObject: OddMediaObject) -> String {
+//        [referrer_url]
+//        [description_url]
+//        [timestamp]
+        let bundleId = Bundle.main.bundleIdentifier ?? "Oddworks"
+        
+        let referrerURL = bundleId
+        
+        let id = mediaObject.id ?? "unknownId"
+        let title = mediaObject.title ?? "unknown"
+        
+        let  description = "\(id) - \(title)"
+        
+        let timestamp = Date().timeIntervalSince1970
+        let timeString = String(format: "%.0f", timestamp)
+        
+        var result = uri
+        
+        result = result.replacingOccurrences(of: "[referrer_url]", with: referrerURL)
+        result = result.replacingOccurrences(of: "[description_url]", with: description)
+        result = result.replacingOccurrences(of: "[timestamp]", with: timeString)
+        
+        print("completeURI: \(result)")
+        
+        return result
+    }
 
     public init(url: URL, onComplete: ((Vast?) -> ())?) {
         
@@ -279,7 +307,7 @@ public class OddVastService: NSObject, XMLParserDelegate {
         } else {
             let request = NSMutableURLRequest(url: url)
             URLSession.shared.reset(completionHandler: {
-                OddLogger.info("Session Reset")
+                OddLogger.debug("Session Reset")
             })
             let task = URLSession.shared.dataTask( with: request as URLRequest, completionHandler: { data, response, error in
                 guard let data = data else {
@@ -305,11 +333,11 @@ public class OddVastService: NSObject, XMLParserDelegate {
     // MARK: - XMLParserDelegate
     
     public func parserDidStartDocument(_ parser: XMLParser) {
-        OddLogger.info("Begin Parse")
+        OddLogger.debug("Begin Parse")
     }
     
     public func parserDidEndDocument(_ parser: XMLParser) {
-        OddLogger.info("End Parse")
+        OddLogger.debug("End Parse")
     }
     
     public func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
@@ -332,7 +360,7 @@ public class OddVastService: NSObject, XMLParserDelegate {
         switch elementName {
         case "MediaFiles": self.currentLinear.mediaFiles = self.currentMediaFiles
         case "TrackingEvents": self.currentLinear.trackingEvents = self.currentTrackingEvents
-        case "Linear": self.currentCreative.linear = self.currentLinear; print("NEW LINEAR")
+        case "Linear": self.currentCreative.linear = self.currentLinear;
         case "Creative" : self.currentCreatives.append(self.currentCreative)
         case "Creatives": self.currentInLine.creatives = self.currentCreatives
         case "InLine": self.currentAd.inLine = self.currentInLine
@@ -341,11 +369,11 @@ public class OddVastService: NSObject, XMLParserDelegate {
         default: break
         }
         
-        OddLogger.info("CurrentCreative: \(self.currentCreative.info())")
+        OddLogger.debug("CurrentCreative: \(self.currentCreative.info())")
     }
     
     public func parser(_ parser: XMLParser, foundCharacters string: String) {
-        OddLogger.info("Found: \(string) for branch: \(self.currentBranch)")
+        OddLogger.debug("Found: \(string) for branch: \(self.currentBranch)")
         
         let cleanString = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         
@@ -356,13 +384,12 @@ public class OddVastService: NSObject, XMLParserDelegate {
         default: break
         }
         self.currentBranch = ""
-        print("### INLINE: \(self.currentInLine)")
     }
     
     public func parser(_ parser: XMLParser, foundCDATA CDATABlock: Data) {
         let string = String(data: CDATABlock, encoding: .utf8)
         let cleanString = string?.trimmingCharacters(in: .whitespacesAndNewlines)
-        OddLogger.info("FOUND CDATA: \(String(describing: cleanString))")
+        OddLogger.debug("FOUND CDATA: \(String(describing: cleanString))")
         
         switch self.currentBranch {
         case "Description": self.currentInLine.description = cleanString
@@ -389,7 +416,7 @@ public class OddVastService: NSObject, XMLParserDelegate {
             let version = VastVersion(rawValue: versionString ) else { return }
         
         self.vast = Vast(version: version, ads: [])
-        OddLogger.info("Creating Vast Object version: \(String(describing: self.vast?.version))")
+        OddLogger.debug("Creating Vast Object version: \(String(describing: self.vast?.version))")
     }
     
     func parseAd(attributes a: [String : String]) {
@@ -414,7 +441,7 @@ public class OddVastService: NSObject, XMLParserDelegate {
     }
     
     func parseTrackingEvent(attributes a: [String : String]) {
-        OddLogger.info("parseTrackingEvent: \(a)")
+        OddLogger.debug("parseTrackingEvent: \(a)")
         self.currentTrackingEvent = TrackingEvent(event: a["event"], uri: nil)
     }
     
