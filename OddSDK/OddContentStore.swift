@@ -282,6 +282,8 @@ public typealias jsonArray = Array<jsonObject>
     if beta {
       OddLogger.info("### Not for production Applications ###")
     }
+    
+    OddLogger.info("Using API root: \(OddContentStore.sharedStore.API.baseURL)")
   }
   
   /// Initializes the content store. If the config is successfully loaded upon completion the
