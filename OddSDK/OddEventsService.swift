@@ -139,7 +139,7 @@ public enum OddMetricAction: String {
         "attributes" : [
           //   "organizationId" : "\(organizationID)",
           "action" : "\(stat.actionString)",
-          "userId" : self.userId(),
+          "viewer" : self.userId(),
           "sessionId" : self.sessionId()
         ]
       ] as [String : Any]
