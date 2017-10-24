@@ -47,9 +47,8 @@ public enum OddMetricAction: String {
   private var _sessionId: String = ""
   public var videoSessionId: String = ""
     
-  public var eventsURL = "https://events-crtv.oddnetworks.com/"
+  public var eventsURL = "https://analytics.oddworks.io/"
 
-  
   override init() {
     super.init()
     let userId = self.userId()
@@ -116,6 +115,9 @@ public enum OddMetricAction: String {
       var contentThumbnailURL = "null"
       //      let organizationID = OddContentStore.sharedStore.organizationId
       
+    if action == .VideoLoad {
+        self.resetVideoSessionId()
+    }
       if let content = content {
         contentType = content.contentTypeString
         
@@ -182,7 +184,6 @@ public enum OddMetricAction: String {
       }
       
       OddLogger.info("PARAMS SENT IN METRIC POST: \(params)")
-      
         
       let data = [ "data" : params ]
       
