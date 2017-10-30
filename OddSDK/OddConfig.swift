@@ -48,6 +48,8 @@ public struct EventSettings {
 }
 
 public struct EventsConfiguration {
+    public var eventsUrl: String = "https://analytics.oddworks.io/"
+    
   var enabledStats: Array<EventSettings> = [
     EventSettings(action: .AppInit, actionString: "app:init", enabled: true, interval: nil),
     EventSettings(action: .ViewLoad, actionString: "view:load", enabled: true, interval: nil),
@@ -73,6 +75,13 @@ public struct EventsConfiguration {
         let metricStat = EventSettings(action: action, actionString: actionString, enabled: enabled, interval: adjustedInterval )
         enabledStats.append(metricStat)
       }
+    }
+    
+    if metrics["url"] as? String != nil {
+        self.eventsUrl = metrics["url"] as! String
+        if self.eventsUrl.hasSuffix("/events") {
+            self.eventsUrl = String(self.eventsUrl.dropLast(6))
+        }
     }
     
     enabledStats.removeAll()

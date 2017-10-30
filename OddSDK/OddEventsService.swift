@@ -46,8 +46,6 @@ public enum OddMetricAction: String {
   
   private var _sessionId: String = ""
   public var videoSessionId: String = ""
-    
-  public var eventsURL = "https://analytics.oddworks.io/"
 
   override init() {
     super.init()
@@ -107,6 +105,7 @@ public enum OddMetricAction: String {
   }
   
   public func postMetricForAction(_ action: OddMetricAction, playerInfo: OddMediaPlayerInfo?, content: OddMediaObject?, callback: APICallback?) {
+    
     if let stat = OddContentStore.sharedStore.config?.analyticsManager.findEnabled(action) {
       //parsing content
       var contentId = "null"
@@ -186,8 +185,10 @@ public enum OddMetricAction: String {
       OddLogger.info("PARAMS SENT IN METRIC POST: \(params)")
         
       let data = [ "data" : params ]
+        
+      let eventsUrl = OddContentStore.sharedStore.config?.analyticsManager.eventsUrl
       
-      self.deliveryService.post(data as [String : AnyObject]?, url: "events", altDomain: self.eventsURL) { (response, error) -> () in
+        self.deliveryService.post(data as [String : AnyObject]?, url: "events", altDomain: eventsUrl) { (response, error) -> () in
         if let e = error {
           OddLogger.error("<<Metric post with type '\(stat.actionString)' failed with error: \(e.localizedDescription)>>")
           callback?(nil, error)
