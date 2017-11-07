@@ -290,7 +290,7 @@ public class OddGateKeeper: NSObject {
     }
   }
   
-  func checkForAuthentication() {
+  @objc func checkForAuthentication() {
     if authAttemptCount < numberOfAuthAttempts {
       authAttemptCount += 1
       print("Checking for change in auth status: \(authAttemptCount)")

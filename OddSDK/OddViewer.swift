@@ -140,7 +140,7 @@ public class OddViewer {
       return nil
     }
     
-    return objects
+    return Array(objects)
   }
   
   
