@@ -117,6 +117,9 @@ public struct EventsConfiguration {
   var adManager = AdServiceConfiguration()
   public var requiresAuthentication: Bool = false
     
+    public var terminationEnabled: Bool = false
+    public var terminationMinutes: Int = 0
+    
   class func configFromJson( _ json : Dictionary<String, AnyObject> ) -> OddConfig? {
     let newConfig = OddConfig()
     guard let data = json["data"] as? Dictionary<String, AnyObject>,
@@ -149,6 +152,11 @@ public struct EventsConfiguration {
         newConfig.requiresAuthentication = auth["enabled"] as! Bool
 //          AuthenticationCredentials.credentialsFromJson(auth)
       }
+        
+        if let termination = features["videoTermination"] as? jsonObject {
+            newConfig.terminationEnabled = termination["enabled"] as? Bool ?? false
+            newConfig.terminationMinutes = termination["minutes"] as? Int ?? 0
+        }
     
     } // end features
     
