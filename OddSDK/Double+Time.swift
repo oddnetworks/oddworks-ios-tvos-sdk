@@ -29,8 +29,8 @@ extension Double {
     return milliseconds
   }
   
-  func roundTimeForMetrics() -> Int {
-    return Int(self/100) * 100
+  mutating func roundTimeForMetrics() -> Int {
+    return Int(Darwin.round(self / 100) * 100)
   }
   
 }
