@@ -46,6 +46,8 @@
 		1347977A1C51424800876D39 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134797791C51424800876D39 /* Keychain.swift */; };
 		1347977B1C51424800876D39 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134797791C51424800876D39 /* Keychain.swift */; };
 		1347977C1C51424800876D39 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134797791C51424800876D39 /* Keychain.swift */; };
+		13539CAB211225AC00598DAC /* OddStoreKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13539CAA211225AC00598DAC /* OddStoreKeeper.swift */; };
+		13539CAC211225B400598DAC /* OddStoreKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13539CAA211225AC00598DAC /* OddStoreKeeper.swift */; };
 		1353FA831C46F0B200B57A83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1353FA821C46F0B200B57A83 /* AppDelegate.swift */; };
 		1353FA851C46F0B200B57A83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1353FA841C46F0B200B57A83 /* ViewController.swift */; };
 		1353FA881C46F0B200B57A83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1353FA861C46F0B200B57A83 /* Main.storyboard */; };
@@ -177,6 +179,7 @@
 		132890891DC133D400F31614 /* OddViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddViewer.swift; sourceTree = "<group>"; };
 		134386601C3D574C0042CCC8 /* OddLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddLogger.swift; sourceTree = "<group>"; };
 		134797791C51424800876D39 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		13539CAA211225AC00598DAC /* OddStoreKeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddStoreKeeper.swift; sourceTree = "<group>"; };
 		1353FA801C46F0B200B57A83 /* DebugApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebugApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1353FA821C46F0B200B57A83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1353FA841C46F0B200B57A83 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -378,6 +381,7 @@
 				1363E4031DE39FB800207C21 /* OddEventsService.swift */,
 				13D7AA911F20EA31000DA8C2 /* OddVastService.swift */,
 				135E687B1C24608200A0A602 /* APIService.swift */,
+				13539CAA211225AC00598DAC /* OddStoreKeeper.swift */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -712,6 +716,7 @@
 				135E68B81C24611800A0A602 /* Array+Bounds.swift in Sources */,
 				135E68AF1C24611800A0A602 /* CMTimeExtension.swift in Sources */,
 				1347977A1C51424800876D39 /* Keychain.swift in Sources */,
+				13539CAB211225AC00598DAC /* OddStoreKeeper.swift in Sources */,
 				134386611C3D574C0042CCC8 /* OddLogger.swift in Sources */,
 				135E68821C24608200A0A602 /* APIService.swift in Sources */,
 				135E68B21C24611800A0A602 /* NSObject+ClassName.swift in Sources */,
@@ -760,6 +765,7 @@
 				1347977B1C51424800876D39 /* Keychain.swift in Sources */,
 				134386621C3D574C0042CCC8 /* OddLogger.swift in Sources */,
 				13D7AA931F20EA31000DA8C2 /* OddVastService.swift in Sources */,
+				13539CAC211225B400598DAC /* OddStoreKeeper.swift in Sources */,
 				1382F1A71D906586009F0344 /* OddSource.swift in Sources */,
 				132081C11EAF9C8600F258E6 /* OddActivityViewController.swift in Sources */,
 				13BA17E41D525AC7001733C1 /* OddImage.swift in Sources */,
