@@ -300,7 +300,7 @@ enum OddFeatureType {
     /// depending on the success of the loading call
     func fetchConfig(_ success: @escaping (Bool, NSError?)->Void ) {
         OddLogger.info("FETCHING CONFIG")
-        API.get( nil, url: "config") { ( response, err ) -> () in
+        API.get( nil, url: "config", altDomain: nil) { ( response, err ) -> () in
             if let error = err {
                 OddLogger.error("Error fetching config: \(error.localizedDescription)")
                 NotificationCenter.default.post(name: OddConstants.OddErrorFetchingConfigNotification, object: self, userInfo: nil)
@@ -480,7 +480,7 @@ enum OddFeatureType {
         var urlStr = "\(type.toString() )s/\(id)"
         if let include = include { urlStr = "\(urlStr)?include=\(include)" }
         
-        API.get(nil , url: urlStr ) { (response, error) -> () in
+        API.get(nil , url: urlStr, altDomain: nil ) { (response, error) -> () in
             if error != nil {
                 self.returnError("Error fetching \(type.toString()): \(id)", errorCode: 105, notification: nil, callback: callback)
             } else {
@@ -524,7 +524,7 @@ enum OddFeatureType {
     /// The array passed to `callback` will either contain the entities matching the query or be empty
     /// if no entities were found
     public func fetchObjectsWithQuery ( _ type: OddMediaObjectType, query: String, callback: @escaping ( Array<OddMediaObject>, NSError? ) -> () ) {
-        API.get(nil, url: query) { (response, error) -> () in
+        API.get(nil, url: query, altDomain: nil) { (response, error) -> () in
             if error != nil {
                 OddLogger.error("Error fetching objects with query")
                 callback([], error)
@@ -632,7 +632,7 @@ enum OddFeatureType {
             NotificationCenter.default.post(Notification(name: OddConstants.OddStartedSearchNotification, object: nil))
         })
         
-        API.get( nil, url: "search?q=\(term.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)") { ( response, error ) -> () in
+        API.get( nil, url: "search?q=\(term.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)", altDomain: nil) { ( response, error ) -> () in
             if let _ = error {
                 print("Error fetching search results")
                 onResults (nil, nil)

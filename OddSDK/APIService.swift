@@ -149,7 +149,7 @@ public class APIService: NSObject, OddHTTPRequestService {
             return token
         }
     }
-    
+        
     /// The url sting used by the APIService to contact the API server
     ///
     /// This string is a combination of the `baseURL` and the currently supported
@@ -180,8 +180,8 @@ public class APIService: NSObject, OddHTTPRequestService {
     /// requested object or an error if the request failed
     ///
     /// See also: `APICallback`
-    public func get(_ params: [ String : AnyObject ]?, url: String, callback: @escaping APICallback) {
-        request("GET", params: params, url: url, callback: callback)
+    public func get(_ params: [ String : AnyObject ]?, url: String, altDomain: String?, callback: @escaping APICallback) {
+        request("GET", params: params, url: url, altDomain: altDomain, callback: callback)
     }
     
     /// Performs a `POST` request on the API Server
@@ -277,9 +277,15 @@ public class APIService: NSObject, OddHTTPRequestService {
         }
         
         
+        
         //Build & App Specific Headers:
         request.addValue(agentHeader.constructHeader(), forHTTPHeaderField: "x-odd-user-agent")
-        request.addValue("Bearer \(userAuthToken)", forHTTPHeaderField: "Authorization")
+        if domain == OddStoreKeeper.connectURL {
+            let connectToken = OddStoreKeeper.connectAccessToken
+            request.addValue("Bearer \(connectToken ?? "token undefined")", forHTTPHeaderField: "Authorization")
+        } else {
+            request.addValue("Bearer \(userAuthToken)", forHTTPHeaderField: "Authorization")
+        }
         //Utility Headers:
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")

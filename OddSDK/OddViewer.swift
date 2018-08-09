@@ -35,7 +35,7 @@ public class OddViewer {
       onResults(nil, error)
     }
     
-    OddContentStore.sharedStore.API.get( nil, url: "viewers/\(OddViewer.current.id)/relationships/watchlist") { ( response, error ) -> () in
+    OddContentStore.sharedStore.API.get( nil, url: "viewers/\(OddViewer.current.id)/relationships/watchlist", altDomain: nil) { ( response, error ) -> () in
       if let _ = error {
         let errorMessage = "Error fetching watchlist"
         let error = OddContentStore.sharedStore.buildError(errorMessage, errorCode: 109, notification: nil)

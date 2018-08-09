@@ -31,15 +31,18 @@ public enum OddStoreKeeperPurchaseFailureCode {
     case noProductsAvailable
     case accountAlreadyExists
     case storePurchaseFailure
+    case noReciptFound
 }
 
 public protocol OddStoreKeeperDelegate {
     func shouldShowPurchaseFailed(withReason reason: OddStoreKeeperPurchaseFailureCode, transaction: SKPaymentTransaction?)
+    func shouldShowRegistrationError(_ error: String)
     func displayStoreProducts(_ products: Array<OddStoreProduct>, invalidProductIds: Array<String>?)
     func displayValidatingEmail()
     func displayPurchasingProduct()
     func displayPurchaseComplete(forTransaction transaction: SKPaymentTransaction)
     func displayPurchaseRestored(forTransaction transaction: SKPaymentTransaction)
+    func didCompleteNewSubscription()
 }
 
 public struct OddStoreProduct {
@@ -73,12 +76,44 @@ public class OddStoreKeeper: NSObject, SKRequestDelegate {
     
     public static let shared = OddStoreKeeper()
     
+    public static let connectURL = "https://oddconnect.com/api/"
+    
     public var delegate: OddStoreKeeperDelegate? = nil
     
     static var prefixId: String {
         get {
             guard let bundleName = Bundle.main.bundleIdentifier else { return "unknownBundleId." }
             return "\(bundleName)."
+        }
+    }
+    
+    static func configFileName() -> String {
+        // we return a default in case the SDK is run in a unit test with no bundle. derp.
+        guard let displayName = Bundle.main.infoDictionary!["CFBundleDisplayName"] as? NSString else { return "OddOTSAppConfig_test" }
+        let cleanDisplayName = displayName.replacingOccurrences(of: " ", with: "")
+        print("CLEAN: \(cleanDisplayName)")
+        return "OddOTSAppConfig_\(cleanDisplayName)"
+    }
+    
+    fileprivate static func configValue(forKey key: String) -> AnyObject? {
+        guard let path = Bundle.main.path(forResource: OddStoreKeeper.configFileName(), ofType: "plist"),
+            let dict = NSDictionary(contentsOfFile: path) as? Dictionary<String, AnyObject>,
+            let value = dict[key] else {
+                OddLogger.error("Odd Connect Access Token not found")
+                return nil
+        }
+        return value
+    }
+    
+    static var connectAccessToken: String? {
+        get {
+            return OddStoreKeeper.configValue(forKey: OddConstants.kConnectAccessTokenKey) as? String
+        }
+    }
+    
+    static var gatekeeperEntitlements: Array<String>? {
+        get {
+            return OddStoreKeeper.configValue(forKey: OddConstants.kGatekeeperEntitlementsKey) as? Array<String>
         }
     }
     
@@ -89,6 +124,8 @@ public class OddStoreKeeper: NSObject, SKRequestDelegate {
     
     fileprivate var selectedProduct: SKProduct? = nil
     
+    fileprivate var userEmail = ""
+    
     public func initializeStoreKeeper() {
         if self.canMakePayments() {
             self.validateProductIdentifiers()
@@ -96,7 +133,6 @@ public class OddStoreKeeper: NSObject, SKRequestDelegate {
             self.delegate?.shouldShowPurchaseFailed(withReason: .unableToMakePayments, transaction: nil)
         }
     }
-    
     
     fileprivate func canMakePayments() -> Bool {
         return SKPaymentQueue.canMakePayments()
@@ -193,14 +229,49 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
             }
             
             OddLogger.info("Account Exists: \(accountExists)")
+            
+            self.userEmail = email
             self.makePaymentForProduct()
         })
     }
     
-    fileprivate func checkForExistingAccount(_ email: String, accountExists: (Bool, Error?) -> Void) {
+    fileprivate func checkForExistingAccount(_ email: String, accountExists: @escaping (Bool, Error?) -> Void) {
         // needs to be connected to service for subscription validation (Odd Connect)
-        let accountNotFound = true
-        accountExists(accountNotFound, nil)
+        
+        let path = "device_users/\(self.userEmail)/entitlements"
+        
+        OddContentStore.sharedStore.API.get(nil, url: path, altDomain: OddStoreKeeper.connectURL) { (response, error) -> () in
+            if let e = error {
+                OddLogger.error("Error checking for existing account Odd Connect failed with error: \(e.localizedDescription)")
+                accountExists(false, error)
+            } else {
+                OddLogger.info("Entitlements Fetched Successfully")
+                
+                guard let json = response as? jsonObject,
+                    let entitlements = json["data"] as? jsonArray else {
+                        OddLogger.error("Error checking for existing account. No incorrect response")
+                        let error = NSError(domain: "Odd", code: 901, userInfo: ["error": "Error checking for existing account. No incorrect response"]) as Error
+                        accountExists(false, error)
+                        return
+                }
+                guard let validEntitlements = OddStoreKeeper.gatekeeperEntitlements else {
+                    // not configured for entitlements so derp?
+                    accountExists(false, nil)
+                    return
+                }
+                entitlements.forEach { (entitlement) in
+                    validEntitlements.forEach { (valid) in
+                        let entitlementId = entitlement["attributes"]?["entitlement_identifier"] as? String
+                        if entitlementId == valid {
+                            accountExists(true, nil)
+                            return
+                        }
+                    }
+                }
+            }
+        }
+        
+        accountExists(false, nil)
     }
     
     fileprivate func makePaymentForProduct() {
@@ -225,26 +296,85 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
                 self.delegate?.shouldShowPurchaseFailed(withReason: .storePurchaseFailure, transaction: transaction)
             case .purchased:
                 self.delegate?.displayPurchaseComplete(forTransaction: transaction)
-                self.recordPurchaseWithOddConnect()
+                self.recordPurchaseWithOddConnect(usingTransaction: transaction)
             case .restored:
                 self.delegate?.displayPurchaseRestored(forTransaction: transaction)
             }
         }
     }
     
-    fileprivate func recordPurchaseWithOddConnect() {
-        let url = Bundle.main.appStoreReceiptURL
+    fileprivate func appReceipt() -> String? {
+        if let receiptURL = Bundle.main.appStoreReceiptURL,
+            let data = try? Data(contentsOf: receiptURL) {
+            
+            let receiptData = data.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
+            OddLogger.debug("Receipt Data: \(receiptData)")
+            return receiptData
+        } else {
+            OddLogger.warn("No Receipt Found")
+        }
+        return nil
+    }
+    
+    fileprivate func recordPurchaseWithOddConnect(usingTransaction transaction: SKPaymentTransaction) {
+        guard let receipt = self.appReceipt() else {
+            self.delegate?.shouldShowPurchaseFailed(withReason: .noReciptFound, transaction: nil)
+            return
+        }
         
+        let path = "device_users/\(self.userEmail)/transactions"
+
+        let params = [
+            "attributes" : [
+                "platform" : "APPLE",
+                "product_identifier" : "\(self.selectedProduct?.productIdentifier ?? "no product id")",
+                "external_identifier" : "\(transaction.transactionIdentifier ?? "no transaction id")",
+                "receipt" : "\(receipt)"
+            ]
+        ] as [String : Any]
+        
+        let data = [ "data" : params ]
+        
+        OddContentStore.sharedStore.API.post(data as jsonObject?, url: path, altDomain: OddStoreKeeper.connectURL) { (response, error) -> () in
+            if let e = error {
+                OddLogger.error("Registering account with Odd Connect failed with error: \(e.localizedDescription)")
+                self.delegate?.shouldShowRegistrationError("Registering account failed with error: \(e.localizedDescription)")
+            } else {
+                OddLogger.info("Account Registered Successfully")
+                self.fetchJWT()
+            }
+        }
+    }
+    
+    fileprivate func fetchJWT() {
+        let path = "device_users/\(self.userEmail)/connections"
+        
+        let userId = OddEventsService.defaultService.userId()
+        
+        let params = [
+            "type" : "connection",
+            
+            "attributes" : [
+                "platform" : "APPLE",
+                "device_identifier" : "\(userId)"
+            ]
+            ] as [String : Any]
+        
+        let data = [ "data" : params ]
+        
+        OddContentStore.sharedStore.API.post(data as jsonObject?, url: path, altDomain: OddStoreKeeper.connectURL) { (response, error) -> () in
+            if let e = error {
+                OddLogger.error("Fetching JWT with Odd Connect failed with error: \(e.localizedDescription)")
+                self.delegate?.shouldShowRegistrationError("Fetching User Token failed with error: \(e.localizedDescription)")
+            } else {
+                OddLogger.info("Fetched JWT Successfully")
+                self.delegate?.didCompleteNewSubscription()
+            }
+        }
     }
     
     public func finishTransaction(_ transaction: SKPaymentTransaction) {
         SKPaymentQueue.default().finishTransaction(transaction)
-//        self.reset()
     }
     
-//    open func reset() {
-//        self.delegate = nil
-//        self.transactionDelegate = nil
-//        self.restoreDelegate = nil
-//    }
 }
