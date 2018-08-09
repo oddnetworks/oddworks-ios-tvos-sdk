@@ -136,12 +136,12 @@ public struct EventsConfiguration {
     
     //MARK: FEATURES
     if let features = attribs["features"] as? Dictionary<String, AnyObject> {
-      //Mark: Ads
+      //MARK: Ads
       if let ads = features["ads"] as? Dictionary<String, AnyObject> {
         newConfig.adManager.configureWithJSON(ads)
       } //end ads
       
-      //Mark: Metrics
+      //MARK: Metrics
       if let metrics = features["metrics"] as? Dictionary<String, AnyObject> {
         newConfig.analyticsManager.configureWithJSON(metrics)
       }

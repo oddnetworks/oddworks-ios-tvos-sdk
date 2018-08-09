@@ -9,15 +9,67 @@
 import Foundation
 import StoreKit
 
+// returns the products price in the correct currency format for the users locale
+public extension SKProduct {
+    func formattedPrice() -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = self.priceLocale
+        return formatter.string(from: self.price) ?? "Undefined"
+    }
+    
+    func asOddStoreProduct() -> OddStoreProduct {
+        return OddStoreProduct(id: self.productIdentifier,
+                               title: self.localizedTitle,
+                               description: self.localizedDescription,
+                               price: self.formattedPrice())
+    }
+}
+
 public enum OddStoreKeeperPurchaseFailureCode {
     case unableToMakePayments
+    case noProductsAvailable
+    case accountAlreadyExists
+    case storePurchaseFailure
 }
 
 public protocol OddStoreKeeperDelegate {
-    func shouldShowPurchaseFailed(withReason reason: OddStoreKeeperPurchaseFailureCode)
+    func shouldShowPurchaseFailed(withReason reason: OddStoreKeeperPurchaseFailureCode, transaction: SKPaymentTransaction?)
+    func displayStoreProducts(_ products: Array<OddStoreProduct>, invalidProductIds: Array<String>?)
+    func displayValidatingEmail()
+    func displayPurchasingProduct()
+    func displayPurchaseComplete(forTransaction transaction: SKPaymentTransaction)
+    func displayPurchaseRestored(forTransaction transaction: SKPaymentTransaction)
 }
 
-public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver, SKRequestDelegate {
+public struct OddStoreProduct {
+    public var id: String
+    public var title: String
+    public var description: String
+    public var price: String
+    
+    public init(id: String, title: String, description: String, price: String) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.price = price
+    }
+    
+    static func skProductsAsOddStoreProducts(skProducts: Array<SKProduct?>) -> Array<OddStoreProduct> {
+        var oddProducts = Array<OddStoreProduct>()
+        
+        skProducts.forEach { (skProduct) in
+            guard let prod = skProduct else {
+                return
+            }
+            oddProducts.append(prod.asOddStoreProduct())
+        }
+        
+        return oddProducts
+    }
+}
+
+public class OddStoreKeeper: NSObject, SKRequestDelegate {
     
     public static let shared = OddStoreKeeper()
     
@@ -30,11 +82,18 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
         }
     }
     
-    public func beginPurchase() {
+    fileprivate var productIdentifiers: Set<String> = Set()
+    
+    fileprivate var productsRequest: SKProductsRequest?
+    fileprivate var products: Array<SKProduct?> = Array()
+    
+    fileprivate var selectedProduct: SKProduct? = nil
+    
+    public func initializeStoreKeeper() {
         if self.canMakePayments() {
-            OddLogger.info("Continue Purchase process...")
+            self.validateProductIdentifiers()
         } else {
-            self.delegate?.shouldShowPurchaseFailed(withReason: .unableToMakePayments)
+            self.delegate?.shouldShowPurchaseFailed(withReason: .unableToMakePayments, transaction: nil)
         }
     }
     
@@ -43,34 +102,149 @@ public class OddStoreKeeper: NSObject, SKProductsRequestDelegate, SKPaymentTrans
         return SKPaymentQueue.canMakePayments()
     }
     
-    // Mark: - SKProductsReqeustDelegte
-    
-    public func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        
-    }
-    
-    public func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        
-    }
-    
-    // Mark: - SKPaymentTransactionObserver
-    
-    // Mark: - SKRequestDelegate
-    
-    
     // MARK: - Products
     
     fileprivate func fetchProductIdentifiers() {
+        OddLogger.info("Fetching product identifiers...")
         guard let url = Bundle.main.url(forResource: "iap_product_ids", withExtension: "plist"),
             let idArray = NSArray(contentsOf: url) as? Array<String> else { return }
-        OddStoreKeeper.productIdentifiers = Set(idArray.map { "\(prefixId)\($0)" } )
+        self.productIdentifiers = Set(idArray.map { "\(OddStoreKeeper.prefixId)\($0)" } )
     }
     
     fileprivate func validateProductIdentifiers() {
+        OddLogger.info("Validating product identifiers...")
         self.fetchProductIdentifiers()
-        self.productsRequest = SKProductsRequest(productIdentifiers: OddStoreKeeper.productIdentifiers)
+        self.productsRequest = SKProductsRequest(productIdentifiers: self.productIdentifiers)
         
         self.productsRequest?.delegate = self
         self.productsRequest?.start()
     }
+    
+}
+
+extension OddStoreKeeper: SKProductsRequestDelegate {
+    
+    //MARK: - SKProductsRequestDelegate
+    
+    open func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
+        self.products = response.products
+        
+        response.invalidProductIdentifiers.forEach { (invalid) in
+            OddLogger.error("\(invalid) is an invalid product identifier")
+        }
+        
+        self.products.forEach { (product) in
+            OddLogger.info("\(product?.localizedTitle ?? "undefined product") - \(product?.price ?? 0.00) is valid")
+        }
+        
+        let oddProducts = OddStoreProduct.skProductsAsOddStoreProducts(skProducts: self.products)
+        
+        if self.products.isEmpty {
+            // send some dummy products to debug in simulator
+            // this will not allow actual purchases but will display subscription select dialog
+//            self.delegate?.displayStoreProducts(self.dummyProducts(), invalidProductIds: nil)
+            self.delegate?.shouldShowPurchaseFailed(withReason: .noProductsAvailable, transaction: nil)
+        } else if response.invalidProductIdentifiers.isEmpty {
+            self.delegate?.displayStoreProducts(oddProducts, invalidProductIds: nil)
+        } else {
+            self.delegate?.displayStoreProducts(oddProducts, invalidProductIds: response.invalidProductIdentifiers)
+        }
+    }
+    
+    func dummyProducts() -> [OddStoreProduct] {
+        let p1 = OddStoreProduct(id: "1234",
+                                 title: "Product One",
+                                 description: "A very special product",
+                                 price: "$9.99")
+        
+        let p2 = OddStoreProduct(id: "5678",
+                                 title: "Product Two",
+                                 description: "Another very special product",
+                                 price: "$19.99")
+        
+        return [p1, p2]
+    }
+
+}
+
+
+extension OddStoreKeeper: SKPaymentTransactionObserver {
+    // MARK: - Purchasing
+    
+    public func makePurchase(itemIndex index: Int, email: String) {
+        if self.products.isEmpty || self.products[index] == nil || index > self.products.count {
+            OddLogger.error("Product Index Out of Bounds")
+            self.delegate?.shouldShowPurchaseFailed(withReason: .noProductsAvailable, transaction: nil)
+            return
+        }
+        
+        self.selectedProduct = self.products[index]
+        
+        let productName = self.selectedProduct?.localizedTitle ?? "Undefined Product"
+        
+        OddLogger.info("Begining purchase of \(productName) for \(email)")
+        self.delegate?.displayValidatingEmail()
+        
+        self.checkForExistingAccount(email, accountExists: { (accountExists, error) in
+            if error != nil {
+                OddLogger.error("Error: \(error!.localizedDescription)")
+                self.delegate?.shouldShowPurchaseFailed(withReason: .accountAlreadyExists, transaction: nil)
+                return
+            }
+            
+            OddLogger.info("Account Exists: \(accountExists)")
+            self.makePaymentForProduct()
+        })
+    }
+    
+    fileprivate func checkForExistingAccount(_ email: String, accountExists: (Bool, Error?) -> Void) {
+        // needs to be connected to service for subscription validation (Odd Connect)
+        let accountNotFound = true
+        accountExists(accountNotFound, nil)
+    }
+    
+    fileprivate func makePaymentForProduct() {
+        guard let product = self.selectedProduct else {
+            self.delegate?.shouldShowPurchaseFailed(withReason: .noProductsAvailable, transaction: nil)
+            return
+        }
+        
+        SKPaymentQueue.default().add(self)
+        let payment = SKMutablePayment(product: product)
+        SKPaymentQueue.default().add(payment)
+    }
+    
+    public func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+        transactions.forEach { (transaction) in
+            switch transaction.transactionState {
+            case .purchasing:
+                self.delegate?.displayPurchasingProduct()
+            case .deferred:
+                self.delegate?.displayPurchasingProduct()
+            case .failed:
+                self.delegate?.shouldShowPurchaseFailed(withReason: .storePurchaseFailure, transaction: transaction)
+            case .purchased:
+                self.delegate?.displayPurchaseComplete(forTransaction: transaction)
+                self.recordPurchaseWithOddConnect()
+            case .restored:
+                self.delegate?.displayPurchaseRestored(forTransaction: transaction)
+            }
+        }
+    }
+    
+    fileprivate func recordPurchaseWithOddConnect() {
+        let url = Bundle.main.appStoreReceiptURL
+        
+    }
+    
+    public func finishTransaction(_ transaction: SKPaymentTransaction) {
+        SKPaymentQueue.default().finishTransaction(transaction)
+//        self.reset()
+    }
+    
+//    open func reset() {
+//        self.delegate = nil
+//        self.transactionDelegate = nil
+//        self.restoreDelegate = nil
+//    }
 }
