@@ -19,8 +19,8 @@ import Foundation
   static let kAuthenticationCredentialsStateKey = "AuthenticationCredentialsStateKey"
   static let kAuthenticationCredentialsAccessTokenKey = "AuthenticationCredentialsAccessTokenKey"
   static let kAuthenticationCredentialsEntitlementCredentialsKey = "AuthenticationCredentialsEntitlementCredentialsKey"
-  static let kConnectAccessTokenKey = "ConnectAccessTokenKey"
-    static let kGatekeeperEntitlementsKey = "GatekeeperEntitlementsKey"
+  static let kConnectAccessTokenKey = "ConnectAccessToken"
+    static let kGatekeeperEntitlementsKey = "GatekeeperEntitlements"
   
   static let kUserAuthenticationTokenKey = "UserAuthenticationTokenKey"
   static let kUserIdKey = "UserId"

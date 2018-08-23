@@ -76,7 +76,8 @@ public class OddStoreKeeper: NSObject, SKRequestDelegate {
     
     public static let shared = OddStoreKeeper()
     
-    public static let connectURL = "https://oddconnect.com/api/"
+//    public static let connectURL = "https://oddconnect.com/api/"
+    public static let connectURL = "https://oddconnect.science/api/"
     
     public var delegate: OddStoreKeeperDelegate? = nil
     
@@ -243,19 +244,26 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
         OddContentStore.sharedStore.API.get(nil, url: path, altDomain: OddStoreKeeper.connectURL) { (response, error) -> () in
             if let e = error {
                 OddLogger.error("Error checking for existing account Odd Connect failed with error: \(e.localizedDescription)")
-                accountExists(false, error)
+                let userInfo = e.userInfo
+                let responseCode = userInfo["statusCode"]
+                
+                // 404 is a valid response if the user email is not in the system
+                if responseCode != nil && responseCode as? Int == 404 {
+                    accountExists(false, nil)
+                } else {
+                    accountExists(false, error)
+                }
             } else {
                 OddLogger.info("Entitlements Fetched Successfully")
                 
                 guard let json = response as? jsonObject,
                     let entitlements = json["data"] as? jsonArray else {
                         OddLogger.error("Error checking for existing account. No incorrect response")
-                        let error = NSError(domain: "Odd", code: 901, userInfo: ["error": "Error checking for existing account. No incorrect response"]) as Error
+                        let error = NSError(domain: "Odd", code: 901, userInfo: ["error": "Error checking for existing account. Incorrect response"]) as Error
                         accountExists(false, error)
                         return
                 }
                 guard let validEntitlements = OddStoreKeeper.gatekeeperEntitlements else {
-                    // not configured for entitlements so derp?
                     accountExists(false, nil)
                     return
                 }
@@ -275,6 +283,11 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
     }
     
     fileprivate func makePaymentForProduct() {
+        OddLogger.info("TRANSACTIONS: \(SKPaymentQueue.default().transactions)")
+        if !SKPaymentQueue.default().transactions.isEmpty {
+            OddLogger.info("Skipping duplicate payment")
+            return
+        }
         guard let product = self.selectedProduct else {
             self.delegate?.shouldShowPurchaseFailed(withReason: .noProductsAvailable, transaction: nil)
             return
@@ -325,11 +338,14 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
         let path = "device_users/\(self.userEmail)/transactions"
 
         let params = [
+            "type" : "transaction",
             "attributes" : [
                 "platform" : "APPLE",
                 "product_identifier" : "\(self.selectedProduct?.productIdentifier ?? "no product id")",
                 "external_identifier" : "\(transaction.transactionIdentifier ?? "no transaction id")",
-                "receipt" : "\(receipt)"
+                "receipt" : [
+                    "latest_receipt": "\(receipt)"
+                ] 
             ]
         ] as [String : Any]
         
@@ -337,8 +353,15 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
         
         OddContentStore.sharedStore.API.post(data as jsonObject?, url: path, altDomain: OddStoreKeeper.connectURL) { (response, error) -> () in
             if let e = error {
-                OddLogger.error("Registering account with Odd Connect failed with error: \(e.localizedDescription)")
-                self.delegate?.shouldShowRegistrationError("Registering account failed with error: \(e.localizedDescription)")
+                let userInfo = e.userInfo
+                let message = userInfo["message"] as? String
+                if message != nil {
+                    OddLogger.error("Registering account with Odd Connect failed with error: \(message!)")
+                    self.delegate?.shouldShowRegistrationError("Registering account failed with error: \(message!)")
+                } else {
+                    OddLogger.error("Registering account with Odd Connect failed with error: \(e.localizedDescription)")
+                    self.delegate?.shouldShowRegistrationError("Registering account failed with error: \(e.localizedDescription)")
+                }
             } else {
                 OddLogger.info("Account Registered Successfully")
                 self.fetchJWT()
@@ -355,7 +378,7 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
             "type" : "connection",
             
             "attributes" : [
-                "platform" : "APPLE",
+                "platform" : "APPLE_TV",
                 "device_identifier" : "\(userId)"
             ]
             ] as [String : Any]
@@ -364,8 +387,15 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
         
         OddContentStore.sharedStore.API.post(data as jsonObject?, url: path, altDomain: OddStoreKeeper.connectURL) { (response, error) -> () in
             if let e = error {
-                OddLogger.error("Fetching JWT with Odd Connect failed with error: \(e.localizedDescription)")
-                self.delegate?.shouldShowRegistrationError("Fetching User Token failed with error: \(e.localizedDescription)")
+                let userInfo = e.userInfo
+                let message = userInfo["message"] as? String
+                if message != nil {
+                    OddLogger.error("Fetching JWT with Odd Connect failed with error: \(message!)")
+                    self.delegate?.shouldShowRegistrationError("Fetching User Token failed with error: \(message!)")
+                } else {
+                    OddLogger.error("Fetching JWT with Odd Connect failed with error: \(e.localizedDescription)")
+                    self.delegate?.shouldShowRegistrationError("Fetching User Token failed with error: \(e.localizedDescription)")
+                }
             } else {
                 OddLogger.info("Fetched JWT Successfully")
                 self.delegate?.didCompleteNewSubscription()
