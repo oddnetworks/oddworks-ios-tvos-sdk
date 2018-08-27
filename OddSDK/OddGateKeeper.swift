@@ -187,6 +187,12 @@ public class OddGateKeeper: NSObject {
       return self.authenticationCredentials.state
     }
   }
+    
+    public var userIdKey: String {
+        get {
+            return OddConstants.kUserIdKey
+        }
+    }
   
   public func fetchAuthenticationConfig( _ callback: @escaping (_ url: String?, _ userCode: String?, _ deviceToken: String?, _ error: NSError?) -> Void ) {
     OddContentStore.sharedStore.API.post(nil, url: "auth/device/code", altDomain: nil) { (res, err) -> () in
