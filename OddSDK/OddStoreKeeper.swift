@@ -32,6 +32,7 @@ public enum OddStoreKeeperPurchaseFailureCode {
     case accountAlreadyExists
     case storePurchaseFailure
     case noReciptFound
+    case noOriginalTransactionFound
 }
 
 public protocol OddStoreKeeperDelegate {
@@ -43,6 +44,7 @@ public protocol OddStoreKeeperDelegate {
     func displayPurchaseComplete(forTransaction transaction: SKPaymentTransaction)
     func displayPurchaseRestored(forTransaction transaction: SKPaymentTransaction)
     func didCompleteNewSubscription()
+    func didFailToRestorePurchase(withError error: String)
 }
 
 public struct OddStoreProduct {
@@ -80,6 +82,8 @@ public class OddStoreKeeper: NSObject, SKRequestDelegate {
     public static let connectURL = "https://oddconnect.science/api/"
     
     public var delegate: OddStoreKeeperDelegate? = nil
+    
+    fileprivate var restoreRequest: SKReceiptRefreshRequest?
     
     static var prefixId: String {
         get {
@@ -188,6 +192,7 @@ extension OddStoreKeeper: SKProductsRequestDelegate {
         }
     }
     
+    
     func dummyProducts() -> [OddStoreProduct] {
         let p1 = OddStoreProduct(id: "1234",
                                  title: "Product One",
@@ -283,9 +288,8 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
     }
     
     fileprivate func makePaymentForProduct() {
-        OddLogger.info("TRANSACTIONS: \(SKPaymentQueue.default().transactions)")
         if !SKPaymentQueue.default().transactions.isEmpty {
-            OddLogger.info("Skipping duplicate payment")
+            OddLogger.warn("Skipping duplicate payment")
             return
         }
         guard let product = self.selectedProduct else {
@@ -312,6 +316,7 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
                 self.recordPurchaseWithOddConnect(usingTransaction: transaction)
             case .restored:
                 self.delegate?.displayPurchaseRestored(forTransaction: transaction)
+                self.recordRestoredPurchaseWithOddConnect(usingTransaction: transaction)
             }
         }
     }
@@ -369,6 +374,73 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
         }
     }
     
+    fileprivate func recordRestoredPurchaseWithOddConnect(usingTransaction transaction: SKPaymentTransaction) {
+        guard let receipt = self.appReceipt() else {
+            self.delegate?.shouldShowPurchaseFailed(withReason: .noReciptFound, transaction: nil)
+            return
+        }
+        
+        guard let originalTransaction = transaction.original else {
+            self.delegate?.shouldShowPurchaseFailed(withReason: .noOriginalTransactionFound, transaction: nil)
+            return
+        }
+        
+        let path = "transactions/restore"
+        
+        let params = [
+            "type" : "transaction",
+            "attributes" : [
+                "platform" : "APPLE",
+                "external_identifier" : "\(originalTransaction.transactionIdentifier ?? "no transaction id")",
+                "receipt" : [
+                    "latest_receipt": "\(receipt)"
+                ]
+            ]
+            ] as [String : Any]
+        
+        let data = [ "data" : params ]
+        
+        OddContentStore.sharedStore.API.post(data as jsonObject?, url: path, altDomain: OddStoreKeeper.connectURL) { (response, error) -> () in
+            if let e = error {
+                let userInfo = e.userInfo
+                let message = userInfo["message"] as? String
+                if message != nil {
+                    OddLogger.error("Restoring account with Odd Connect failed with error: \(message!)")
+                    self.delegate?.shouldShowRegistrationError("Restoring account failed with error: \(message!)")
+                } else {
+                    OddLogger.error("Restoring account with Odd Connect failed with error: \(e.localizedDescription)")
+                    self.delegate?.shouldShowRegistrationError("Restoring account failed with error: \(e.localizedDescription)")
+                }
+            } else {
+                guard let json = response as? jsonObject else {
+                    OddLogger.error("Restoring account with Odd Connect failed with error: unable to determine user id")
+                    self.delegate?.shouldShowRegistrationError("Restoring account failed with error: unable to determine user id")
+                    return
+                }
+                
+                if self.saveUserId(withJson: json) {
+                    OddLogger.info("Account Restored Successfully")
+                    self.fetchJWT()
+                } else {
+                    OddLogger.error("Restoring account with Odd Connect failed with error: unable to determine user id")
+                    self.delegate?.shouldShowRegistrationError("Restoring account failed with error: unable to determine user id")
+                }
+            }
+        }
+    }
+    
+    fileprivate func saveUserId(withJson json: jsonObject) -> Bool {
+        guard let attribs = json["attributes"] as? jsonObject,
+            let email = attribs["email"] as? String else {
+                return false
+        }
+        UserDefaults.standard.set(email, forKey: OddConstants.kUserIdKey)
+        UserDefaults.standard.synchronize()
+        OddLogger.info(("Stored User ID: \(email)"))
+        self.userEmail = email
+        return true
+    }
+    
     fileprivate func fetchJWT() {
         let path = "device_users/\(self.userEmail)/connections"
         
@@ -407,4 +479,11 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
         SKPaymentQueue.default().finishTransaction(transaction)
     }
     
+    // MARK: - Restore Purchase
+
+    public func restorePurchase() {
+        SKPaymentQueue.default().add(self)
+        SKPaymentQueue.default().restoreCompletedTransactions()
+    }
+
 }
