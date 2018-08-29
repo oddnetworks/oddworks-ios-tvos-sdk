@@ -469,10 +469,28 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
                     self.delegate?.shouldShowRegistrationError("Fetching User Token failed with error: \(e.localizedDescription)")
                 }
             } else {
+                guard let json = response as? jsonObject else {
+                    OddLogger.error("Restoring account with Odd Connect failed with error: unable to parse viewer token")
+                    self.delegate?.shouldShowRegistrationError("Restoring account failed with error: unable to parse viewer token")
+                    return
+                }
                 OddLogger.info("Fetched JWT Successfully")
-                self.delegate?.didCompleteNewSubscription()
+                self.saveJWT(withJson: json)
             }
         }
+    }
+    
+    
+    fileprivate func saveJWT(withJson json: jsonObject) {
+        guard let attribs = json["attributes"] as? jsonObject,
+            let jwt = attribs["jwt"] as? String else {
+                self.delegate?.shouldShowRegistrationError("Fetching User Token failed with error: unable to parse viewer token.")
+                return
+        }
+        UserDefaults.standard.set(jwt, forKey: OddConstants.kUserAuthenticationTokenKey)
+        UserDefaults.standard.synchronize()
+        OddLogger.info(("Stored User JWT: \(jwt)"))
+        self.delegate?.didCompleteNewSubscription()
     }
     
     public func finishTransaction(_ transaction: SKPaymentTransaction) {
