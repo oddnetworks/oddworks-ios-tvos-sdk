@@ -260,7 +260,13 @@ public class APIService: NSObject, OddHTTPRequestService {
         
         URLCache.shared.removeAllCachedResponses()
         
-        let request = NSMutableURLRequest(url: URL(string: domain + url)!)
+        let url = URL(string: domain + url)
+        if url == nil {
+            let error = NSError(domain: "Odd", code: 113 , userInfo: ["Error": "Unable to contruct valid url with parameters"])
+            callback(nil, error)
+            return
+        }
+        let request = NSMutableURLRequest(url: url!)
         let session = URLSession.shared
         request.httpMethod = type
         
@@ -354,8 +360,9 @@ public class APIService: NSObject, OddHTTPRequestService {
             }
             
             if res.statusCode == 201 {
-                OddLogger.info("Server responded with \(res.statusCode). Object created.")
-                callback(response, nil)
+                OddLogger.info("Server responded with \(res.statusCode). Object created for route: \(domain)\(url)")
+//                callback(response, nil)
+                self.parseData(data, cacheTime: cacheTime, callback: callback)
                 return
             }
             

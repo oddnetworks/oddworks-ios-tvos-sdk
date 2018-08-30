@@ -45,6 +45,7 @@ public protocol OddStoreKeeperDelegate {
     func displayPurchaseRestored(forTransaction transaction: SKPaymentTransaction)
     func didCompleteNewSubscription()
     func didFailToRestorePurchase(withError error: String)
+    func didAuthenticate()
 }
 
 public struct OddStoreProduct {
@@ -92,11 +93,24 @@ public class OddStoreKeeper: NSObject, SKRequestDelegate {
         }
     }
     
+    var authAttemptTimeDelta: TimeInterval = 5  // check for Authentication every 5 seconds
+    
+    /// Number of times the server will be contacted to check for Authentication status changes.
+    /// This number multiplied by `authAttemptTimeDelta` will determine how long the SDK will
+    /// attempt to detecet a change in state before stopping.
+    var numberOfAuthAttempts: Int =  5 //60            // number of times to try before failing
+    
+    /// A counter to track the number of attempts we have made to check auth state changes
+    var authAttemptCount = 0
+    
+    /// A timer to trigger Authentication state change checks
+    var pollingTimer: Timer?
+    
     static func configFileName() -> String {
         // we return a default in case the SDK is run in a unit test with no bundle. derp.
         guard let displayName = Bundle.main.infoDictionary!["CFBundleDisplayName"] as? NSString else { return "OddOTSAppConfig_test" }
         let cleanDisplayName = displayName.replacingOccurrences(of: " ", with: "")
-        print("CLEAN: \(cleanDisplayName)")
+//        print("CLEAN: \(cleanDisplayName)")
         return "OddOTSAppConfig_\(cleanDisplayName)"
     }
     
@@ -470,19 +484,19 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
                 }
             } else {
                 guard let json = response as? jsonObject else {
-                    OddLogger.error("Restoring account with Odd Connect failed with error: unable to parse viewer token")
-                    self.delegate?.shouldShowRegistrationError("Restoring account failed with error: unable to parse viewer token")
+                    OddLogger.error("Fetching User Token failed: unable to parse viewer token")
+                    self.delegate?.shouldShowRegistrationError("Fetching User Token failed: unable to parse viewer token")
                     return
                 }
                 OddLogger.info("Fetched JWT Successfully")
                 self.saveJWT(withJson: json)
             }
-        }
+        }  
     }
     
-    
     fileprivate func saveJWT(withJson json: jsonObject) {
-        guard let attribs = json["attributes"] as? jsonObject,
+        guard let data = json["data"],
+            let attribs = data["attributes"] as? jsonObject,
             let jwt = attribs["jwt"] as? String else {
                 self.delegate?.shouldShowRegistrationError("Fetching User Token failed with error: unable to parse viewer token.")
                 return
@@ -504,4 +518,96 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
         SKPaymentQueue.default().restoreCompletedTransactions()
     }
 
+    // MARK: - Polling for Auth
+    
+    public func beginPollingForAuthentication(withEmail email: String) {
+        self.userEmail = email
+        OddLogger.info("Starting Authentication polling timer")
+        self.authAttemptCount = 0
+        self.pollingTimer?.invalidate()
+        // timer must be configured on the main thread or it will not fire
+        DispatchQueue.main.async(execute: { () -> Void in
+            self.pollingTimer = Timer.scheduledTimer(timeInterval: self.authAttemptTimeDelta, target: self, selector: #selector(self.checkForAuthentication), userInfo: nil, repeats: true)
+        })
+        OddLogger.info("Authentication Timer started")
+    }
+    
+    @objc fileprivate func checkForAuthentication() {
+        if self.authAttemptCount < self.numberOfAuthAttempts {
+            self.authAttemptCount += 1
+            OddLogger.debug("Checking for change in auth status: \(self.authAttemptCount)")
+            self.pollForJWT()
+        } else {
+            OddLogger.info("Stopping check for change in auth status")
+            self.pollingTimer?.invalidate()
+            self.delegate?.shouldShowRegistrationError("Error: Authentication timed out. Please try again.")
+        }
+    }
+    
+    fileprivate func pollForJWT() {
+        let path = "connections/\(self.userEmail)"
+        
+        let userId = OddEventsService.defaultService.userId()
+        
+        let params = [
+            "type" : "connection",
+            
+            "attributes" : [
+                "platform" : "APPLE_TV",
+                "device_identifier" : "\(userId)"
+            ]
+            ] as [String : Any]
+        
+        let data = [ "data" : params ]
+        
+        OddContentStore.sharedStore.API.post(data as jsonObject?, url: path, altDomain: OddStoreKeeper.connectURL) { (response, error) -> () in
+            if let e = error {
+                let userInfo = e.userInfo
+                let statusCode = userInfo["statusCode"] as? Int
+                
+                if statusCode != nil && statusCode! == 404 {
+                    // 404 is a valid response when the user has not completed the auth process yet
+                    OddLogger.info("Received 404. Continue polling...")
+                    return
+                }
+                
+                let message = userInfo["message"] as? String
+                if message != nil {
+                    OddLogger.error("Polling for  viewer token failed with error: \(message!)")
+                    self.delegate?.shouldShowRegistrationError("Polling for viewer token failed with error: \(message!)")
+                } else {
+                    OddLogger.error("Polling for  viewer token failed with error: \(e.localizedDescription)")
+                    self.delegate?.shouldShowRegistrationError("Polling for viewer token failed with error: \(e.localizedDescription)")
+                }
+            } else {
+                guard let json = response as? jsonObject else {
+                    OddLogger.error("Polling for  viewer token failed with error: unable to parse viewer token")
+                    self.delegate?.shouldShowRegistrationError("Polling for viewer token failed with error: unable to parse viewer token")
+                    return
+                }
+                OddLogger.info("Polling for JWT was successful")
+                if self.saveUserCredentials(withJson: json) {
+                    self.delegate?.didAuthenticate()
+                } else {
+                    OddLogger.error("Polling for  viewer token failed with error: unable to parse viewer token")
+                    self.delegate?.shouldShowRegistrationError("Polling for viewer token failed with error: unable to parse viewer token")
+                }
+                OddLogger.info("Polling for viewer token complete. Stopping timer.")
+                self.pollingTimer?.invalidate()
+            }
+        }
+    }
+    
+    fileprivate func saveUserCredentials(withJson json: jsonObject) -> Bool {
+        guard let attribs = json["attributes"] as? jsonObject,
+            let email = attribs["email"] as? String,
+            let jwt = attribs["jwt"] as? String else {
+                return false
+        }
+        UserDefaults.standard.set(email, forKey: OddConstants.kUserIdKey)
+        UserDefaults.standard.set(jwt, forKey: OddConstants.kUserAuthenticationTokenKey)
+        UserDefaults.standard.synchronize()
+        OddLogger.info(("Stored User ID: \(email)"))
+        return true
+    }
 }
