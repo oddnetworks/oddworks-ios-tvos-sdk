@@ -98,7 +98,7 @@ public class OddStoreKeeper: NSObject, SKRequestDelegate {
     /// Number of times the server will be contacted to check for Authentication status changes.
     /// This number multiplied by `authAttemptTimeDelta` will determine how long the SDK will
     /// attempt to detecet a change in state before stopping.
-    var numberOfAuthAttempts: Int =  5 //60            // number of times to try before failing
+    var numberOfAuthAttempts: Int =  60            // number of times to try before failing
     
     /// A counter to track the number of attempts we have made to check auth state changes
     var authAttemptCount = 0
