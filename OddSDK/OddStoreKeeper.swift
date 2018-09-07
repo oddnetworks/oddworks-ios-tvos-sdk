@@ -106,6 +106,8 @@ public class OddStoreKeeper: NSObject, SKRequestDelegate {
     /// A timer to trigger Authentication state change checks
     var pollingTimer: Timer?
     
+    var connectionId = ""
+    
     static func configFileName() -> String {
         // we return a default in case the SDK is run in a unit test with no bundle. derp.
         guard let displayName = Bundle.main.infoDictionary!["CFBundleDisplayName"] as? NSString else { return "OddOTSAppConfig_test" }
@@ -444,7 +446,8 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
     }
     
     fileprivate func saveUserId(withJson json: jsonObject) -> Bool {
-        guard let attribs = json["attributes"] as? jsonObject,
+        guard let data = json["data"] as? jsonObject,
+            let attribs = data["attributes"] as? jsonObject,
             let email = attribs["email"] as? String else {
                 return false
         }
@@ -522,6 +525,16 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
     
     public func beginPollingForAuthentication(withEmail email: String) {
         self.userEmail = email
+        self.fetchConnectionId() { success in
+            if success {
+                self.doPollingForToken()
+            } else {
+                self.delegate?.shouldShowRegistrationError("Error: Authentication timed out. Please try again.")
+            }
+        }
+    }
+    
+    fileprivate func doPollingForToken() {
         OddLogger.info("Starting Authentication polling timer")
         self.authAttemptCount = 0
         self.pollingTimer?.invalidate()
@@ -544,8 +557,8 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
         }
     }
     
-    fileprivate func pollForJWT() {
-        let path = "connections/\(self.userEmail)"
+    fileprivate func fetchConnectionId(callback: @escaping (_ success: Bool) -> Void) {
+        let path = "connections/"
         
         let userId = OddEventsService.defaultService.userId()
         
@@ -553,6 +566,7 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
             "type" : "connection",
             
             "attributes" : [
+                "email" : self.userEmail,
                 "platform" : "APPLE_TV",
                 "device_identifier" : "\(userId)"
             ]
@@ -561,6 +575,40 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
         let data = [ "data" : params ]
         
         OddContentStore.sharedStore.API.post(data as jsonObject?, url: path, altDomain: OddStoreKeeper.connectURL) { (response, error) -> () in
+            if let e = error {
+                let userInfo = e.userInfo
+    
+                let message = userInfo["message"] as? String
+                if message != nil {
+                    OddLogger.error("Fetching Connection Id failed with error: \(message!)")
+                    self.delegate?.shouldShowRegistrationError("Fetching Connection Id failed with error: \(message!)")
+                } else {
+                    OddLogger.error("Fetching Connection Id failed with error: \(e.localizedDescription)")
+                    self.delegate?.shouldShowRegistrationError("Fetching Connection Id failed with error: \(e.localizedDescription)")
+                }
+                callback(false)
+                return
+            } else {
+                guard let json = response as? jsonObject,
+                    let data = json["data"] as? jsonObject,
+                    let connectionId = data["id"] as? String else {
+                    OddLogger.error("Fetching Connection Id failed with error: unable to parse Connection Id")
+                    self.delegate?.shouldShowRegistrationError("Fetching Connection Id failed with error: unable to parse Connection Id")
+                    callback(false)
+                    return
+                }
+                OddLogger.info("Fetching Connection Id was successful")
+                
+                self.connectionId = connectionId
+                callback(true)
+            }
+        }
+    }
+    
+    fileprivate func pollForJWT() {
+        let path = "connections/\(self.connectionId)"
+    
+        OddContentStore.sharedStore.API.get(nil, url: path, altDomain: OddStoreKeeper.connectURL) { (response, error) -> () in
             if let e = error {
                 let userInfo = e.userInfo
                 let statusCode = userInfo["statusCode"] as? Int
@@ -599,7 +647,8 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
     }
     
     fileprivate func saveUserCredentials(withJson json: jsonObject) -> Bool {
-        guard let attribs = json["attributes"] as? jsonObject,
+        guard let data = json["data"] as? jsonObject,
+            let attribs = data["attributes"] as? jsonObject,
             let email = attribs["email"] as? String,
             let jwt = attribs["jwt"] as? String else {
                 return false

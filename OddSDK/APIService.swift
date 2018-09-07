@@ -260,13 +260,13 @@ public class APIService: NSObject, OddHTTPRequestService {
         
         URLCache.shared.removeAllCachedResponses()
         
-        let url = URL(string: domain + url)
-        if url == nil {
+        guard let url = URL(string: domain + url) else {
             let error = NSError(domain: "Odd", code: 113 , userInfo: ["Error": "Unable to contruct valid url with parameters"])
             callback(nil, error)
             return
         }
-        let request = NSMutableURLRequest(url: url!)
+        
+        let request = NSMutableURLRequest(url: url)
         let session = URLSession.shared
         request.httpMethod = type
         
@@ -309,7 +309,7 @@ public class APIService: NSObject, OddHTTPRequestService {
         }
         #endif
         
-        OddLogger.debug("URL: \(domain)\(url)")
+//        OddLogger.debug("URL: \(domain)\(url)")
         request.allHTTPHeaderFields?.forEach({ (header) in
             OddLogger.debug("HEADER: \(header)")
         })
