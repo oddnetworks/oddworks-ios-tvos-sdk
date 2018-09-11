@@ -52,6 +52,11 @@ public enum OddMetricAction: String {
     let userId = self.userId()
 
     OddLogger.info("OddEventsService initialized with UserId: \( userId ) and SessionId: \( sessionId() )")
+    guard let eventsUrl = OddContentStore.sharedStore.config?.analyticsManager.eventsUrl else {
+        OddLogger.warn("OddEventsService Error: Not configured for Event Server URL")
+        return
+    }
+    OddLogger.info("OddEventsSerivce using: \(eventsUrl)")
   }
   
   /// Provides the UUID associated with this device. 
