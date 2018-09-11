@@ -79,8 +79,8 @@ public class OddStoreKeeper: NSObject, SKRequestDelegate {
     
     public static let shared = OddStoreKeeper()
     
-//    public static let connectURL = "https://oddconnect.com/api/"
-    public static let connectURL = "https://oddconnect.science/api/"
+    public static let connectURL = "https://oddconnect.com/api/"
+//    public static let connectURL = "https://oddconnect.science/api/"
     
     public var delegate: OddStoreKeeperDelegate? = nil
     
@@ -391,13 +391,17 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
     }
     
     fileprivate func recordRestoredPurchaseWithOddConnect(usingTransaction transaction: SKPaymentTransaction) {
+        if transaction.transactionState != .restored {
+            return
+        }
+        
         guard let receipt = self.appReceipt() else {
             self.delegate?.shouldShowPurchaseFailed(withReason: .noReciptFound, transaction: nil)
             return
         }
         
         guard let originalTransaction = transaction.original else {
-            self.delegate?.shouldShowPurchaseFailed(withReason: .noOriginalTransactionFound, transaction: nil)
+//            self.delegate?.shouldShowPurchaseFailed(withReason: .noOriginalTransactionFound, transaction: nil)
             return
         }
         
@@ -517,7 +521,11 @@ extension OddStoreKeeper: SKPaymentTransactionObserver {
     // MARK: - Restore Purchase
 
     public func restorePurchase() {
-        SKPaymentQueue.default().add(self)
+        if !SKPaymentQueue.default().transactions.isEmpty {
+            OddLogger.warn("Skipping duplicate restore")
+            return
+        }
+       SKPaymentQueue.default().add(self)
         SKPaymentQueue.default().restoreCompletedTransactions()
     }
 

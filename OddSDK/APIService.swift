@@ -167,6 +167,7 @@ public class APIService: NSObject, OddHTTPRequestService {
     ///
     /// No configurable options at this time
     override init() {
+        OddLogger.info("API Service initialized")
         super.init()
     }
     
